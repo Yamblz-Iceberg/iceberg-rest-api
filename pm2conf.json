@@ -1,0 +1,36 @@
+{
+  "apps": [
+    {
+      "name": "dev_iseberg",
+      "script": "./bin/www",
+      "watch": true,
+      "logs": true,
+      "ignore_watch": [
+        "node_modules",
+        ".git",
+        ".idea",
+        ".vscdode"
+      ]
+    },
+    {
+      "name": "start_iseberg",
+      "script": "./bin/www",
+      "watch": false,
+      "logs": true
+    },
+    {
+      "name": "production_iseberg",
+      "script": "./bin/www",
+      "exec_mode": "cluster",
+      "instances": 4,
+      "watch": true,
+      "logs": true,
+      "ignore_watch": [
+        "node_modules",
+        ".git",
+        ".idea",
+        ".vscdode"
+      ]
+    }
+  ]
+}

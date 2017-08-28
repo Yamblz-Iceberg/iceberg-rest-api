@@ -1,0 +1,27 @@
+{
+  "base_url": "http://localhost",
+  "port": 1337,
+  "ws_port": 3003,
+  "security": {
+    "tokenLife" : 3600
+  },
+  "mongoose": {
+    "uri": "mongodb://localhost/isebergDB",
+    "uri_test": "mongodb://localhost/isebergTestDB"
+  },
+  "default": {
+    "api": {
+      "version" : "v1"
+    },
+    "user": {
+      "username": "myapi",
+      "password": "abc1234",
+      "token": "token"
+    },
+    "client": {
+      "name": "Android API v1",
+      "clientId": "android",
+      "clientSecret": "SomeRandomCharsAndNumbers"
+    }
+  }
+}

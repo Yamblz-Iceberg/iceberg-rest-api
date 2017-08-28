@@ -1,0 +1,53 @@
+{
+  "user": "mac220-adsa-eege-edefe",
+  "photo": "photos/200/sadsnia-wrte232fds.png",
+  "rating": "10",
+  "currentPosition": {
+    "x": "56.213213123",
+    "y": "42.324324"
+  },
+  "answers": {
+    "count": 1,
+    "messages": [
+      {
+        "to": "mac220-adsa-eege-adsa",
+        "requestId": "gr5ert4Vbfeer45",
+        "time": 123424214124,
+        "message": "Hello",
+        "messageId": 232134343,
+        "attachments": [
+          {
+            "photo": "img/mac220-adsa-eege-edefe/12321dsa-eEWQEqweQW0-wqewq.png"
+          }
+        ]
+      }
+    ]
+  },
+  "requests": {
+    "count": 2,
+    "messages": [
+      {
+        "requestId": "gr5ert4Vbfeer45",
+        "position": {
+          "x": "56.213213123",
+          "y": "42.324324"
+        },
+        "time": 123424214124,
+        "message": "What is the weather?",
+        "timeToStayAlive": 7480,
+        "answered": false
+      },
+      {
+        "requestId": "g234e2389bf3er43",
+        "position": {
+          "x": "51.213213123",
+          "y": "43.324324"
+        },
+        "time": 1234542342,
+        "message": "Help me to find blouse",
+        "timeToStayAlive": 6790,
+        "answered": true
+      }
+    ]
+  }
+}

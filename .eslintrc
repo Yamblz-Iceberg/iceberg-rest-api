@@ -1,0 +1,41 @@
+{
+  "extends": "airbnb-base",
+  "plugins": [
+    "node",
+    "es6-recommended",
+    "mongodb"
+  ],
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "sourceType": "module"
+  },
+  "settings": {
+    
+  },
+  "env": {
+    "node": true,
+    "es6": true,
+    "mocha": true
+  },
+  "rules": {
+    "new-cap": [2, {
+      "capIsNewExceptions": ["Router", "ObjectId"]
+    }],
+    "no-underscore-dangle":"warn",
+    "no-trailing-spaces":"warn",
+    "no-unused-vars":"warn",
+    "no-useless-escape":"warn",
+    "camelcase": [2, {
+      "properties": "never"
+    }],
+    "node/exports-style": ["error", "module.exports"],
+    "max-len": ["warn", 160],
+    "indent": ["warn", 2],
+    "linebreak-style": ["warn", "unix"],
+    "space-before-function-paren": [2, {
+      "anonymous": "always",
+      "named": "never"
+    }],
+    "no-use-before-define": [2, "nofunc"]
+  }
+}

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
+<script>
+  var socket = io.connect('https://localhost.daplie.me:3001', {
+    query: 'token=token'
+  }); // TIP: io() with no args does auto-discovery
+  socket.once('connect', function () {
+    log.info('yeah! we connected to server'); // TIP: you can avoid listening on `connect` and listen on events directly too!
+    socket.emit('ferret', 'tobi', function (data) {
+      log.info(data); // data will be 'woot'
+    });
+    socket.on('newMessage', function (data) {
+      log.info(data); // data will be 'woot'
+    });
+  });
+
+</script>
+
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+
+<body>
+
+</body>
+
+</html>
