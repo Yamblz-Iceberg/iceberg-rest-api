@@ -1,4 +1,4 @@
-# REST API проекта ISEBERG
+# REST API проекта ICEBERG
 
 - Вам необходимо установить **Node.js** и **MongoDB**
 - Все настройки находятся в файле `config.json`
@@ -63,6 +63,10 @@ npm run stop //убить процесс
 ### Feed route
 
 - **GET** `/feed`- получение ленты
+
+### Cards route
+
+- **GET** `/collections/:collectionId`- получение карточки
 
 ### Users route
 

@@ -45,6 +45,7 @@ require('./libs/websocket/socketIO')(io);
 
 const index = require('./routes/index');
 const users = require('./routes/users');
+const collections = require('./routes/collections');
 const register = require('./routes/register');
 const feed = require('./routes/feed');
 require('./libs/db/mongoose');
@@ -86,6 +87,7 @@ app.use('/users', users);
 app.use('/register', register);
 app.use('/oauth', oauth);
 app.use('/feed', feed);
+app.use('/collections', collections);
 
 
 //  catch 404 and forward to error handler
