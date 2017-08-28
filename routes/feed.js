@@ -24,15 +24,6 @@ router.get('/', (req, res, next) => {
     {
       $unwind: '$tags',
     },
-    // {
-    //   $lookup:
-    //      {
-    //        from: 'links',
-    //        localField: 'links',
-    //        foreignField: '_id',
-    //        as: 'link',
-    //      },
-    // },
     {
       $lookup:
          {
@@ -51,9 +42,6 @@ router.get('/', (req, res, next) => {
            as: 'author',
          },
     },
-    // {
-    //   $unwind: '$link',
-    // },
     {
       $unwind: '$tag',
     },
@@ -67,13 +55,14 @@ router.get('/', (req, res, next) => {
         author: { $first: '$author' },
         photo: { $first: '$photo' },
         color: { $first: '$color' },
-        // links: { $addToSet: '$link' },
+        links: { $addToSet: '$links' },
         tags: { $addToSet: '$tag' },
       },
     },
     {
       $addFields: {
         tags: { $slice: ['$tags', 2] },
+        links: { $size: '$links' },
       },
     },
     {
