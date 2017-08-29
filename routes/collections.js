@@ -100,4 +100,14 @@ router.get('/:collectionId', (req, res, next) => {
     .catch(err => next(err));
 });
 
+router.post('/', passport.authenticate('bearer', { session: false }), validation(validationParams.collection), (req, res, next) => {
+  req.body.authorId = req.user.userId;
+  req.body.tags = req.body.tags.map(tag => mongoose.Types.ObjectId(tag));
+  const newCollection = new Collection(req.body);
+  newCollection.save()
+    .then(collection => res.json({ collection }))
+    .catch(err => next(err));
+});
+
+
 module.exports = router;

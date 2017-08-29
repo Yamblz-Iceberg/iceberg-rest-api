@@ -26,11 +26,11 @@ const Collection = new Schema({
   },
   color: {
     type: String,
-    required: true,
+    required: false,
   },
   textColor: {
     type: String,
-    required: true,
+    required: false,
   },
 });
 

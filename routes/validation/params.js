@@ -27,25 +27,22 @@ module.exports = {
       coordinates: coordinatesJoi,
     },
   },
-  request: {
+  collection: {
     body: {
-      position: Joi.object({
-        coordinates: coordinatesJoi,
-      }),
-      message: messageJoi,
-      place: Joi.string().max(50),
-      timeToStayAlive: Joi.number().min(60).max(36000).required(),
+      name: Joi.string().min(5).max(50).required(),
+      description: Joi.string().max(300),
+      tags: Joi.array().min(1).max(10).items(Joi.string().regex(idMongoRegex))
+        .required(),
+      photo: Joi.string().regex(urlJoi),
     },
     params: {
       userId: Joi.string().invalid(Joi.ref('$user.userId')),
     },
   },
-  rating: {
+  tag: {
     body: {},
     params: {
-      rating: Joi.number().min(0).max(10).required(),
-      reqId: Joi.string().min(23).max(32).required(),
-      userId: Joi.string().min(3).max(64).required(),
+      tagName: Joi.string().min(2).max(50).required(),
     },
   },
   social: {

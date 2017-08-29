@@ -48,6 +48,7 @@ const users = require('./routes/users');
 const collections = require('./routes/collections');
 const register = require('./routes/register');
 const feed = require('./routes/feed');
+const tags = require('./routes/tags');
 require('./libs/db/mongoose');
 require('./libs/auth/oauth2');
 const oauth = require('./routes/oauth');
@@ -88,6 +89,7 @@ app.use('/register', register);
 app.use('/oauth', oauth);
 app.use('/feed', feed);
 app.use('/collections', collections);
+app.use('/tags', tags);
 
 
 //  catch 404 and forward to error handler
