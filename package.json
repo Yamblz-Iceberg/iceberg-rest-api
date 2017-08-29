@@ -16,6 +16,7 @@
     "async": "^2.5.0",
     "bluebird": "^3.5.0",
     "body-parser": "~1.17.1",
+    "color-thief": "^2.2.2",
     "compression": "^1.7.0",
     "cookie-parser": "~1.4.3",
     "cors": "^2.8.4",
@@ -43,6 +44,7 @@
     "node-vkapi": "^2.1.0",
     "nodemon": "^1.11.0",
     "oauth2orize": "^1.8.0",
+    "onecolor": "^3.0.4",
     "passport": "^0.3.2",
     "passport-facebook": "git+https://github.com/MoreBlood/passport-facebook.git",
     "passport-http": "^0.3.0",
@@ -56,6 +58,7 @@
     "request": "^2.81.0",
     "rest-api-errors": "^1.2.1",
     "serve-favicon": "~2.4.2",
+    "sharp": "^0.18.2",
     "socket.io": "^2.0.3",
     "uuid": "^3.1.0",
     "winston": "^2.3.1"

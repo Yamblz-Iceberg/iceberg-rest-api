@@ -25,6 +25,8 @@
     "no-trailing-spaces":"warn",
     "no-unused-vars":"warn",
     "no-useless-escape":"warn",
+    "no-bitwise":"off",
+    "no-mixed-operators":"off",
     "camelcase": [2, {
       "properties": "never"
     }],

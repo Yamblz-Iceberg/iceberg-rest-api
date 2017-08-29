@@ -81,7 +81,7 @@ npm run stop //убить процесс
 
 ### Upload route
 
-- **POST** `/upload`- загрузка файла
+- **POST** `/upload`- загрузка файла и получение среднего цвета нижней части картинки
 
 ```html
 <form ref='uploadForm' action='/upload' method='post' encType="multipart/form-data">
@@ -94,6 +94,7 @@ npm run stop //убить процесс
 
 ```json
 {
-  "fileName": "/images/d21fbec2-4ebc-425b-afdb-b5614921f2f5.jpeg"
+  "fileName": "/images/d21fbec2-4ebc-425b-afdb-b5614921f2f5.jpeg",
+  "mainColor": "rgb(4, 107, 235)"
 }
 ```
