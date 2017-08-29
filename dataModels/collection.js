@@ -28,9 +28,16 @@ const Collection = new Schema({
     type: String,
     required: false,
   },
+  savedTimesCount: {
+    type: Number,
+  },
   textColor: {
     type: String,
     required: false,
+  },
+  created: {
+    type: Date,
+    default: Date.now,
   },
 });
 

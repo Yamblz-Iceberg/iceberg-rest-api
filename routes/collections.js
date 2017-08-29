@@ -69,6 +69,8 @@ router.get('/:collectionId', (req, res, next) => {
         color: { $first: '$color' },
         links: { $addToSet: '$link' },
         tags: { $addToSet: '$tag' },
+        description: { $first: '$description' },
+        savedTimesCount: { $first: '$savedTimesCount' },
       },
     },
     {

@@ -57,12 +57,13 @@ router.get('/', (req, res, next) => {
         color: { $first: '$color' },
         links: { $addToSet: '$links' },
         tags: { $addToSet: '$tag' },
+        savedTimesCount: { $first: '$savedTimesCount' },
       },
     },
     {
       $addFields: {
         tags: { $slice: ['$tags', 2] },
-        links: { $size: '$links' },
+        linksCount: { $size: '$links' },
       },
     },
     {
@@ -74,7 +75,7 @@ router.get('/', (req, res, next) => {
         'author.rating': 0,
         'author.accType': 0,
         'author.__v': 0,
-        'links.__v': 0,
+        links: 0,
         'tags.__v': 0,
         'tags.textColor': 0,
         'tags.color': 0,

@@ -188,10 +188,12 @@ const generateCollections = () => new Promise((resolve, reject) => {
         collections.push({
           name: faker.lorem.sentence(),
           authorId: _.sample(users).main.userId,
+          description: faker.lorem.paragraph(),
           photo: faker.image.image(),
           tags: _.sampleSize(idsTags, _.random(2, 3)),
           links: _.sampleSize(idsLinks, _.random(3, 10)),
           color: faker.internet.color(),
+          savedTimesCount: _.random(0, 75),
           textColor: faker.internet.color(),
         });
       }))

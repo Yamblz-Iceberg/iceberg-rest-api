@@ -26,6 +26,9 @@ const Link = new Schema({
     type: String,
     required: true,
   },
+  likes: {
+    type: Number,
+  },
 });
 
 Link.plugin(findOrCreate);
