@@ -9,14 +9,6 @@ const Tag = new Schema({
     unique: true,
     required: true,
   },
-  color: {
-    type: String,
-    required: true,
-  },
-  textColor: {
-    type: String,
-    required: true,
-  },
 });
 
 Tag.plugin(findOrCreate);

@@ -92,8 +92,9 @@ app.use('/collections', collections);
 
 //  catch 404 and forward to error handler
 app.use((req, res, next) => {
-  const err = new Error('Not Found');
+  const err = new Error('Route not found');
   err.status = 404;
+  err.code = 'NO_ROUTE_ERR';
   next(err);
 });
 

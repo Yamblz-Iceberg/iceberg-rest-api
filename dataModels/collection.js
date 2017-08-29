@@ -15,6 +15,9 @@ const Collection = new Schema({
   tags: {
     type: Array,
   },
+  description: {
+    type: String,
+  },
   photo: {
     type: String,
   },

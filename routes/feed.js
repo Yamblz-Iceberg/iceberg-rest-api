@@ -76,11 +76,13 @@ router.get('/', (req, res, next) => {
         'author.__v': 0,
         'links.__v': 0,
         'tags.__v': 0,
+        'tags.textColor': 0,
+        'tags.color': 0,
       },
     },
   ])
-    .then((collection) => {
-      if (!collection) {
+    .then((collections) => {
+      if (!collections) {
         throw new error.NotFound('NO_COLLECTIONS', 'Collections cannot be found');
       } else {
         return Tag.find({}, { __v: 0 })
@@ -88,7 +90,7 @@ router.get('/', (req, res, next) => {
             if (!tags) {
               throw new error.NotFound('NO_TAGS', 'Tags cannot be found');
             }
-            res.json({ cards: collection, tags });
+            res.json({ collections, tags });
           });
       }
     })

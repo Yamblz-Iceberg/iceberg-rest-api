@@ -85,6 +85,8 @@ router.get('/:collectionId', (req, res, next) => {
         'author.__v': 0,
         'links.__v': 0,
         'tags.__v': 0,
+        'tags.textColor': 0,
+        'tags.color': 0,
       },
     },
   ])
@@ -92,7 +94,7 @@ router.get('/:collectionId', (req, res, next) => {
       if (!collection || !collection.length) {
         throw new error.NotFound('NO_COLLECTIONS', 'Collections not found');
       } else {
-        res.json({ collection });
+        res.json({ collection: collection[0] });
       }
     })
     .catch(err => next(err));

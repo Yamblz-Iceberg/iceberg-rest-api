@@ -11,10 +11,6 @@ const User = new Schema({
     unique: true,
     required: true,
   },
-  nickName: {
-    type: String,
-    required: false,
-  },
   description: {
     type: String,
   },
