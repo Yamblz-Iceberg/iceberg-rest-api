@@ -33,7 +33,7 @@ module.exports = {
       description: Joi.string().max(300),
       tags: Joi.array().min(1).max(10).items(Joi.string().regex(idMongoRegex))
         .required(),
-      photo: Joi.string().regex(urlJoi),
+      photo: Joi.string().regex(/^[a-z0-9\-\.\/]+\.(?:jpe?g|png|gif)(?!\"|\')$/),
     },
     params: {
       userId: Joi.string().invalid(Joi.ref('$user.userId')),

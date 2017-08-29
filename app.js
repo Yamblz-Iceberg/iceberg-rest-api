@@ -12,6 +12,7 @@ const passport = require('passport');
 const methodOverride = require('method-override');
 const errorHandler = require('./libs/error');
 const cors = require('cors');
+const fileUpload = require('express-fileupload');
 
 const RateLimit = require('express-rate-limit');
 
@@ -49,6 +50,7 @@ const collections = require('./routes/collections');
 const register = require('./routes/register');
 const feed = require('./routes/feed');
 const tags = require('./routes/tags');
+const upload = require('./routes/upload');
 require('./libs/db/mongoose');
 require('./libs/auth/oauth2');
 const oauth = require('./routes/oauth');
@@ -65,6 +67,7 @@ if (process.env.NODE_ENV !== 'test') {
   app.use(logger('dev'));
 }
 app.use(bodyParser.json());
+app.use(fileUpload({ safeFileNames: true }));
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
@@ -90,6 +93,7 @@ app.use('/oauth', oauth);
 app.use('/feed', feed);
 app.use('/collections', collections);
 app.use('/tags', tags);
+app.use('/upload', upload);
 
 
 //  catch 404 and forward to error handler

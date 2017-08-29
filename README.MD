@@ -49,7 +49,7 @@ npm run stop //убить процесс
   "refresh_token": "6f46607bb629e83707cd6eb4ff9518d7f74422e0063d62a70c8ef3a3455a733a",
   "token_type": "Bearer"
 }
- ```
+```
 
 ### Outh route
 
@@ -78,3 +78,22 @@ npm run stop //убить процесс
 - **GET** `/users/:userId?`- получение информации о пользователе
 - **PUT** `/users json={object}` - изменение своего профиля
 - **DELETE** `/users` - удалить пользователя
+
+### Upload route
+
+- **POST** `/upload`- загрузка файла
+
+```html
+<form ref='uploadForm' action='/upload' method='post' encType="multipart/form-data">
+  <input type="file" name="photo" accept="image/*" capture="camera" />
+  <input type='submit' value='Upload!' />
+</form>
+```
+
+- **RESPONCE** после загрузки
+
+```json
+{
+  "fileName": "/images/d21fbec2-4ebc-425b-afdb-b5614921f2f5.jpeg"
+}
+```

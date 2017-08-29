@@ -1,6 +1,6 @@
 const mongoose = require('./libs/db/mongoose');
 const async = require('async');
-const faker = require('faker');
+const faker = require('faker/locale/ru');
 
 const config = require('./libs/config');
 const log = require('./libs/log/log')(module);
@@ -166,6 +166,7 @@ const generateLinks = () => {
       favicon: faker.internet.avatar(),
       photo: faker.image.image(),
       url: faker.internet.url(),
+      likesCount: faker.internet.url(),
     });
   }
   return links;
