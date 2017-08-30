@@ -19,14 +19,13 @@ const Jimp = require('jimp');
 
 const root = process.cwd();
 
-const getImageBuffer = (image, mime) => new Promise((resolve, reject) => {
-  image.getBuffer(mime, (err, buffer) => {
+const getImageBuffer = (image, imageMime) => new Promise((resolve, reject) => {
+  image.getBuffer(imageMime, (err, buffer) => {
     if (err) {
-      reject(err)
+      reject(err);
     }
     return resolve(buffer);
-  }
-)
+  });
 });
 
 
@@ -42,6 +41,9 @@ router.post('/', (req, res, next) => {
 
   return sampleFile.mv(fileUri)
     .then(() => Jimp.read(fileUri))
+    .then(image => image
+      .resize(101, 100)
+      .crop(51, 90, 100, 20))
     .then(image => getImageBuffer(image, sampleFile.mimetype))
     .then(image => res.json({ fileName, mainColor: `rgb(${colorThief.getColor(image).join(', ')})` }))
     .catch(err => next(new error.InternalServerError('FILE_SAVE_ERR', err)));
