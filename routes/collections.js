@@ -133,7 +133,7 @@ router.get('/:collectionId', (req, res, next) => {
       if (!collection || !collection.length) {
         throw new error.NotFound('NO_COLLECTIONS', 'Collections not found');
       } else {
-        res.json({ collection });
+        res.json({ collection: collection[0] });
       }
     })
     .catch(err => next(err));
