@@ -43,4 +43,6 @@ const Collection = new Schema({
 
 Collection.plugin(findOrCreate);
 
+Collection.index({ name: 'text' });
+
 module.exports.Collection = mongoose.model('Collection', Collection);
