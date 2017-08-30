@@ -119,7 +119,6 @@ router.get('/:collectionId', (req, res, next) => {
         'links.userAdded.created': 0,
         'links.userAdded.__v': 0,
         'links.userAdded.accType': 0,
-        'links.userAdded.rating': 0,
         'links.userAdded.description': 0,
         'author.__v': 0,
         'links.__v': 0,

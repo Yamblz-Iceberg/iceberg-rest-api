@@ -32,7 +32,6 @@ const PROJECT_ID = 'iceberg-cfa80';
 const CLOUD_BUCKET = `${PROJECT_ID}.appspot.com`;
 
 const GCS = require('@google-cloud/storage');
-const admin = require('firebase-admin');
 
 const gcs = new GCS({
   projectId: PROJECT_ID,
