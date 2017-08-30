@@ -15,9 +15,19 @@ const error = require('rest-api-errors');
 const _ = require('lodash');
 const mime = require('mime-types');
 const ColorThief = require('color-thief');
-const sharp = require('sharp');
+const Jimp = require('jimp');
 
 const root = process.cwd();
+
+const getImageBuffer = (image, mime) => new Promise((resolve, reject) => {
+  image.getBuffer(mime, (err, buffer) => {
+    if (err) {
+      reject(err)
+    }
+    return resolve(buffer);
+  }
+)
+});
 
 
 router.post('/', (req, res, next) => {
@@ -31,10 +41,8 @@ router.post('/', (req, res, next) => {
   const colorThief = new ColorThief();
 
   return sampleFile.mv(fileUri)
-    .then(() => sharp(fileUri)
-      .resize(null, 50)
-      .crop(sharp.gravity.south)
-      .toBuffer())
+    .then(() => Jimp.read(fileUri))
+    .then(image => getImageBuffer(image, sampleFile.mimetype))
     .then(image => res.json({ fileName, mainColor: `rgb(${colorThief.getColor(image).join(', ')})` }))
     .catch(err => next(new error.InternalServerError('FILE_SAVE_ERR', err)));
 });
