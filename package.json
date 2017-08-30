@@ -29,7 +29,7 @@
     "express-validation": "^1.0.2",
     "faker": "^4.1.0",
     "fb": "^2.0.0",
-    "firebase-admin": "^5.1.0",
+    "firebase-admin": "^5.2.1",
     "greenlock-express": "^2.0.11",
     "helmet": "^3.8.1",
     "jimp": "^0.2.28",

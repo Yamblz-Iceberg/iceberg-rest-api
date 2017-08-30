@@ -27,13 +27,16 @@ const multer = Multer({
 });
 
 const root = process.cwd();
-const KEY_FILENAME = 'iceberg-cfa80-firebase-adminsdk-2ftak-c8bba566d7.json';
+const KEY_FILENAME = '/google-credentials.json';
 const PROJECT_ID = 'iceberg-cfa80';
 const CLOUD_BUCKET = `${PROJECT_ID}.appspot.com`;
 
-const gcs = require('@google-cloud/storage')({
-  projectId: root + PROJECT_ID,
-  keyFilename: KEY_FILENAME,
+const GCS = require('@google-cloud/storage');
+const admin = require('firebase-admin');
+
+const gcs = new GCS({
+  projectId: PROJECT_ID,
+  keyFilename: root + KEY_FILENAME,
 });
 
 const bucket = gcs.bucket(CLOUD_BUCKET);
