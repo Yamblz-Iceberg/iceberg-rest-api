@@ -17,6 +17,15 @@ const mime = require('mime-types');
 const ColorThief = require('color-thief');
 const Jimp = require('jimp');
 
+const Multer = require('multer');
+
+const multer = Multer({
+  storage: Multer.MemoryStorage,
+  limits: {
+    fileSize: 5 * 1024 * 1024, // no larger than 5mb
+  },
+});
+
 const root = process.cwd();
 const KEY_FILENAME = 'iceberg-cfa80-firebase-adminsdk-2ftak-c8bba566d7.json';
 const PROJECT_ID = 'iceberg-cfa80';
@@ -31,36 +40,36 @@ const bucket = gcs.bucket(CLOUD_BUCKET);
 
 
 function getPublicUrl(filename) {
-  return `https://storage.googleapis.com/${CLOUD_BUCKET}/images/${filename}`;
+  return `https://storage.googleapis.com/${CLOUD_BUCKET}/${filename}`;
 }
 
 function sendUploadToGCS(req, res, next) {
-  if (!req.files) {
+  if (!req.file) {
     return next();
   }
-
-  const sampleFile = req.files.photo;
-  const gcsname = `${uuidv4()}.${mime.extension(sampleFile.mimetype)}`;
+  const gcsname = `images/${uuidv4()}.${mime.extension(req.file.mimetype)}`;
   const file = bucket.file(gcsname);
 
   const stream = file.createWriteStream({
     metadata: {
-      contentType: sampleFile.mimetype,
+      contentType: req.file.mimetype,
     },
   });
 
   stream.on('error', (err) => {
-    req.files.cloudStorageError = err;
+    req.file.cloudStorageError = err;
     next(err);
   });
 
   stream.on('finish', () => {
-    req.files.cloudStorageObject = gcsname;
-    req.files.cloudStoragePublicUrl = getPublicUrl(gcsname);
-    next();
+    req.file.cloudStorageObject = gcsname;
+    file.makePublic().then(() => {
+      req.file.cloudStoragePublicUrl = getPublicUrl(gcsname);
+      next();
+    });
   });
 
-  stream.end(req.files.buffer);
+  return stream.end(req.file.buffer);
 }
 
 
@@ -74,21 +83,16 @@ const getImageBuffer = (image, imageMime) => new Promise((resolve, reject) => {
 });
 
 
-router.post('/', sendUploadToGCS, (req, res, next) => {
-  if (!req.files) {
-    return next(new error.BadRequest('NO_FILE_ERR', 'Nothing to upload'));
-  }
-
+router.post('/', multer.single('photo'), sendUploadToGCS, (req, res, next) => {
   const colorThief = new ColorThief();
 
-  // return sampleFile.mv(fileUri)
-  //   .then(() => Jimp.read(fileUri))
-  //   .then(image => image
-  //     .resize(101, 100)
-  //     .crop(51, 90, 100, 20))
-  //   .then(image => getImageBuffer(image, sampleFile.mimetype))
-  /*   .then(image => */ res.json({ fileName: req.files.cloudStoragePublicUrl, mainColor: `rgb(${colorThief.getColor(req.files.buffer).join(', ')})` }); // )
-  // catch(err => next(new error.InternalServerError('FILE_SAVE_ERR', err)));
+  return Jimp.read(req.file.buffer)
+    .then(image => image
+      .resize(101, 100)
+      .crop(51, 90, 100, 20))
+    .then(image => getImageBuffer(image, req.file.mimetype))
+    .then(image => res.json({ fileName: req.file.cloudStoragePublicUrl, mainColor: `rgb(${colorThief.getColor(image).join(', ')})` }))
+    .catch(err => next(new error.InternalServerError('FILE_SAVE_ERR', err)));
 });
 
 

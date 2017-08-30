@@ -41,6 +41,7 @@
     "mongoose": "^4.10.7",
     "mongoose-find-or-create": "github:mtimofiiv/mongoose-findorcreate#pull/4/head",
     "morgan": "~1.8.1",
+    "multer": "^1.3.0",
     "nconf": "^0.8.4",
     "node-vkapi": "^2.1.0",
     "nodemon": "^1.11.0",

@@ -12,7 +12,6 @@ const passport = require('passport');
 const methodOverride = require('method-override');
 const errorHandler = require('./libs/error');
 const cors = require('cors');
-const fileUpload = require('express-fileupload');
 
 const RateLimit = require('express-rate-limit');
 
@@ -67,7 +66,6 @@ if (process.env.NODE_ENV !== 'test') {
   app.use(logger('dev'));
 }
 app.use(bodyParser.json());
-app.use(fileUpload({ safeFileNames: true }));
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
