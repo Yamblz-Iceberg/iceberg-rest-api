@@ -13,6 +13,7 @@
     "fake_mlab": "MONGODB_URI=true node databaseFake.js"
   },
   "dependencies": {
+    "@google-cloud/storage": "^1.2.1",
     "async": "^2.5.0",
     "bluebird": "^3.5.0",
     "body-parser": "~1.17.1",
