@@ -79,11 +79,48 @@ router.get('/:collectionId', (req, res, next) => {
       },
     },
     {
+      $unwind: '$links',
+    },
+    {
+      $lookup:
+         {
+           from: 'users',
+           localField: 'links.userAdded',
+           foreignField: 'userId',
+           as: 'links.userAdded',
+         },
+    },
+    {
+      $unwind: '$links.userAdded',
+    },
+    {
+      $group: {
+        _id: '$_id',
+        name: { $first: '$name' },
+        author: { $first: '$author' },
+        photo: { $first: '$photo' },
+        color: { $first: '$color' },
+        links: { $addToSet: '$links' },
+        tags: { $first: '$tags' },
+        description: { $first: '$description' },
+        savedTimesCount: { $first: '$savedTimesCount' },
+      },
+    },
+    {
       $project: { 'author.salt': 0,
         'author._id': 0,
         'author.hash': 0,
         'author.banned': 0,
         'author.created': 0,
+        'links.userAdded._id': 0,
+        'links.userAdded.hash': 0,
+        'links.userAdded.salt': 0,
+        'links.userAdded.banned': 0,
+        'links.userAdded.created': 0,
+        'links.userAdded.__v': 0,
+        'links.userAdded.accType': 0,
+        'links.userAdded.rating': 0,
+        'links.userAdded.description': 0,
         'author.__v': 0,
         'links.__v': 0,
         'tags.__v': 0,
@@ -96,7 +133,7 @@ router.get('/:collectionId', (req, res, next) => {
       if (!collection || !collection.length) {
         throw new error.NotFound('NO_COLLECTIONS', 'Collections not found');
       } else {
-        res.json({ collection: collection[0] });
+        res.json({ collection });
       }
     })
     .catch(err => next(err));
