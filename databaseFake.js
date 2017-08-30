@@ -166,7 +166,8 @@ const generateLinks = () => {
       favicon: faker.internet.avatar(),
       photo: faker.image.image(),
       url: faker.internet.url(),
-      likesCount: faker.internet.url(),
+      savedTimesCount: _.random(2, 50),
+      likes: _.random(2, 100),
     });
   }
   return links;
