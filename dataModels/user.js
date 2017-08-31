@@ -30,6 +30,12 @@ const User = new Schema({
     unique: false,
     required: false,
   },
+  savedLinks: {
+    type: Array,
+  },
+  savedCollections: {
+    type: Array,
+  },
   photo: {
     type: String,
     required: false,

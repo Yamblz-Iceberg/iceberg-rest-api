@@ -85,6 +85,9 @@ router.get('/:searchText?', (req, res, next) => {
         'tags.color': 0,
       },
     },
+    {
+      $sort: req.query.sort === 'time' ? { created: -1 } : { savedTimesCount: -1 },
+    },
   ])
     .then((collections) => {
       if (!collections) {

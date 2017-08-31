@@ -31,12 +31,10 @@ module.exports = {
     body: {
       name: Joi.string().min(5).max(50).required(),
       description: Joi.string().max(300),
+      color: Joi.string().regex(/rgb\((?:([0-9]{1,2}|1[0-9]{1,2}|2[0-4][0-9]|25[0-5]), ?)(?:([0-9]{1,2}|1[0-9]{1,2}|2[0-4][0-9]|25[0-5]), ?)(?:([0-9]{1,2}|1[0-9]{1,2}|2[0-4][0-9]|25[0-5]))\)/).required(),
       tags: Joi.array().min(1).max(10).items(Joi.string().regex(idMongoRegex))
         .required(),
-      photo: Joi.string().regex(/^[a-z0-9\-\.\/]+\.(?:jpe?g|png|gif)(?!\"|\')$/),
-    },
-    params: {
-      userId: Joi.string().invalid(Joi.ref('$user.userId')),
+      photo: Joi.string().regex(/(?:(?:https?:\/\/))[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,4}\b(?:[-a-zA-Z0-9@:%_\+.~#?&\/=]*(\.jpg|\.png|\.jpeg))/),
     },
   },
   tag: {

@@ -17,6 +17,7 @@ const Collection = new Schema({
   },
   description: {
     type: String,
+    default: '',
   },
   photo: {
     type: String,
@@ -27,9 +28,11 @@ const Collection = new Schema({
   color: {
     type: String,
     required: false,
+    default: '#0476fc',
   },
   savedTimesCount: {
     type: Number,
+    default: 0,
   },
   textColor: {
     type: String,
