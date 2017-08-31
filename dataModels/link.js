@@ -7,7 +7,6 @@ const Schema = mongoose.Schema;
 const Link = new Schema({
   name: {
     type: String,
-    unique: true,
     required: true,
   },
   userAdded: {
@@ -20,11 +19,11 @@ const Link = new Schema({
   },
   photo: {
     type: String,
-    required: true,
   },
   url: {
     type: String,
     required: true,
+    unique: true,
   },
   likes: {
     type: Number,

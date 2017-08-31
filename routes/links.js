@@ -14,12 +14,6 @@ const error = require('rest-api-errors');
 
 const _ = require('lodash');
 
-router.get('/parse', (req, res, next) => {
-  linkParser.getInfo(req.body.link)
-    .then(img => res.json(img))
-    .catch(err => next(err));
-});
-
 router.post('/', passport.authenticate('bearer', { session: false }), (req, res, next) => {
   linkParser.getInfo(req.body.link)
     .then((info) => {

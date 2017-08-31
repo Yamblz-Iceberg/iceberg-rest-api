@@ -13,15 +13,15 @@ const getInfo = url => new Promise((resolve, reject) => {
       reject(err);
     }
     const domain = `${response.request.uri.protocol}//${response.request.uri.host}`;
-    console.log();
     const $ = cheerio.load(body);
     const images = $('img').map(function (i, el) {
-      return `${domain}${$(this).attr('src')}`;
+      const srcPhoto = $(this).attr('src');
+      return `${(srcPhoto.match(/http/).length ? '' : domain)}${srcPhoto}`;
     });
-    let photo = _.first(images);
-    if (!photo) photo = 'https://storage.googleapis.com/iceberg-cfa80.appspot.com/images/a02b5fc8-0f2c-4bfe-b56c-fd9fb0dae0b7.png';
+    const photo = _.first(images);
     const name = $('title').text();
-    const favicon = domain + $('link[rel=icon]').attr('href');
+    const hrefFavicon = $('link[rel~=icon]').attr('href');
+    const favicon = (hrefFavicon.match(/http/).length ? '' : domain) + hrefFavicon;
     resolve({ photo, name, favicon });
   });
 });
