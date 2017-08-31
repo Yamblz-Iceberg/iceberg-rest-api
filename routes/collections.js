@@ -153,5 +153,12 @@ router.post('/', passport.authenticate('bearer', { session: false }), validation
     .catch(err => next(err));
 });
 
+router.post('/addLink/:collectionId/:linkId', passport.authenticate('bearer', { session: false }), (req, res, next) => {
+  Collection.findOneAndUpdate({ _id: mongoose.Types.ObjectId(req.params.collectionId) },
+    { $addToSet: { links: mongoose.Types.ObjectId(req.params.linkId) } })
+    .then(() => res.end())
+    .catch(err => next(err));
+});
+
 
 module.exports = router;
