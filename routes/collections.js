@@ -19,10 +19,10 @@ router.get('/:collectionId', (req, res, next) => {
       $match: { _id: mongoose.Types.ObjectId(req.params.collectionId) },
     },
     {
-      $unwind: '$links',
+      $unwind: { path: '$links', preserveNullAndEmptyArrays: true },
     },
     {
-      $unwind: '$tags',
+      $unwind: { path: '$tags', preserveNullAndEmptyArrays: true },
     },
     {
       $lookup:
@@ -52,13 +52,13 @@ router.get('/:collectionId', (req, res, next) => {
          },
     },
     {
-      $unwind: '$tag',
+      $unwind: { path: '$tag', preserveNullAndEmptyArrays: true },
     },
     {
-      $unwind: '$link',
+      $unwind: { path: '$link', preserveNullAndEmptyArrays: true },
     },
     {
-      $unwind: '$author',
+      $unwind: { path: '$author', preserveNullAndEmptyArrays: true },
     },
     {
       $group: {
@@ -79,7 +79,7 @@ router.get('/:collectionId', (req, res, next) => {
       },
     },
     {
-      $unwind: '$links',
+      $unwind: { path: '$links', preserveNullAndEmptyArrays: true },
     },
     {
       $lookup:
@@ -91,7 +91,7 @@ router.get('/:collectionId', (req, res, next) => {
          },
     },
     {
-      $unwind: '$links.userAdded',
+      $unwind: { path: '$links.userAdded', preserveNullAndEmptyArrays: true },
     },
     {
       $group: {

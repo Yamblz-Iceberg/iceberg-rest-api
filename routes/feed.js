@@ -19,13 +19,13 @@ const _ = require('lodash');
 router.get('/:searchText?', (req, res, next) => {
   Collection.aggregate([
     {
-      $match: req.params.searchText ? { $text: { $search: req.params.searchText } } : { _id: { $exists: true } },
+      $match: req.params.searchText ? { $text: { $search: req.params.searchText, $caseSensitive: false } } : { _id: { $exists: true } },
     },
     {
-      $unwind: '$links',
+      $unwind: { path: '$links', preserveNullAndEmptyArrays: true },
     },
     {
-      $unwind: '$tags',
+      $unwind: { path: '$tags', preserveNullAndEmptyArrays: true },
     },
     {
       $lookup:
@@ -46,10 +46,10 @@ router.get('/:searchText?', (req, res, next) => {
          },
     },
     {
-      $unwind: '$tag',
+      $unwind: { path: '$tag', preserveNullAndEmptyArrays: true },
     },
     {
-      $unwind: '$author',
+      $unwind: { path: '$author', preserveNullAndEmptyArrays: true },
     },
     {
       $group: {
@@ -58,6 +58,7 @@ router.get('/:searchText?', (req, res, next) => {
         author: { $first: '$author' },
         photo: { $first: '$photo' },
         color: { $first: '$color' },
+        created: { $first: '$created' },
         links: { $addToSet: '$links' },
         tags: { $addToSet: '$tag' },
         savedTimesCount: { $first: '$savedTimesCount' },
