@@ -5,6 +5,7 @@ const router = express.Router();
 const passport = require('passport');
 
 const Collection = require('.././dataModels/collection').Collection;
+const User = require('.././dataModels/user').User;
 const mongoose = require('mongoose');
 
 const validation = require('./validation/validator');
@@ -143,7 +144,12 @@ router.post('/', passport.authenticate('bearer', { session: false }), validation
   req.body.tags = req.body.tags.map(tag => mongoose.Types.ObjectId(tag));
   const newCollection = new Collection(req.body);
   newCollection.save()
-    .then(collection => res.json({ collection }))
+    .then(collection => User.findOneAndUpdate({ userId: req.user.userId },
+      { $push: { createdCollections: collection._id } })
+      .then((user) => {
+        if (!user) throw new error.NotFound('NO_USER_ERR', 'User not found');
+        res.json({ collection });
+      }))
     .catch(err => next(err));
 });
 

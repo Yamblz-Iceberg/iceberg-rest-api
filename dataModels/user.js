@@ -36,6 +36,9 @@ const User = new Schema({
   savedCollections: {
     type: Array,
   },
+  createdCollections: {
+    type: Array,
+  },
   photo: {
     type: String,
     required: false,

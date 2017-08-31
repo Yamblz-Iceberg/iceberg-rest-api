@@ -94,7 +94,7 @@ router.post('/', multer.single('photo'), sendUploadToGCS, (req, res, next) => {
       .crop(51, 90, 100, 20))
     .then(image => getImageBuffer(image, req.file.mimetype))
     .then(image => res.json({ fileName: req.file.cloudStoragePublicUrl, mainColor: `rgb(${colorThief.getColor(image).join(', ')})` }))
-    .catch(err => next(new error.InternalServerError('FILE_SAVE_ERR', err)));
+    .catch(err => next(new error.InternalServerError('FILE_POST_PROCCES_ERR', err)));
 });
 
 
