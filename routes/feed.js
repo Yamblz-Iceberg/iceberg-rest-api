@@ -16,10 +16,10 @@ const error = require('rest-api-errors');
 
 const _ = require('lodash');
 
-router.get('/:searchText?', (req, res, next) => {
+router.get('/', (req, res, next) => {
   Collection.aggregate([
     {
-      $match: req.params.searchText ? { name: { $regex: new RegExp(req.params.searchText) } } : { _id: { $exists: true } },
+      $match: req.body.searchText ? { name: { $regex: new RegExp(req.body.searchText, 'i') } } : { _id: { $exists: true } },
     },
     {
       $unwind: { path: '$links', preserveNullAndEmptyArrays: true },
@@ -93,7 +93,7 @@ router.get('/:searchText?', (req, res, next) => {
       if (!collections) {
         throw new error.NotFound('NO_COLLECTIONS', 'Collections cannot be found');
       } else {
-        if (req.params.searchText !== undefined) {
+        if (req.body.searchText !== undefined) {
           return res.json({ collections });
         }
         return Tag.find({}, { __v: 0 })
