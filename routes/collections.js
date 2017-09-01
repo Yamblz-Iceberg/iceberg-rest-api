@@ -6,6 +6,7 @@ const passport = require('passport');
 
 const Collection = require('.././dataModels/collection').Collection;
 const User = require('.././dataModels/user').User;
+const Link = require('.././dataModels/link').Link;
 const mongoose = require('mongoose');
 
 const validation = require('./validation/validator');
@@ -155,14 +156,23 @@ router.post('/', passport.authenticate('bearer', { session: false }), validation
     .catch(err => next(err));
 });
 
-router.post('/addLink/:collectionId/:linkId', passport.authenticate('bearer', { session: false }), (req, res, next) => { // FIXME: проверка по url
+router.post('/addLink/:collectionId/:linkId', validation(validationParams.description), passport.authenticate('bearer', { session: false }), (req, res, next) => { // FIXME: проверка по url
   Collection.findOneAndUpdate({ _id: mongoose.Types.ObjectId(req.params.collectionId) },
     { $addToSet: { links: mongoose.Types.ObjectId(req.params.linkId) } })
     .then((collection) => {
       if (!collection) {
         throw new error.NotFound('NO_COLLECTIONS_ERR', 'Collections not found, cannot update this collection');
       }
-      res.end();
+      if (req.body.description) {
+        return Link.findOneAndUpdate({ _id: mongoose.Types.ObjectId(req.params.linkId) }, { description: req.body.description })
+          .then((link) => {
+            if (!link) {
+              throw new error.NotFound('NO_LINK_ERR', 'Link not found, cannot update this link description');
+            }
+            res.end();
+          });
+      }
+      return res.end();
     })
     .catch(err => next(err));
 });

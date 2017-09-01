@@ -20,6 +20,10 @@ const Link = new Schema({
   photo: {
     type: String,
   },
+  description: {
+    type: String,
+    default: '',
+  },
   url: {
     type: String,
     required: true,

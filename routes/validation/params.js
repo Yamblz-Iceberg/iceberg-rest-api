@@ -25,6 +25,16 @@ module.exports = {
   addLink: {
     body: {
       link: Joi.string().regex(urlJoi).required(),
+      description: Joi.string().max(300),
+    },
+  },
+  description: {
+    body: {
+      description: Joi.string().max(300),
+    },
+    params: {
+      collectionId: Joi.string().regex(idMongoRegex).required(),
+      linkId: Joi.string().regex(idMongoRegex).required(),
     },
   },
   collection: {
@@ -40,7 +50,7 @@ module.exports = {
   tag: {
     body: {},
     params: {
-      tagName: Joi.string().min(2).max(50).required(),
+      tagName: Joi.string().min(2).max(50).required(), // TODO: valid
     },
   },
   social: {

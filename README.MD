@@ -66,7 +66,7 @@ npm run stop //убить процесс
 
 ### Links route
 
-- **POST** `/links/ json = {"link": "http://telegra.ph/Iceberg-Sample-08-31"}`- добавление ссылки
+- **POST** `/links/ json = {"link": "http://telegra.ph/Iceberg-Sample-08-31", "description": "Описание ссылки"}`- добавление ссылки
 
 ### Tags route
 

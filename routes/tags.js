@@ -13,7 +13,7 @@ const error = require('rest-api-errors');
 
 const _ = require('lodash');
 
-router.post('/:tagName', passport.authenticate('bearer', { session: false }), validation(validationParams.tag), (req, res, next) => {
+router.post('/:tagName', validation(validationParams.tag), passport.authenticate('bearer', { session: false }), (req, res, next) => {
   Tag.findOrCreate({ name: req.params.tagName })
     .then(tag => res.json({ tag }))
     .catch(err => next(err));
