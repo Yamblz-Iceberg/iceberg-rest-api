@@ -19,7 +19,7 @@ const _ = require('lodash');
 router.get('/', (req, res, next) => {
   Collection.aggregate([
     {
-      $match: req.body.searchText ? { name: { $regex: new RegExp(req.body.searchText, 'i') } } : { _id: { $exists: true } },
+      $match: req.query.search ? { name: { $regex: new RegExp(req.query.search, 'i') } } : { _id: { $exists: true } },
     },
     {
       $unwind: { path: '$links', preserveNullAndEmptyArrays: true },
@@ -93,7 +93,7 @@ router.get('/', (req, res, next) => {
       if (!collections) {
         throw new error.NotFound('NO_COLLECTIONS', 'Collections cannot be found');
       } else {
-        if (req.body.searchText !== undefined) {
+        if (req.query.search !== undefined) {
           return res.json({ collections });
         }
         return Tag.find({}, { __v: 0 })

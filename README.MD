@@ -62,7 +62,7 @@ npm run stop //убить процесс
 
 ### Feed route
 
-- **GET** `/feed?sort=time || rating`- получение ленты, по умолчанию сортировка по рейтингу
+- **GET** `/feed?sort=time&search=Colle`- получение ленты, по умолчанию сортировка по рейтингу, non-case-sensetive поиск
 
 ### Links route
 
