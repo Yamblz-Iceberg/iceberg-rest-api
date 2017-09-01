@@ -76,7 +76,7 @@ npm run stop //убить процесс
 
 - **GET** `/collections/:collectionId`- получение карточки
 - **POST** `/collections json = {"description": "Очень хочу котика", "name": "Как завести кота", "photo": "https://pp.userapi.com/c543100/v543100915/2fbfb/IoVG_UEW-yw.jpg", "tags": ["59a57bfcc7291c53b91c94ca",  "59a57bfcc7291c53b91c94ca"]}`- добавление карточки
-- **POST** `/addLink/:collectionId/:linkId`- добавление ссылки в карточку
+- **POST** `/collections/addLink/:collectionId/:linkId`- добавление ссылки в карточку
 
 ### Users route
 

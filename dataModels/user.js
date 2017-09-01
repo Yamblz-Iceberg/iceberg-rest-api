@@ -33,6 +33,9 @@ const User = new Schema({
   savedLinks: {
     type: Array,
   },
+  addedLinks: {
+    type: Array,
+  },
   savedCollections: {
     type: Array,
   },

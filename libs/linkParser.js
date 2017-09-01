@@ -10,11 +10,12 @@ const getInfo = url => new Promise((resolve, reject) => {
     try {
       const httpRegEx = /http/;
       const excludeRegex = /logo/;
+      const excludeClasses = [];
       const domain = `${response.request.uri.protocol}//${response.request.uri.host}`;
       const $ = cheerio.load(body);
       const images = $('#content img, article img, main img').map(function (i, e) {
         const srcPhoto = $(this).attr('src');
-        if (excludeRegex.test(srcPhoto)) {
+        if (excludeRegex.test(srcPhoto) || $(this).hasClass('avatar')) {
           return null;
         }
         return srcPhoto ? `${(httpRegEx.test(srcPhoto) ? '' : domain)}${srcPhoto}` : null;

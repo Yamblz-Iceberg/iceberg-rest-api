@@ -5,6 +5,7 @@ const router = express.Router();
 const passport = require('passport');
 
 const Link = require('.././dataModels/link').Link;
+const User = require('.././dataModels/user').User;
 const mongoose = require('mongoose');
 
 const validation = require('./validation/validator');
@@ -17,8 +18,15 @@ const _ = require('lodash');
 router.post('/', validation(validationParams.addLink), passport.authenticate('bearer', { session: false }), (req, res, next) => {
   linkParser.getInfo(req.body.link)
     .then(info => Link.findOrCreate({ userAdded: req.user.userId, url: req.body.link }, { favicon: info.favicon, name: info.name, photo: info.photo }, { upsert: true })
-      .then(link => res.json(link)))
-    .catch(err => next(err));
+      .then(link => User.findOneAndUpdate({ userId: req.user.userId },
+        { $push: { addedLinks: link.result._id } })
+        .then((user) => {
+          if (!user) {
+            throw new error.NotFound('NO_USER_ERR', 'User not found');
+          }
+          res.json(link);
+        }))
+      .catch(err => next(err)));
 });
 
 

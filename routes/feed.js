@@ -91,7 +91,7 @@ router.get('/', (req, res, next) => {
   ])
     .then((collections) => {
       if (!collections) {
-        throw new error.NotFound('NO_COLLECTIONS', 'Collections cannot be found');
+        throw new error.NotFound('NO_COLLECTIONS_ERR', 'Collections cannot be found');
       } else {
         if (req.query.search !== undefined) {
           return res.json({ collections });
@@ -99,7 +99,7 @@ router.get('/', (req, res, next) => {
         return Tag.find({}, { __v: 0 })
           .then((tags) => {
             if (!tags) {
-              throw new error.NotFound('NO_TAGS', 'Tags cannot be found');
+              throw new error.NotFound('NO_TAGS_ERR', 'Tags not found');
             }
             res.json({ collections, tags });
           });

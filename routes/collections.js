@@ -131,7 +131,7 @@ router.get('/:collectionId', (req, res, next) => {
   ])
     .then((collection) => {
       if (!collection || !collection.length) {
-        throw new error.NotFound('NO_COLLECTIONS', 'Collections not found');
+        throw new error.NotFound('NO_COLLECTIONS_ERR', 'Collections not found');
       } else {
         res.json({ collection: collection[0] });
       }
@@ -147,16 +147,23 @@ router.post('/', passport.authenticate('bearer', { session: false }), validation
     .then(collection => User.findOneAndUpdate({ userId: req.user.userId },
       { $push: { createdCollections: collection._id } })
       .then((user) => {
-        if (!user) throw new error.NotFound('NO_USER_ERR', 'User not found');
+        if (!user) {
+          throw new error.NotFound('NO_USER_ERR', 'User not found');
+        }
         res.json({ collection });
       }))
     .catch(err => next(err));
 });
 
-router.post('/addLink/:collectionId/:linkId', passport.authenticate('bearer', { session: false }), (req, res, next) => {
+router.post('/addLink/:collectionId/:linkId', passport.authenticate('bearer', { session: false }), (req, res, next) => { // FIXME: проверка по url
   Collection.findOneAndUpdate({ _id: mongoose.Types.ObjectId(req.params.collectionId) },
     { $addToSet: { links: mongoose.Types.ObjectId(req.params.linkId) } })
-    .then(() => res.end())
+    .then((collection) => {
+      if (!collection) {
+        throw new error.NotFound('NO_COLLECTIONS_ERR', 'Collections not found, cannot update this collection');
+      }
+      res.end();
+    })
     .catch(err => next(err));
 });
 
