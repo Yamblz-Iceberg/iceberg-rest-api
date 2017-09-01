@@ -16,7 +16,7 @@ const _ = require('lodash');
 
 router.post('/', validation(validationParams.addLink), passport.authenticate('bearer', { session: false }), (req, res, next) => {
   linkParser.getInfo(req.body.link)
-    .then(info => Link.findOrCreate({ userAdded: req.user.userId, url: req.body.link }, { favicon: info.favicon, name: info.name, photo: info.photo })
+    .then(info => Link.findOrCreate({ userAdded: req.user.userId, url: req.body.link }, { favicon: info.favicon, name: info.name, photo: info.photo }, { upsert: true })
       .then(link => res.json(link)))
     .catch(err => next(err));
 });
