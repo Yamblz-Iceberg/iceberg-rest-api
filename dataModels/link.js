@@ -23,7 +23,6 @@ const Link = new Schema({
   url: {
     type: String,
     required: true,
-    unique: true,
   },
   likes: {
     type: Number,

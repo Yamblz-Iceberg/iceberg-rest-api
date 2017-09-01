@@ -14,13 +14,10 @@ const error = require('rest-api-errors');
 
 const _ = require('lodash');
 
-router.post('/', passport.authenticate('bearer', { session: false }), (req, res, next) => {
+router.post('/', validation(validationParams.addLink), passport.authenticate('bearer', { session: false }), (req, res, next) => {
   linkParser.getInfo(req.body.link)
-    .then((info) => {
-      const newLink = new Link({ favicon: info.favicon, name: info.name, photo: info.photo, userAdded: req.user.userId, url: req.body.link });
-      return newLink.save()
-        .then(link => res.json(link));
-    })
+    .then(info => Link.findOrCreate({ userAdded: req.user.userId, url: req.body.link }, { favicon: info.favicon, name: info.name, photo: info.photo })
+      .then(link => res.json(link)))
     .catch(err => next(err));
 });
 
