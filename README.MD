@@ -62,16 +62,21 @@ npm run stop //убить процесс
 
 ### Feed route
 
-- **GET** `/feed`- получение ленты
+- **GET** `/feed?sort=time || rating`- получение ленты, по умолчанию сортировка по рейтингу
+
+### Links route
+
+- **POST** `/links/ json = {"link": "http://telegra.ph/Iceberg-Sample-08-31"}`- добавление ссылки
 
 ### Tags route
 
 - **POST** `/tags/котики`- если тег существует то вернем id, если нет создадим и вернем id
 
-### Cards route
+### Collections route
 
 - **GET** `/collections/:collectionId`- получение карточки
 - **POST** `/collections json = {"description": "Очень хочу котика", "name": "Как завести кота", "photo": "https://pp.userapi.com/c543100/v543100915/2fbfb/IoVG_UEW-yw.jpg", "tags": ["59a57bfcc7291c53b91c94ca",  "59a57bfcc7291c53b91c94ca"]}`- добавление карточки
+- **POST** `/addLink/:collectionId/:linkId`- добавление ссылки в карточку
 
 ### Users route
 
@@ -86,7 +91,7 @@ npm run stop //убить процесс
 ```html
 <form ref='uploadForm' action='/upload' method='post' encType="multipart/form-data">
   <input type="file" name="photo" accept="image/*" capture="camera" />
-  <input type='submit' value='Upload!' />
+  <input type='submit' value='Upload!'/>
 </form>
 ```
 

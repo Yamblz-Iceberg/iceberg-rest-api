@@ -22,9 +22,9 @@ module.exports = {
       password: Joi.string().regex(/[a-zA-Z0-9]{3,30}/).required(),
     },
   },
-  coordinates: {
+  addLink: {
     body: {
-      coordinates: coordinatesJoi,
+      link: Joi.string().regex(urlJoi).required(),
     },
   },
   collection: {

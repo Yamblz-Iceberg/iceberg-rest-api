@@ -1,6 +1,6 @@
 const mongoose = require('../libs/db/mongoose');
 // const crypto = require('crypto');
-const findOrCreate = require('mongoose-find-or-create');
+const findOrCreate = require('findorcreate-promise');
 const passportLocalMongoose = require('passport-local-mongoose');
 
 const Schema = mongoose.Schema;

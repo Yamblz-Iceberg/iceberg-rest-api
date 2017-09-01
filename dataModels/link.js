@@ -1,5 +1,5 @@
 const mongoose = require('../libs/db/mongoose');
-const findOrCreate = require('mongoose-find-or-create');
+const findOrCreate = require('findorcreate-promise');
 
 const Schema = mongoose.Schema;
 
@@ -7,7 +7,6 @@ const Schema = mongoose.Schema;
 const Link = new Schema({
   name: {
     type: String,
-    unique: true,
     required: true,
   },
   userAdded: {
@@ -20,7 +19,6 @@ const Link = new Schema({
   },
   photo: {
     type: String,
-    required: true,
   },
   url: {
     type: String,
@@ -28,9 +26,11 @@ const Link = new Schema({
   },
   likes: {
     type: Number,
+    default: 0,
   },
   savedTimesCount: {
     type: Number,
+    default: 0,
   },
 });
 

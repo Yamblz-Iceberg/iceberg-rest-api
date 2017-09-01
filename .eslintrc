@@ -27,6 +27,7 @@
     "no-useless-escape":"warn",
     "no-bitwise":"off",
     "no-mixed-operators":"off",
+    "func-names":"off",
     "camelcase": [2, {
       "properties": "never"
     }],
