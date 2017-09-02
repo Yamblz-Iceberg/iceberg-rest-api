@@ -177,23 +177,5 @@ router.post('/addLink/:collectionId/:linkId', validation(validationParams.descri
     .catch(err => next(err));
 });
 
-router.put('/save/:collectionId', passport.authenticate('bearer', { session: false }), (req, res, next) => {
-  Collection.findOneAndUpdate({ _id: mongoose.Types.ObjectId(req.params.collectionId) },
-    { $inc:  })
-    .then((collection) => {
-      if (!collection) {
-        throw new error.NotFound('NO_COLLECTIONS_ERR', 'Collections not found, cannot update this collection');
-      }
-      return Link.findOneAndUpdate({ _id: mongoose.Types.ObjectId(req.params.linkId) }, { description: req.body.description })
-        .then((link) => {
-          if (!link) {
-            throw new error.NotFound('NO_LINK_ERR', 'Link not found, cannot update this link description');
-          }
-          res.end();
-        });
-    })
-    .catch(err => next(err));
-});
-
 
 module.exports = router;

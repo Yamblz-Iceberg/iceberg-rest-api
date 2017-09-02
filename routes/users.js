@@ -2,6 +2,9 @@ const express = require('express');
 
 const router = express.Router();
 const User = require('.././dataModels/user').User;
+const Collection = require('.././dataModels/collection').Collection;
+const Link = require('.././dataModels/link').Link;
+const mongoose = require('mongoose');
 const passport = require('passport');
 const validation = require('./validation/validator');
 const validationParams = require('./validation/params');
@@ -51,6 +54,42 @@ router.delete('/', (req, res, next) => {
 router.get('/social/friends', status.accountTypeMiddleware, (req, res, next) => {
   social.getFriends(req.user)
     .then(response => res.json(response))
+    .catch(err => next(err));
+});
+
+router.all('/bookmarks/:type/:id?', validation(validationParams.bookmarks), passport.authenticate('bearer', { session: false }), (req, res, next) => {
+  const COLLECTIONS = 'collections';
+  let bookmarksAction = {};
+  let userAction = {};
+  const collectionsActionDestination = { savedCollections: req.params.id };
+  const linksActionDestination = { savedLinks: req.params.id };
+  const userActionDestination = { usersSaved: req.user.userId };
+  const mongoCollection = req.params.type === COLLECTIONS ? Collection : Link;
+
+
+  if (req.method === 'PUT' && req.params.id) {
+    bookmarksAction = { $addToSet: userActionDestination };
+    userAction = { $addToSet: req.params.type === COLLECTIONS ? collectionsActionDestination : linksActionDestination };
+  } else if (req.method === 'DELETE' && req.params.id) {
+    bookmarksAction = { $pull: userActionDestination };
+    userAction = { $pull: req.params.type === COLLECTIONS ? collectionsActionDestination : linksActionDestination };
+  }
+
+  mongoCollection.findOneAndUpdate({ _id: mongoose.Types.ObjectId(req.params.id) },
+    bookmarksAction)
+    .then((bookmark) => {
+      if (!bookmark && req.params.id) {
+        throw new error.NotFound('NO_BOOKMARKS_ERR', 'Bookmarks not found');
+      }
+      return User.findOneAndUpdate({ userId: req.user.userId }, userAction)
+        .then((user) => {
+          if (!user) {
+            throw new error.NotFound('NO_USER_ERR', 'User not found, cannot update this user');
+          }
+          const resposeBookmarks = req.params.type === COLLECTIONS ? { savedCollections: user.savedCollections } : { savedLinks: user.savedLinks };
+          res.json(req.method === 'GET' ? resposeBookmarks : { result: 'success' });
+        });
+    })
     .catch(err => next(err));
 });
 

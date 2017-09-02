@@ -72,13 +72,10 @@ module.exports = {
       photo: Joi.string().regex(urlJoi),
     },
   },
-  message: {
-    body: {
-      message: messageJoi,
-      attachments: Joi.array().min(1).max(10).items(Joi.object({
-        type: Joi.string().valid(['photo', 'video', 'audio']),
-        src: Joi.string().regex(urlJoi),
-      })),
+  bookmarks: {
+    params: {
+      type: Joi.string().valid(['collections', 'links']).required(),
+      id: Joi.string().regex(idMongoRegex),
     },
   },
   messagesDelete: {
