@@ -15,7 +15,6 @@ const Link = new Schema({
   },
   favicon: {
     type: String,
-    required: true,
   },
   photo: {
     type: String,

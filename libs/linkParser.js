@@ -27,16 +27,19 @@ const getInfo = url => new Promise((resolve, reject) => {
       //   }
       //   return srcPhoto ? `${(httpRegEx.test(srcPhoto) ? '' : domain)}${srcPhoto}` : null;
       // }).get();
-      resolver.resolve( url, function( result ){
+      resolver.resolve(url, (result) => {
         let photo = null;
-        if (result) {
+        if (result && result.image) {
           photo = result.image;
-        }  
+        }
         const name = $('title').text();
         const hrefFavicon = $('link[rel~=icon]').attr('href');
-        const favicon = (httpRegEx.test(hrefFavicon) ? '' : domain) + hrefFavicon;
+        let favicon = null;
+        if (hrefFavicon) {
+          favicon = (httpRegEx.test(hrefFavicon) ? '' : domain) + hrefFavicon;
+        }
         resolve({ photo, name, favicon });
-      })
+      });
     } catch (error) {
       reject(error);
     }
