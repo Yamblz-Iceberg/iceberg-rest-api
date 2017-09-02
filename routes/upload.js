@@ -40,14 +40,13 @@ const gcs = new GCS({
 
 const bucket = gcs.bucket(CLOUD_BUCKET);
 
-
 function getPublicUrl(filename) {
   return `https://storage.googleapis.com/${CLOUD_BUCKET}/${filename}`;
 }
 
 function sendUploadToGCS(req, res, next) {
   if (!req.file) {
-    return next();
+    return next(new error.BadRequest('NO_FILE_ERR', 'File not found'));
   }
   const gcsname = `images/${uuidv4()}.${mime.extension(req.file.mimetype)}`;
   const file = bucket.file(gcsname);
@@ -84,8 +83,21 @@ const getImageBuffer = (image, imageMime) => new Promise((resolve, reject) => {
   });
 });
 
+function resizeImage(req, res, next) {
+  if (!req.file) {
+    return next(new error.BadRequest('NO_FILE_ERR', 'File not found'));
+  }
+  return Jimp.read(req.file.buffer)
+    .then(image => image
+      .resize(Jimp.AUTO, 500))
+    .then(image => getImageBuffer(image, req.file.mimetype))
+    .then((buffer) => {
+      req.file.buffer = buffer;
+      return next();
+    });
+}
 
-router.post('/', multer.single('photo'), sendUploadToGCS, (req, res, next) => {
+router.post('/', multer.single('photo'), resizeImage, sendUploadToGCS, (req, res, next) => {
   const colorThief = new ColorThief();
 
   return Jimp.read(req.file.buffer)
@@ -93,7 +105,7 @@ router.post('/', multer.single('photo'), sendUploadToGCS, (req, res, next) => {
       .resize(101, 100)
       .crop(51, 90, 100, 20))
     .then(image => getImageBuffer(image, req.file.mimetype))
-    .then(image => res.json({ fileName: req.file.cloudStoragePublicUrl, mainColor: `rgb(${colorThief.getColor(image).join(', ')})` }))
+    .then(buffer => res.json({ fileName: req.file.cloudStoragePublicUrl, mainColor: `rgb(${colorThief.getColor(buffer).join(', ')})` }))
     .catch(err => next(new error.InternalServerError('FILE_POST_PROCCES_ERR', err)));
 });
 

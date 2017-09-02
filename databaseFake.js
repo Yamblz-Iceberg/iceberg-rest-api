@@ -165,6 +165,7 @@ const generateLinks = () => {
     links.push({
       name: faker.lorem.sentence(),
       userAdded: _.sample(users).main.userId,
+      description: faker.lorem.sentences(_.random(0, 3)),
       favicon: faker.internet.avatar(),
       photo: faker.image.image(),
       url: faker.internet.url(),

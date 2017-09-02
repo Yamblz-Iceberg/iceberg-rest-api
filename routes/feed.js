@@ -61,7 +61,7 @@ router.get('/', (req, res, next) => {
         created: { $first: '$created' },
         links: { $addToSet: '$links' },
         tags: { $addToSet: '$tag' },
-        savedTimesCount: { $addToSet: '$usersSaved' },
+        savedTimesCount: { $first: '$usersSaved' },
       },
     },
     {

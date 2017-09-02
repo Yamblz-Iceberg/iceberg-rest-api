@@ -56,11 +56,14 @@ router.get('/:collectionId', (req, res, next) => {
     {
       $unwind: { path: '$tag', preserveNullAndEmptyArrays: true },
     },
-    {
-      $addFields: { 'link.savedTimesCount': { $size: '$link.usersSaved' } },
-    },
+
     {
       $unwind: { path: '$link', preserveNullAndEmptyArrays: true },
+    },
+    {
+      $addFields: { 'link.savedTimesCount': { $size: '$link.usersSaved' },
+        // TODO: флаг, если юзер сохранил себе linkSaved: { $cond: { if: { $in: [req.user.userId, '$link.usersSaved'] }, then: true, else: false } },
+      },
     },
     {
       $unwind: { path: '$author', preserveNullAndEmptyArrays: true },
@@ -75,7 +78,7 @@ router.get('/:collectionId', (req, res, next) => {
         links: { $addToSet: '$link' },
         tags: { $addToSet: '$tag' },
         description: { $first: '$description' },
-        savedTimesCount: { $addToSet: '$usersSaved' },
+        savedTimesCount: { $first: '$usersSaved' },
       },
     },
     {
