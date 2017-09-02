@@ -34,6 +34,9 @@ const Collection = new Schema({
     type: Number,
     default: 0,
   },
+  usersSaved: {
+    type: Array,
+  },
   textColor: {
     type: String,
     required: false,
