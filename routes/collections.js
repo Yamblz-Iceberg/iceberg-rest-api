@@ -57,6 +57,9 @@ router.get('/:collectionId', (req, res, next) => {
       $unwind: { path: '$tag', preserveNullAndEmptyArrays: true },
     },
     {
+      $addFields: { 'link.savedTimesCount': { $size: '$link.usersSaved' } },
+    },
+    {
       $unwind: { path: '$link', preserveNullAndEmptyArrays: true },
     },
     {
@@ -72,7 +75,7 @@ router.get('/:collectionId', (req, res, next) => {
         links: { $addToSet: '$link' },
         tags: { $addToSet: '$tag' },
         description: { $first: '$description' },
-        savedTimesCount: { $first: '$savedTimesCount' },
+        savedTimesCount: { $addToSet: '$usersSaved' },
       },
     },
     {
@@ -109,12 +112,22 @@ router.get('/:collectionId', (req, res, next) => {
       },
     },
     {
+      $addFields: {
+        savedTimesCount: { $size: '$savedTimesCount' },
+      },
+    },
+    {
       $project: { 'author.salt': 0,
         'author._id': 0,
         'author.hash': 0,
         'author.banned': 0,
         'author.created': 0,
+        'author.createdCollections': 0,
+        'author.savedCollections': 0,
+        'author.savedLinks': 0,
+        'author.addedLinks': 0,
         'links.userAdded._id': 0,
+        'links.usersSaved': 0,
         'links.userAdded.hash': 0,
         'links.userAdded.salt': 0,
         'links.userAdded.banned': 0,
@@ -122,6 +135,10 @@ router.get('/:collectionId', (req, res, next) => {
         'links.userAdded.__v': 0,
         'links.userAdded.accType': 0,
         'links.userAdded.description': 0,
+        'links.userAdded.createdCollections': 0,
+        'links.userAdded.savedCollections': 0,
+        'links.userAdded.addedLinks': 0,
+        'links.userAdded.savedLinks': 0,
         'author.__v': 0,
         'links.__v': 0,
         'tags.__v': 0,

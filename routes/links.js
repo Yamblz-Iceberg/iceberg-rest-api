@@ -20,7 +20,7 @@ router.post('/', validation(validationParams.addLink), passport.authenticate('be
     .then(info => Link.findOrCreate({ userAdded: req.user.userId, url: req.body.link },
       { favicon: info.favicon, name: info.name, photo: info.photo, description: req.body.description }, { upsert: true })
       .then(link => User.findOneAndUpdate({ userId: req.user.userId },
-        { $push: { addedLinks: link.result._id } })
+        { $addToSet: { addedLinks: link.result._id } })
         .then((user) => {
           if (!user) {
             throw new error.NotFound('NO_USER_ERR', 'User not found');

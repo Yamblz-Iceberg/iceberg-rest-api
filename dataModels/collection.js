@@ -30,10 +30,6 @@ const Collection = new Schema({
     required: false,
     default: '#0476fc',
   },
-  savedTimesCount: {
-    type: Number,
-    default: 0,
-  },
   usersSaved: {
     type: Array,
   },

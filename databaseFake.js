@@ -18,6 +18,7 @@ mongoose.Promise = global.Promise;
 const users = [];
 const tags = [];
 const links = [];
+const collections = [];
 
 
 async.series([
@@ -30,6 +31,7 @@ async.series([
   createTags,
   createLinks,
   createCollections,
+  updateUsers,
 ], (err) => {
   if (err) {
     log.info(err);
@@ -166,7 +168,7 @@ const generateLinks = () => {
       favicon: faker.internet.avatar(),
       photo: faker.image.image(),
       url: faker.internet.url(),
-      savedTimesCount: _.random(2, 50),
+      usersSaved: _.sampleSize(_.map(users, 'main.userId'), _.random(3, 10)),
       likes: _.random(2, 100),
     });
   }
@@ -182,27 +184,24 @@ function createLinks(callback) {
   }, callback);
 }
 
-const generateCollections = () => new Promise((resolve, reject) => {
-  const collections = [];
-  return Promise.all([...Array(collectionsCount)].map(() => mongoose.models.Tag.distinct('_id')
-    .then(idsTags => mongoose.models.Link.distinct('_id')
-      .then((idsLinks) => {
-        collections.push({
-          name: faker.lorem.sentence(),
-          authorId: _.sample(users).main.userId,
-          description: faker.lorem.paragraph(),
-          photo: faker.image.image(),
-          tags: _.sampleSize(idsTags, _.random(2, 3)),
-          links: _.sampleSize(idsLinks, _.random(3, 10)),
-          color: faker.internet.color(),
-          savedTimesCount: _.random(0, 75),
-          textColor: faker.internet.color(),
-        });
-      }))
-    .catch(err => reject(err))))
-    .then(() => resolve(collections))
-    .catch(err => log.error(err));
-});
+const generateCollections = () => new Promise((resolve, reject) => Promise.all([...Array(collectionsCount)].map(() => mongoose.models.Tag.distinct('_id')
+  .then(idsTags => mongoose.models.Link.distinct('_id')
+    .then((idsLinks) => {
+      collections.push({
+        name: faker.lorem.sentence(),
+        authorId: _.sample(users).main.userId,
+        description: faker.lorem.paragraph(),
+        photo: faker.image.image(),
+        tags: _.sampleSize(idsTags, _.random(2, 3)),
+        links: _.sampleSize(idsLinks, _.random(3, 10)),
+        color: faker.internet.color(),
+        usersSaved: _.sampleSize(_.map(users, 'main.userId'), _.random(3, 10)),
+        textColor: faker.internet.color(),
+      });
+    }))
+  .catch(err => reject(err))))
+  .then(() => resolve(collections))
+  .catch(err => log.error(err)));
 
 function createCollections(callback) {
   generateCollections()
@@ -210,5 +209,20 @@ function createCollections(callback) {
       const curCollection = new mongoose.models.Collection(curCollectionData);
       curCollection.save(_callback);
     }, callback));
+}
+
+function updateUsers(callback) {
+  mongoose.models.Collection.find({})
+    .then(collectionsDB => mongoose.models.Link.find({})
+      .then(linksDB => mongoose.models.User.find({})
+        .then(usersDB => Promise.all(usersDB.map((user) => {
+          user.savedCollections = collectionsDB.map(collection => (_.indexOf(collection.usersSaved, user.userId) ? undefined : collection._id)).filter(Boolean);
+          user.createdCollections = _.filter(collectionsDB, { authorId: user.userId }).map(collection => collection._id);
+          user.addedLinks = _.filter(linksDB, { userAdded: user.userId }).map(link => link._id);
+          user.savedLinks = linksDB.map(link => (_.indexOf(link.usersSaved, user.userId) ? undefined : link._id)).filter(Boolean);
+          return user.save();
+        }))
+          .then(() => callback())
+          .catch(err => log.error(err)))));
 }
 

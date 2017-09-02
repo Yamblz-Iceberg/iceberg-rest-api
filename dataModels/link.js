@@ -32,9 +32,8 @@ const Link = new Schema({
     type: Number,
     default: 0,
   },
-  savedTimesCount: {
-    type: Number,
-    default: 0,
+  usersSaved: {
+    type: Array,
   },
 });
 

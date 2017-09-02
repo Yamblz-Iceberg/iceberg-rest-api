@@ -61,13 +61,14 @@ router.get('/', (req, res, next) => {
         created: { $first: '$created' },
         links: { $addToSet: '$links' },
         tags: { $addToSet: '$tag' },
-        savedTimesCount: { $first: '$savedTimesCount' },
+        savedTimesCount: { $addToSet: '$usersSaved' },
       },
     },
     {
       $addFields: {
         tags: { $slice: ['$tags', 2] },
         linksCount: { $size: '$links' },
+        savedTimesCount: { $size: '$savedTimesCount' },
       },
     },
     {
@@ -76,8 +77,11 @@ router.get('/', (req, res, next) => {
         'author.hash': 0,
         'author.banned': 0,
         'author.created': 0,
-        'author.rating': 0,
         'author.accType': 0,
+        'author.createdCollections': 0,
+        'author.savedCollections': 0,
+        'author.savedLinks': 0,
+        'author.addedLinks': 0,
         'author.__v': 0,
         links: 0,
         'tags.__v': 0,
