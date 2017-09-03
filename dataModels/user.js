@@ -67,6 +67,9 @@ const User = new Schema({
   fbToken: {
     type: String,
   },
+  yaToken: {
+    type: String,
+  },
   banned: {
     type: Boolean,
     required: true,

@@ -58,6 +58,7 @@
     "passport-local-mongoose": "^4.1.0",
     "passport-oauth2-client-password": "^0.1.2",
     "passport-vkontakte": "git+https://github.com/MoreBlood/passport-vkontakte.git",
+    "passport-yandex": "0.0.3",
     "pm2": "^2.6.1",
     "pug": "~2.0.0-beta11",
     "request": "^2.81.0",

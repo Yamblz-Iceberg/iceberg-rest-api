@@ -37,6 +37,7 @@ const app = express();
 require('./libs/auth/auth');
 require('./libs/auth/vk');
 require('./libs/auth/facebook');
+require('./libs/auth/yandex');
 
 const io = socketIo();
 app.io = io;

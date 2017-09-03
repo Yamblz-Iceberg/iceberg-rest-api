@@ -45,7 +45,7 @@ aserver.exchange(oauth2orize.exchange.password((client, userId, password, scope,
         clientId: client.clientId,
       };
 
-      if (user.vkToken === password || user.fbToken === password) {
+      if (user.vkToken === password || user.fbToken === password || user.yaToken === password) {
         model.userId = user.userId;
         generateTokens(model, next);
       } else { // FIXME: check

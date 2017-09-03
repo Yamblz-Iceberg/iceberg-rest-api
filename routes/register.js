@@ -130,6 +130,12 @@ router.post('/fb', validation(validationParams.social), passport.authenticate('b
   })(req, res, next);
 });
 
+router.post('/ya', validation(validationParams.social), passport.authenticate('basic', { session: false }), (req, res, next) => {
+  passport.authenticate('yandex', {
+    state: `${req.user.clientId},${req.user.clientSecret},${req.body.uniqueId}`,
+  })(req, res, next);
+});
+
 router.get('/vk/callback', passport.authenticate('vkontakte', { session: false }), (req, res, next) => {
   getStateParams(req.query.state)
     .then(state => redirectOauth(state.clientId, state.clientSecret, req.user.userId, req.user.vkToken))
@@ -140,6 +146,13 @@ router.get('/vk/callback', passport.authenticate('vkontakte', { session: false }
 router.get('/fb/callback', passport.authenticate('facebook', { session: false }), (req, res, next) => {
   getStateParams(req.query.state)
     .then(state => redirectOauth(state.clientId, state.clientSecret, req.user.userId, req.user.fbToken))
+    .then(responce => res.json(responce))
+    .catch(err => next(err));
+});
+
+router.get('/yandex/callback', passport.authenticate('yandex', { session: false }), (req, res, next) => {
+  getStateParams(req.query.state)
+    .then(state => redirectOauth(state.clientId, state.clientSecret, req.user.userId, req.user.yaToken))
     .then(responce => res.json(responce))
     .catch(err => next(err));
 });
