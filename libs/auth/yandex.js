@@ -19,9 +19,8 @@ passport.use(new YandexStrategy({
       userId: `ya_${profile.id}`,
       firstName: profile.name.familyName,
       lastName: profile.name.givenName,
-      // photo: _.chain(profile.photos).find(['type', 'photo_max_orig']).get('value', 'reportlogo.png'), // set default photo
+      photo: `https://avatars.yandex.net/get-yapic/${_.get(profile._json, 'default_avatar_id')}/islands-200`, // set default photo
       sex: profile.gender,
-      socialLink: profile.profileUrl,
       yaToken: accessToken,
       accType: 'user',
     };

@@ -28,7 +28,7 @@
     "no-mixed-operators":"off",
     "func-names":"off",
     "no-underscore-dangle": [2, {
-      "allow": ["_id"]
+      "allow": ["_id", "_json"]
     }],
     "camelcase": [2, {
       "properties": "never"
