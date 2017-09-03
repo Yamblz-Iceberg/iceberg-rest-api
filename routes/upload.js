@@ -19,7 +19,7 @@ const Jimp = require('jimp');
 
 const Multer = require('multer');
 
-const multer = Multer({
+const multer = new Multer({
   storage: Multer.MemoryStorage,
   limits: {
     fileSize: 10 * 1024 * 1024, // no larger than 5mb
