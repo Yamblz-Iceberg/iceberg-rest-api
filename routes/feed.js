@@ -16,10 +16,10 @@ const error = require('rest-api-errors');
 
 const _ = require('lodash');
 
-router.get('/', (req, res, next) => {
+router.get('/', validation(validationParams.feed), passport.authenticate('bearer', { session: false }), (req, res, next) => {
   Collection.aggregate([
     {
-      $match: req.query.search ? { name: { $regex: new RegExp(req.query.search, 'i') } } : { _id: { $exists: true } },
+      $match: req.query.search ? { name: { $regex: new RegExp(req.query.search, 'i') } } : { _id: { $exists: true } }, // TODO: #tag поиск
     },
     {
       $unwind: { path: '$links', preserveNullAndEmptyArrays: true },
@@ -61,18 +61,20 @@ router.get('/', (req, res, next) => {
         created: { $first: '$created' },
         links: { $addToSet: '$links' },
         tags: { $addToSet: '$tag' },
-        savedTimesCount: { $first: '$usersSaved' },
+        usersSaved: { $first: '$usersSaved' },
       },
     },
     {
       $addFields: {
         tags: { $slice: ['$tags', 2] },
         linksCount: { $size: '$links' },
-        savedTimesCount: { $size: '$savedTimesCount' },
+        savedTimesCount: { $size: '$usersSaved' },
+        saved: { $cond: { if: { $and: [{ $isArray: '$usersSaved' }, { $in: [req.user.userId, '$usersSaved'] }] }, then: true, else: false } },
       },
     },
     {
       $project: { 'author.salt': 0,
+        usersSaved: 0,
         'author._id': 0,
         'author.hash': 0,
         'author.banned': 0,

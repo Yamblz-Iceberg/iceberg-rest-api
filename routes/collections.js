@@ -15,13 +15,25 @@ const error = require('rest-api-errors');
 
 const _ = require('lodash');
 
-router.get('/:collectionId', (req, res, next) => {
+router.get('/:collectionId', passport.authenticate('bearer', { session: false }), (req, res, next) => {
   Collection.aggregate([
     {
       $match: { _id: mongoose.Types.ObjectId(req.params.collectionId) },
     },
     {
       $unwind: { path: '$links', preserveNullAndEmptyArrays: true },
+    },
+    {
+      $lookup:
+         {
+           from: 'links',
+           localField: 'links',
+           foreignField: '_id',
+           as: 'link',
+         },
+    },
+    {
+      $unwind: { path: '$link', preserveNullAndEmptyArrays: true },
     },
     {
       $unwind: { path: '$tags', preserveNullAndEmptyArrays: true },
@@ -35,6 +47,10 @@ router.get('/:collectionId', (req, res, next) => {
            as: 'tag',
          },
     },
+
+    {
+      $unwind: { path: '$tag', preserveNullAndEmptyArrays: true },
+    },
     {
       $lookup:
          {
@@ -45,23 +61,12 @@ router.get('/:collectionId', (req, res, next) => {
          },
     },
     {
-      $lookup:
-         {
-           from: 'links',
-           localField: 'links',
-           foreignField: '_id',
-           as: 'link',
-         },
-    },
-    {
-      $unwind: { path: '$tag', preserveNullAndEmptyArrays: true },
-    },
-
-    {
-      $unwind: { path: '$link', preserveNullAndEmptyArrays: true },
-    },
-    {
       $unwind: { path: '$author', preserveNullAndEmptyArrays: true },
+    },
+    {
+      $addFields: { 'link.savedTimesCount': { $cond: { if: { $isArray: '$link.usersSaved' }, then: { $size: '$link.usersSaved' }, else: 0 } },
+        'link.saved': { $cond: { if: { $and: [{ $isArray: '$link.usersSaved' }, { $in: [req.user.userId, '$link.usersSaved'] }] }, then: true, else: false } },
+      },
     },
     {
       $group: {
@@ -73,7 +78,7 @@ router.get('/:collectionId', (req, res, next) => {
         links: { $addToSet: '$link' },
         tags: { $addToSet: '$tag' },
         description: { $first: '$description' },
-        savedTimesCount: { $first: '$usersSaved' },
+        usersSaved: { $first: '$usersSaved' },
       },
     },
     {
@@ -106,22 +111,19 @@ router.get('/:collectionId', (req, res, next) => {
         links: { $addToSet: '$links' },
         tags: { $first: '$tags' },
         description: { $first: '$description' },
-        savedTimesCount: { $first: '$savedTimesCount' },
+        usersSaved: { $first: '$usersSaved' },
       },
     },
     {
       $addFields: {
-        savedTimesCount: { $size: '$savedTimesCount' },
-      },
-    },
-    {
-      $addFields: { 'links.savedTimesCount': { $size: '$links.usersSaved' },
-        // TODO: флаг, если юзер сохранил себе linkSaved: { $cond: { if: { $in: [req.user.userId, '$link.usersSaved'] }, then: true, else: false } },
+        saved: { $cond: { if: { $and: [{ $isArray: '$usersSaved' }, { $in: [req.user.userId, '$usersSaved'] }] }, then: true, else: false } },
+        savedTimesCount: { $size: '$usersSaved' },
       },
     },
     {
       $project: { 'author.salt': 0,
         'author._id': 0,
+        usersSaved: 0,
         'author.hash': 0,
         'author.banned': 0,
         'author.created': 0,
@@ -150,11 +152,15 @@ router.get('/:collectionId', (req, res, next) => {
       },
     },
   ])
-    .then((collection) => {
-      if (!collection || !collection.length) {
+    .then((returnedCollection) => {
+      if (!returnedCollection || !returnedCollection.length) {
         throw new error.NotFound('NO_COLLECTIONS_ERR', 'Collections not found');
       } else {
-        res.json({ collection: collection[0] });
+        const collection = returnedCollection[0];
+        if (!_.find(collection.links, 'userAdded')) { // FIXME: очень некрасивый костыль
+          collection.links = [];
+        }
+        res.json({ collection });
       }
     })
     .catch(err => next(err));

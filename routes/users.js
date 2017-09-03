@@ -61,8 +61,8 @@ router.all('/bookmarks/:type/:id?', validation(validationParams.bookmarks), pass
   const COLLECTIONS = 'collections';
   let bookmarksAction = {};
   let userAction = {};
-  const collectionsActionDestination = { savedCollections: req.params.id };
-  const linksActionDestination = { savedLinks: req.params.id };
+  const collectionsActionDestination = { savedCollections: mongoose.Types.ObjectId(req.params.id) };
+  const linksActionDestination = { savedLinks: mongoose.Types.ObjectId(req.params.id) };
   const userActionDestination = { usersSaved: req.user.userId };
   const mongoCollection = req.params.type === COLLECTIONS ? Collection : Link;
 

@@ -169,7 +169,7 @@ const generateLinks = () => {
       favicon: faker.internet.avatar(),
       photo: faker.image.image(),
       url: faker.internet.url(),
-      usersSaved: _.sampleSize(_.map(users, 'main.userId'), _.random(3, 10)),
+      usersSaved: _.sampleSize(_.map(users, 'main.userId'), _.random(1, numberOfUsers / 3)),
       likes: _.random(2, 100),
     });
   }
@@ -196,7 +196,7 @@ const generateCollections = () => new Promise((resolve, reject) => Promise.all([
         tags: _.sampleSize(idsTags, _.random(2, 3)),
         links: _.sampleSize(idsLinks, _.random(3, 10)),
         color: faker.internet.color(),
-        usersSaved: _.sampleSize(_.map(users, 'main.userId'), _.random(3, 10)),
+        usersSaved: _.sampleSize(_.map(users, 'main.userId'), _.random(1, numberOfUsers / 3)),
         textColor: faker.internet.color(),
       });
     }))
@@ -217,10 +217,10 @@ function updateUsers(callback) {
     .then(collectionsDB => mongoose.models.Link.find({})
       .then(linksDB => mongoose.models.User.find({})
         .then(usersDB => Promise.all(usersDB.map((user) => {
-          user.savedCollections = collectionsDB.map(collection => (_.indexOf(collection.usersSaved, user.userId) ? undefined : collection._id)).filter(Boolean);
+          user.savedCollections = collectionsDB.map(collection => (collection.usersSaved.indexOf(user.userId) !== -1 ? collection._id : undefined)).filter(Boolean);
           user.createdCollections = _.filter(collectionsDB, { authorId: user.userId }).map(collection => collection._id);
           user.addedLinks = _.filter(linksDB, { userAdded: user.userId }).map(link => link._id);
-          user.savedLinks = linksDB.map(link => (_.indexOf(link.usersSaved, user.userId) ? undefined : link._id)).filter(Boolean);
+          user.savedLinks = linksDB.map(link => (link.usersSaved.indexOf(user.userId) !== -1 ? link._id : undefined)).filter(Boolean);
           return user.save();
         }))
           .then(() => callback())
