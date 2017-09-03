@@ -19,7 +19,8 @@ const _ = require('lodash');
 router.get('/', validation(validationParams.feed), passport.authenticate('bearer', { session: false }), (req, res, next) => {
   Collection.aggregate([
     {
-      $match: req.query.search ? { name: { $regex: new RegExp(req.query.search, 'i') } } : { _id: { $exists: true } }, // TODO: #tag поиск
+      $match: req.query.search && !/^#/.test(req.query.search) ?
+        { name: { $regex: new RegExp(req.query.search, 'i') } } : { _id: { $exists: true } },
     },
     {
       $unwind: { path: '$links', preserveNullAndEmptyArrays: true },
@@ -63,6 +64,10 @@ router.get('/', validation(validationParams.feed), passport.authenticate('bearer
         tags: { $addToSet: '$tag' },
         usersSaved: { $first: '$usersSaved' },
       },
+    },
+    {
+      $match: req.query.search && /^#/.test(req.query.search) ?
+        { 'tags.name': { $regex: new RegExp(req.query.search.replace('#', ''), 'i') } } : { _id: { $exists: true } },
     },
     {
       $addFields: {

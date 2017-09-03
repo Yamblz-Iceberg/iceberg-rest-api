@@ -59,13 +59,15 @@ router.get('/social/friends', status.accountTypeMiddleware, (req, res, next) => 
 
 router.all('/bookmarks/:type/:id?', validation(validationParams.bookmarks), passport.authenticate('bearer', { session: false }), (req, res, next) => {
   const COLLECTIONS = 'collections';
+
   let bookmarksAction = {};
   let userAction = {};
+
   const collectionsActionDestination = { savedCollections: mongoose.Types.ObjectId(req.params.id) };
   const linksActionDestination = { savedLinks: mongoose.Types.ObjectId(req.params.id) };
   const userActionDestination = { usersSaved: req.user.userId };
-  const mongoCollection = req.params.type === COLLECTIONS ? Collection : Link;
 
+  const mongoCollection = req.params.type === COLLECTIONS ? Collection : Link;
 
   if (req.method === 'PUT' && req.params.id) {
     bookmarksAction = { $addToSet: userActionDestination };
