@@ -9,7 +9,7 @@ const _ = require('lodash');
 passport.use(new VKontakteStrategy({
   clientID: process.env.VK_ID || config.get('vk_id'), // VK.com docs call it 'API ID', 'app_id', 'api_id', 'client_id' or 'apiId'
   clientSecret: process.env.VK_SECRET || config.get('vk_secret'),
-  callbackURL: `${process.env.URL || `${config.get('base_url')}:`}${process.env.PORT || `${config.get('port')}/`}register/vk/callback`,
+  callbackURL: `${process.env.URL || `${config.get('base_url')}:${config.get('port')}/`}register/vk/callback`,
   profileFields: ['photo_max_orig'],
   passReqToCallback: true,
 },

@@ -41,7 +41,7 @@ const getStateParams = state => new Promise((resolve, reject) => {
 const redirectOauth = (clientId, clientSecret, username, password) => new Promise((resolve, reject) => {
   const options = {
     method: 'POST',
-    url: `${process.env.URL || `${config.get('base_url')}:`}${process.env.PORT || `${config.get('port')}/`}oauth/token`,
+    url: `${process.env.URL || `${config.get('base_url')}:${config.get('port')}/`}oauth/token`,
     headers: {
       'content-type': 'application/x-www-form-urlencoded',
     },

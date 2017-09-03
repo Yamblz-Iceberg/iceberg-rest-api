@@ -8,7 +8,7 @@ const User = require('../../dataModels/user').User;
 passport.use(new FacebookStrategy({
   clientID: process.env.FB_ID || config.get('fb_id'),
   clientSecret: process.env.FB_SECRET || config.get('fb_secret'),
-  callbackURL: `${process.env.URL || `${config.get('base_url')}:`}${process.env.PORT || `${config.get('port')}/`}register/fb/callback`,
+  callbackURL: `${process.env.URL || `${config.get('base_url')}:${config.get('port')}/`}register/fb/callback`,
   passReqToCallback: true,
 },
   ((req, accessToken, _refreshToken, profile, done) => {
