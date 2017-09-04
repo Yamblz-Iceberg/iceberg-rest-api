@@ -59,14 +59,14 @@ function sendUploadToGCS(req, res, next) {
 
   stream.on('error', (err) => {
     req.file.cloudStorageError = err;
-    next(err);
+    return next(new error.BandwidthLimitExceeded('GC_UPLOAD_ERR', err.message));
   });
 
   stream.on('finish', () => {
     req.file.cloudStorageObject = gcsname;
     file.makePublic().then(() => {
       req.file.cloudStoragePublicUrl = getPublicUrl(gcsname);
-      next();
+      return next();
     });
   });
 
@@ -89,7 +89,7 @@ function resizeImage(req, res, next) {
   }
   return Jimp.read(req.file.buffer)
     .then(image => image
-      .resize(Jimp.AUTO, 500))
+      .resize(Jimp.AUTO, 1000))
     .then(image => getImageBuffer(image, req.file.mimetype))
     .then((buffer) => {
       req.file.buffer = buffer;
