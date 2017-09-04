@@ -21,7 +21,6 @@ const Link = new Schema({
   },
   description: {
     type: String,
-    default: '',
   },
   url: {
     type: String,

@@ -25,12 +25,12 @@ module.exports = {
   addLink: {
     body: {
       link: Joi.string().regex(urlJoi).required(),
-      description: Joi.string().max(300),
+      description: Joi.string().allow('').max(300),
     },
   },
   description: {
     body: {
-      description: Joi.string().max(300),
+      description: Joi.string().allow('').max(300),
     },
     params: {
       collectionId: Joi.string().regex(idMongoRegex).required(),
