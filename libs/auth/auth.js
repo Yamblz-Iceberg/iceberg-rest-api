@@ -17,10 +17,10 @@ passport.use(new BasicStrategy(
     Client.findOne({ clientId: username })
       .then((client) => {
         if (!client) {
-          throw next(new error.Unauthorized('AUTH_ERROR_GRANTS', 'Client not found'));
+          throw next(new error.Unauthorized('AUTH_ERR', 'Client not found'));
         }
         if (client.clientSecret !== password) {
-          throw next(new error.Unauthorized('AUTH_ERROR_GRANTS', 'Client secret is wrong'));
+          throw next(new error.Unauthorized('AUTH_ERR', 'Client secret is wrong'));
         }
         return next(null, client);
       })
@@ -32,10 +32,10 @@ passport.use(new ClientPasswordStrategy(
     Client.findOne({ clientId })
       .then((client) => {
         if (!client) {
-          throw next(new error.Unauthorized('AUTH_ERROR_GRANTS', 'Client not found'));
+          throw next(new error.Unauthorized('AUTH_ERR', 'Client not found'));
         }
         if (client.clientSecret !== clientSecret) {
-          throw next(new error.Unauthorized('AUTH_ERROR_GRANTS', 'Client secret is wrong'));
+          throw next(new error.Unauthorized('AUTH_ERR', 'Client secret is wrong'));
         }
         return next(null, client);
       })
@@ -47,7 +47,7 @@ passport.use(new LocalStrategy(
     User.findByUsername(userId)
       .then((user) => {
         if (!user) {
-          throw next(new error.Unauthorized('AUTH_ERROR_GRANTS', 'User not found'));
+          throw next(new error.Unauthorized('AUTH_ERR', 'User not found'));
         }
         user.authenticate(password, (err, thisModel, passwordErr) => {
           if (err) {
@@ -67,19 +67,19 @@ passport.use(new BearerStrategy(
     AccessToken.findOne({ token: accessToken })
       .then((token) => {
         if (!token) {
-          throw next(new error.Unauthorized('AUTH_ERROR_TOKEN', 'Token not found'));
+          throw next(new error.Unauthorized('AUTH_ERR', 'Token not found'));
         }
         if (Math.round((Date.now() - token.created) / 1000) > config.get('security:tokenLife') &&
           token.userId !== config.get('default:user:username')) {
           return AccessToken.remove({ token: accessToken })
             .then(() => {
-              throw next(new error.Unauthorized('AUTH_ERROR_TOKEN', 'Token expiried'));
+              throw next(new error.Unauthorized('AUTH_ERR', 'Token expiried'));
             });
         }
         return User.findOne({ userId: token.userId })
           .then((user) => {
             if (!user) {
-              throw next(new error.Unauthorized('AUTH_ERROR_TOKEN', 'User not found'));
+              throw next(new error.Unauthorized('AUTH_ERR', 'User not found, while proccesing token'));
             }
             const info = {
               scope: '*',

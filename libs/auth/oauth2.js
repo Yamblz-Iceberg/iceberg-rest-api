@@ -39,7 +39,7 @@ aserver.exchange(oauth2orize.exchange.password((client, userId, password, scope,
   User.findByUsername(userId)
     .then((user) => {
       if (!user) {
-        throw next(new error.Forbidden('AUTH_ERROR_GRANTS', 'User not found'));
+        throw next(new error.Forbidden('AUTH_ERR', 'User not found'));
       }
       const model = {
         clientId: client.clientId,

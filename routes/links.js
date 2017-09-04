@@ -26,8 +26,8 @@ router.post('/', validation(validationParams.addLink), passport.authenticate('be
             throw new error.NotFound('NO_USER_ERR', 'User not found');
           }
           res.json(link);
-        }))
-      .catch(err => next(err)));
+        })))
+    .catch(err => next(err));
 });
 
 

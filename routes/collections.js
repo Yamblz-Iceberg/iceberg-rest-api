@@ -82,11 +82,6 @@ router.get('/:collectionId', passport.authenticate('bearer', { session: false })
       },
     },
     {
-      $addFields: {
-        tags: { $slice: ['$tags', 2] },
-      },
-    },
-    {
       $unwind: { path: '$links', preserveNullAndEmptyArrays: true },
     },
     {
@@ -187,7 +182,7 @@ router.post('/addLink/:collectionId/:linkId', validation(validationParams.descri
     { $addToSet: { links: mongoose.Types.ObjectId(req.params.linkId) } })
     .then((collection) => {
       if (!collection) {
-        throw new error.NotFound('NO_COLLECTIONS_ERR', 'Collections not found, cannot update this collection');
+        throw new error.NotFound('NO_COLLECTION_ERR', 'Collection not found, cannot update this collection');
       }
       if (req.body.description) {
         return Link.findOneAndUpdate({ _id: mongoose.Types.ObjectId(req.params.linkId) }, { description: req.body.description })

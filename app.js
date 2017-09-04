@@ -74,7 +74,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(methodOverride());
 app.use(passport.initialize());
 app.use(helmet());
-app.use(limiter);
+// app.use(limiter);
 
 // FIXME: Redirect to https 
 // app.all('*', ensureSecure);
@@ -113,9 +113,9 @@ app.use((err, req, res, next) => {
     })
     .catch((error) => {
       res.status(500).json({
-        code: 'ERROR_PARSE_ERROR',
+        code: 'ERROR_PARSE_ERR',
         type: 'API_ERROR',
-        message: 'This message is caused by illegal error data, this literaly doesn\'t happens, but this error must be defined',
+        message: 'This message is caused by bad error data, this usually doesn\'t happens, but this error must be defined 🙃',
       });
       next(error);
     });

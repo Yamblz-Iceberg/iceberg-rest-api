@@ -80,7 +80,7 @@ module.exports = {
   },
   bookmarks: {
     params: {
-      type: Joi.string().valid(['collections', 'links']).required(),
+      type: Joi.string().valid(['collections', 'links', 'myCollections', 'myLinks']).required(),
       id: Joi.string().regex(idMongoRegex),
     },
   },

@@ -25,7 +25,6 @@ passport.use(new YandexStrategy({
       accType: 'user',
     };
 
-    // FIXME: продумать решение, если регистрироваться без демо
     User.findOne({ userId: user.userId })
       .then((userFound) => {
         if (userFound) {
