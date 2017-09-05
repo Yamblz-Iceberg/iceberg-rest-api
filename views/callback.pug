@@ -1,0 +1,8 @@
+doctype html
+html(lang='en')
+  head
+    title Callback
+    script(type='text/javascript').
+      window.parent.postMessage("#{response}", "*");
+      console.log("#{response}");
+      console.log(window);
