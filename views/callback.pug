@@ -3,5 +3,6 @@ html(lang='en')
   head
     title Callback
     script(type='text/javascript').
-      window.postMessage("#{response}", "*");
+      window.parent.postMessage("#{response}", "*");
       console.log("#{response}");
+      console.log(window);
