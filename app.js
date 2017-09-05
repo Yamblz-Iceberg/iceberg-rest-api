@@ -34,6 +34,7 @@ const limiter = new RateLimit({
 
 const app = express();
 
+
 require('./libs/auth/auth');
 require('./libs/auth/vk');
 require('./libs/auth/facebook');
@@ -74,6 +75,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(methodOverride());
 app.use(passport.initialize());
 app.use(helmet());
+app.use(helmet.frameguard({ action: 'ALLOW-FROM', domain: '*' }));
 // app.use(limiter);
 
 // FIXME: Redirect to https 
@@ -85,6 +87,7 @@ app.use(helmet());
 //   }
 //   return res.redirect(`https:// localhost.daplie.me:3001${req.url}`);
 // }
+
 
 app.use('/', index);
 app.use('/users', users);
