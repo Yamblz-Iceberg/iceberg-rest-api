@@ -30,5 +30,9 @@ router.post('/', validation(validationParams.addLink), passport.authenticate('be
     .catch(err => next(err));
 });
 
+router.put('/read/:linkId', validation(validationParams.readLink), passport.authenticate('bearer', { session: false }), (req, res, next) => {
+  
+
+});
 
 module.exports = router;

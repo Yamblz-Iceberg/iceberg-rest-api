@@ -28,6 +28,11 @@ module.exports = {
       description: Joi.string().allow('').max(300),
     },
   },
+  readLink: {
+    params: {
+      linkId: Joi.string().regex(idMongoRegex).required(),
+    },
+  },
   description: {
     body: {
       description: Joi.string().allow('').max(300),
