@@ -153,7 +153,7 @@ router.get('/fb/callback', passport.authenticate('facebook', { session: false })
 router.get('/yandex/callback', passport.authenticate('yandex', { session: false }), (req, res, next) => {
   getStateParams(req.query.state)
     .then(state => redirectOauth(state.clientId, state.clientSecret, req.user.userId, req.user.yaToken))
-    .then(responce => res.json(responce))
+    .then(responce => res.render('callback', { responce }))
     .catch(err => next(err));
 });
 
