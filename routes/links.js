@@ -20,7 +20,7 @@ router.post('/', validation(validationParams.addLink), passport.authenticate('be
     .then(info => Link.findOrCreate({ userAdded: req.user.userId, url: req.body.link },
       { favicon: info.favicon, name: info.name, photo: info.photo, description: req.body.description }, { upsert: true })
       .then(link => User.findOneAndUpdate({ userId: req.user.userId },
-        { $addToSet: { addedLinks: link.result._id } })
+        { $addToSet: { addedLinks: { bookmarkId: link.result._id } } })
         .then((user) => {
           if (!user) {
             throw new error.NotFound('NO_USER_ERR', 'User not found');
@@ -30,5 +30,9 @@ router.post('/', validation(validationParams.addLink), passport.authenticate('be
     .catch(err => next(err));
 });
 
+router.put('/read/:linkId', validation(validationParams.readLink), passport.authenticate('bearer', { session: false }), (req, res, next) => {
+
+
+});
 
 module.exports = router;
