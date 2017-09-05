@@ -71,7 +71,7 @@ router.get('/', validation(validationParams.feed), passport.authenticate('bearer
     },
     {
       $addFields: {
-        tags: { $slice: ['$tags', 2] },
+        // tags: { $slice: ['$tags', 2] },
         linksCount: { $size: '$links' },
         savedTimesCount: { $size: '$usersSaved' },
         saved: { $cond: { if: { $and: [{ $isArray: '$usersSaved' }, { $in: [req.user.userId, '$usersSaved'] }] }, then: true, else: false } },
