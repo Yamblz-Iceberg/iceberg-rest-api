@@ -60,7 +60,7 @@ module.exports = {
     },
   },
   social: {
-    body: {
+    query: {
       uniqueId: Joi.string().guid({
         version: [
           'uuidv4',
