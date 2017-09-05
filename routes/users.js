@@ -120,7 +120,7 @@ router.all('/bookmarks/:type/:id?', validation(validationParams.bookmarks), pass
             if (req.params.type === COLLECTIONS || req.params.type === MY_COLLECTIONS) {
               return Collection.aggregate([
                 {
-                  $match: { _id: req.params.type === COLLECTIONS ? { $in: user.savedCollections.map(id => mongoose.Types.ObjectId(id)) } :
+                  $match: { _id: req.params.type === COLLECTIONS ? { $in: user.savedCollections.map(savedCollection => mongoose.Types.ObjectId(savedCollection.bookmarkId)) } :
                     { $in: user.createdCollections.map(id => mongoose.Types.ObjectId(id)) } },
                 },
                 {
@@ -181,8 +181,8 @@ router.all('/bookmarks/:type/:id?', validation(validationParams.bookmarks), pass
             }
             return Link.aggregate([
               {
-                $match: { _id: req.params.type === LINKS ? { $in: user.savedLinks.map(id => mongoose.Types.ObjectId(id)) } :
-                  { $in: user.addedLinks.map(id => mongoose.Types.ObjectId(id)) } },
+                $match: { _id: req.params.type === LINKS ? { $in: user.savedLinks.map(savedLink => mongoose.Types.ObjectId(savedLink.bookmarkId)) } :
+                  { $in: user.addedLinks.map(addedLink => mongoose.Types.ObjectId(addedLink.bookmarkId)) } },
               },
               {
                 $unwind: { path: '$author', preserveNullAndEmptyArrays: true },
@@ -198,6 +198,21 @@ router.all('/bookmarks/:type/:id?', validation(validationParams.bookmarks), pass
               },
               {
                 $unwind: { path: '$userAdded', preserveNullAndEmptyArrays: true },
+              },
+              {
+                $lookup:
+                   {
+                     from: 'users',
+                     localField: '_id',
+                     foreignField: req.params.type === LINKS ? 'savedLinks.bookmarkId' : 'savedLinks.bookmarkId',
+                     as: 'metrics',
+                   },
+              },
+              {
+                $unwind: { path: '$metrics', preserveNullAndEmptyArrays: true },
+              },
+              {
+                $addFields: { metrics: { }},
               },
               {
                 $project: { __v: 0,
