@@ -167,7 +167,7 @@ router.post('/', passport.authenticate('bearer', { session: false }), validation
   const newCollection = new Collection(req.body);
   newCollection.save()
     .then(collection => User.findOneAndUpdate({ userId: req.user.userId },
-      { $push: { createdCollections: collection._id } })
+      { $push: { createdCollections: { bookmarkId: collection._id } } })
       .then((user) => {
         if (!user) {
           throw new error.NotFound('NO_USER_ERR', 'User not found');

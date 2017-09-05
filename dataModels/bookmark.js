@@ -11,9 +11,12 @@ const Bookmark = new Schema({
     type: Boolean,
     default: false,
   },
-  time: {
+  addTime: {
     type: Date,
     default: Date.now,
+  },
+  openTime: {
+    type: Date,
   },
 });
 

@@ -27,6 +27,7 @@
     "no-bitwise":"off",
     "no-mixed-operators":"off",
     "func-names":"off",
+    "no-nested-ternary":"off",
     "no-underscore-dangle": [2, {
       "allow": ["_id", "_json"]
     }],
