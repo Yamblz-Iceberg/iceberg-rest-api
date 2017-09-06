@@ -11,7 +11,7 @@ passport.use(new FacebookStrategy({
   callbackURL: `${process.env.URL || `${config.get('base_url')}:${config.get('port')}/`}register/fb/callback`,
   passReqToCallback: true,
 },
-  ((req, accessToken, _refreshToken, profile, done) => {
+  ((req, accessToken, refreshToken, profile, next) => {
     const uniqueId = req.query.state.split(',')[2];
     const user = {
       userId: `fb_${profile.id}`,
@@ -21,16 +21,8 @@ passport.use(new FacebookStrategy({
       accType: 'user',
     };
 
-    User.findOne({ userId: user.userId })
-      .then((userFound) => {
-        if (userFound) {
-          User.findOneAndUpdate({ userId: user.userId }, user, { new: true })
-            .then(_user => done(null, _user));
-        } else {
-          User.findOneAndUpdate({ userId: uniqueId }, user, { new: true })
-            .then(_user => done(null, _user));
-        }
-      })
-      .catch(err => done(err));
+    User.findOneAndUpdate({ $or: [{ userId: user.userId }, { userId: uniqueId }] }, user, { new: true })
+      .then(_user => next(null, _user))
+      .catch(err => next(err));
   })));
 

@@ -74,8 +74,9 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(methodOverride());
 app.use(passport.initialize());
-// app.use(helmet());
-// app.use(helmet.frameguard({ action: 'ALLOW-FROM', domain: 'ANY' }));
+app.use(helmet({
+  frameguard: false,
+}));
 // app.use(limiter);
 
 // FIXME: Redirect to https 
