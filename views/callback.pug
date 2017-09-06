@@ -3,6 +3,13 @@ html(lang='en')
   head
     title Callback
     script(type='text/javascript').
-      window.parent.postMessage("#{response}", "*");
-      console.log("#{response}");
-      console.log(window);
+      var app = 'iceberg';
+      var str = "";
+      for (var key in !{response}) {
+      if (str != "") {
+      str += "&";
+      }
+      str += key + "=" + encodeURIComponent(!{response}[key]);
+      }
+      console.log(str);
+      window.location = app + '://?data=' + str;
