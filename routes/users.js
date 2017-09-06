@@ -63,6 +63,8 @@ router.all('/bookmarks/:type/:id?', validation(validationParams.bookmarks), pass
   const LINKS = 'links';
   const MY_LINKS = 'myLinks';
 
+  const addingId = mongoose.Types.ObjectId(req.params.id);
+
   const types = [COLLECTIONS, LINKS];
   const myTypes = [MY_COLLECTIONS, MY_LINKS];
 
@@ -74,11 +76,12 @@ router.all('/bookmarks/:type/:id?', validation(validationParams.bookmarks), pass
 
   let bookmarksAction = {};
   let userAction = {};
+  let userDuplicateCheck = { userId: req.user.userId };
 
-  const collectionsActionDestination = { savedCollections: { bookmarkId: mongoose.Types.ObjectId(req.params.id) } };
-  const collectionsCreatedActionDestination = { createdCollections: { bookmarkId: mongoose.Types.ObjectId(req.params.id) } };
-  const linksActionDestination = { savedLinks: { bookmarkId: mongoose.Types.ObjectId(req.params.id) } };
-  const linksActionAddedDestination = { addedLinks: { bookmarkId: mongoose.Types.ObjectId(req.params.id) } };
+  const collectionsActionDestination = { savedCollections: { bookmarkId: addingId } };
+  const collectionsCreatedActionDestination = { createdCollections: { bookmarkId: addingId } };
+  const linksActionDestination = { savedLinks: { bookmarkId: addingId } };
+  const linksActionAddedDestination = { addedLinks: { bookmarkId: addingId } };
 
   const userActionDestination = { usersSaved: req.user.userId };
 
@@ -87,6 +90,9 @@ router.all('/bookmarks/:type/:id?', validation(validationParams.bookmarks), pass
   if (req.method === 'PUT' && req.params.id && types.indexOf(req.params.type) !== -1) {
     bookmarksAction = { $addToSet: userActionDestination };
     userAction = { $addToSet: req.params.type === COLLECTIONS ? collectionsActionDestination : linksActionDestination };
+    userDuplicateCheck = req.params.type === COLLECTIONS ? { userId: req.user.userId, 'savedCollections.bookmarkId': { $ne: addingId } } :
+      { userId: req.user.userId, 'savedLinks.bookmarkId': { $ne: addingId } };
+      console.log(userDuplicateCheck);
   } else if (req.method === 'DELETE' && req.params.id) {
     switch (req.params.type) {
     case (COLLECTIONS): userAction = { $pull: collectionsActionDestination };
@@ -104,17 +110,17 @@ router.all('/bookmarks/:type/:id?', validation(validationParams.bookmarks), pass
     }
   }
 
-  return mongoCollection.findOneAndUpdate({ _id: mongoose.Types.ObjectId(req.params.id) },
+  return mongoCollection.findOneAndUpdate({ _id: addingId },
     bookmarksAction)
     .then((bookmark) => {
       if (!bookmark && req.params.id) {
         throw new error.NotFound('NO_BOOKMARKS_ERR', 'Bookmarks not found');
       }
-      return User.findOneAndUpdate({ userId: req.user.userId },
+      return User.findOneAndUpdate(userDuplicateCheck,
         userAction)
         .then((user) => {
           if (!user) {
-            throw new error.NotFound('NO_USER_ERR', 'User not found, cannot update this user');
+            throw new error.NotFound('BOOKMARK_ADD_ERR', 'User not found, cannot update this user, or this bookmark is already added');
           }
           if (req.method === 'GET') {
             if (req.params.type === COLLECTIONS || req.params.type === MY_COLLECTIONS) {
@@ -318,8 +324,8 @@ router.all('/bookmarks/:type/:id?', validation(validationParams.bookmarks), pass
               .then(links => res.json({ links }));
           } else if (req.method === 'DELETE' && myTypes.indexOf(req.params.type) !== -1) {
             return mongoCollection.findOneAndRemove(req.params.type === MY_COLLECTIONS ?
-              { _id: mongoose.Types.ObjectId(req.params.id), authorId: req.user.userId } :
-              { _id: mongoose.Types.ObjectId(req.params.id), userAdded: req.user.userId })
+              { _id: addingId, authorId: req.user.userId } :
+              { _id: addingId, userAdded: req.user.userId })
               .then((deletedContent) => {
                 if (!deletedContent) {
                   throw new error.NotFound('CONTENT_DELETE_ERR', 'Nothing to delete');

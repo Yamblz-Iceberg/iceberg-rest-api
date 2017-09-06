@@ -19,14 +19,9 @@ router.post('/', validation(validationParams.addLink), passport.authenticate('be
   linkParser.getInfo(req.body.link)
     .then(info => Link.findOrCreate({ userAdded: req.user.userId, url: req.body.link },
       { favicon: info.favicon, name: info.name, photo: info.photo, description: req.body.description }, { upsert: true })
-      .then(link => User.findOneAndUpdate({ userId: req.user.userId },
+      .then(link => User.findOneAndUpdate({ userId: req.user.userId, 'addedLinks.bookmarkId': { $ne: link.result._id } },
         { $addToSet: { addedLinks: { bookmarkId: link.result._id } } })
-        .then((user) => {
-          if (!user) {
-            throw new error.NotFound('NO_USER_ERR', 'User not found');
-          }
-          res.json(link);
-        })))
+        .then(() => res.json(link))))
     .catch(err => next(err));
 });
 
