@@ -19,6 +19,9 @@ module.exports = {
         .invalid(badUsernames)
         .required(),
       nickName: nicknameJoi,
+      firstName: textShortJoi,
+      lastName: textShortJoi,
+      photo: Joi.string().regex(urlJoi),
       password: Joi.string().regex(/[a-zA-Z0-9]{3,30}/).required(),
     },
   },
