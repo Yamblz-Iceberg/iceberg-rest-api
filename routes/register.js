@@ -15,13 +15,16 @@ const validationParams = require('./validation/params');
 const error = require('rest-api-errors');
 
 
-const getGrants = (userObject, type = 'user') => {
+const getGrants = (userObject, type = 'user') => new Promise((resolve, reject) => {
+  if (!userObject) {
+    reject(new error.BadRequest('INVALID_USER_DATA_ERR', 'User data is invalid or emty'));
+  }
   const user = {};
   user.main = _.omit(userObject, 'password');
   user.password = _.get(userObject, 'password');
   user.main.accType = type;
-  return user;
-};
+  resolve(user);
+});
 
 const getStateParams = state => new Promise((resolve, reject) => {
   if (!state) {
@@ -34,7 +37,7 @@ const getStateParams = state => new Promise((resolve, reject) => {
   }
 
   const stateObj = {};
-  [stateObj.clientId, stateObj.clientSecret, stateObj.uniqueId] = stateArray; // es6 destructurisation
+  [stateObj.clientId, stateObj.clientSecret, stateObj.uniqueId] = stateArray;
   resolve(stateObj);
 });
 
@@ -92,27 +95,15 @@ const checkVKToken = (userId, token) => new Promise((resolve, reject) => {
 
 
 router.post('/demo', validation(validationParams.register), passport.authenticate(['basic'], { session: false }), (req, res, next) => {
-  const user = getGrants(req.body, 'demo');
-  User.register(user.main, user.password, (err, account) => {
-    if (err) {
-      return next(err);
-    }
-    return redirectOauth(req.user.clientId, req.user.clientSecret, account.userId, user.password)
-      .then(responce => res.json(responce))
-      .catch(_error => next(_error));
-  });
-});
-
-router.post('/basic', validation(validationParams.register), passport.authenticate(['basic'], { session: false }), (req, res, next) => {
-  const user = getGrants(req.body);
-  User.register(user.main, user.password, (err, account) => {
-    if (err) {
-      return next(err);
-    }
-    return redirectOauth(req.user.clientId, req.user.clientSecret, account.userId, user.password)
-      .then(responce => res.json(responce))
-      .catch(_error => next(_error));
-  });
+  getGrants(req.body, 'demo')
+    .then(user => User.register(user.main, user.password, (err, account) => {
+      if (err) {
+        return next(err);
+      }
+      return redirectOauth(req.user.clientId, req.user.clientSecret, account.userId, user.password)
+        .then(responce => res.json(responce));
+    }))
+    .catch(_error => next(_error));
 });
 
 router.post('/vk', validation(validationParams.social), passport.authenticate('basic', { session: false }), (req, res, next) => {
@@ -139,14 +130,14 @@ router.post('/ya', validation(validationParams.social), passport.authenticate('b
 router.get('/vk/callback', passport.authenticate('vkontakte', { session: false }), (req, res, next) => {
   getStateParams(req.query.state)
     .then(state => redirectOauth(state.clientId, state.clientSecret, req.user.userId, req.user.vkToken))
-    .then(responce => res.json(responce))
+    .then(response => res.render('callback', { response: JSON.stringify(response) }))
     .catch(err => next(err));
 });
 
 router.get('/fb/callback', passport.authenticate('facebook', { session: false }), (req, res, next) => {
   getStateParams(req.query.state)
     .then(state => redirectOauth(state.clientId, state.clientSecret, req.user.userId, req.user.fbToken))
-    .then(responce => res.json(responce))
+    .then(response => res.render('callback', { response: JSON.stringify(response) }))
     .catch(err => next(err));
 });
 

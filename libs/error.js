@@ -3,6 +3,7 @@ const restError = require('rest-api-errors').APIError;
 const FBError = require('fb').FacebookApiException;
 const VKAPIError = require('node-vkapi/lib/errors/api-error');
 const VKAuthError = require('node-vkapi/lib/errors/auth-error');
+const passportLocalMongooseErr = require('passport-local-mongoose/lib/errors').AuthenticationError;
 
 const errorHandler = error => new Promise((resolve, reject) => {
   try {
@@ -26,6 +27,9 @@ const errorHandler = error => new Promise((resolve, reject) => {
       body.message = error.message;
     } else if (error instanceof restError) {
       body.type = 'API_ERROR';
+      body.message = error.message;
+    } else if (error instanceof passportLocalMongooseErr) {
+      body.type = 'REGISTRATION_ERROR';
       body.message = error.message;
     } else if (error.name === 'MongoError') {
       body.type = 'MONGO_ERROR';
