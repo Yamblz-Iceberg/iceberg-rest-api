@@ -30,6 +30,7 @@
     "express-validation": "^1.0.2",
     "faker": "^4.1.0",
     "fb": "^2.0.0",
+    "find-favicon": "^0.1.2",
     "findorcreate-promise": "^1.2.0",
     "firebase-admin": "^5.2.1",
     "greenlock-express": "^2.0.11",
