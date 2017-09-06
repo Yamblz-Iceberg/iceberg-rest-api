@@ -73,7 +73,6 @@ function sendUploadToGCS(req, res, next) {
   return stream.end(req.file.buffer);
 }
 
-
 const getImageBuffer = (image, imageMime) => new Promise((resolve, reject) => {
   image.getBuffer(imageMime, (err, buffer) => {
     if (err) {

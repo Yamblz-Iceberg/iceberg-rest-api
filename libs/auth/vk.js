@@ -27,8 +27,16 @@ passport.use(new VKontakteStrategy({
       accType: 'user',
     };
 
-    User.findOneAndUpdate({ $or: [{ userId: user.userId }, { userId: uniqueId }] }, user, { new: true })
-      .then(_user => next(null, _user))
+    User.findOne({ userId: user.userId })
+      .then((userFound) => {
+        if (userFound) {
+          User.findOneAndUpdate({ userId: user.userId }, user, { new: true })
+            .then(_user => next(null, _user));
+        } else {
+          User.findOneAndUpdate({ userId: uniqueId }, user, { new: true })
+            .then(_user => next(null, _user));
+        }
+      })
       .catch(err => next(err));
   })));
 
