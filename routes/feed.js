@@ -104,12 +104,16 @@ router.get('/', validation(validationParams.feed), passport.authenticate('bearer
       if (!collections) {
         throw new error.NotFound('NO_COLLECTIONS_ERR', 'Collections cannot be found');
       } else {
+        if (req.query.only === 'collections') {
+          return res.json({ collections });
+        }
         return Tag.find(req.query.search ? { name: { $regex: new RegExp(req.query.search.replace('#', ''), 'i') } } : {}, { __v: 0 })
           .then((tags) => {
             if (!tags) {
               throw new error.NotFound('NO_TAGS_ERR', 'Tags not found');
             }
-            res.json({ collections, tags });
+            res.json({ collections: !req.query.only ? collections : undefined,
+              tags: req.query.only === 'tags' || !req.query.only ? tags : undefined });
           });
       }
     })

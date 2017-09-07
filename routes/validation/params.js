@@ -59,6 +59,7 @@ module.exports = {
     query: {
       search: Joi.string(),
       sort: Joi.string().valid(['time', 'rating']),
+      only: Joi.string().valid(['tags', 'collections']),
     },
   },
   tag: {
