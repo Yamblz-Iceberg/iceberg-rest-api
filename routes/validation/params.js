@@ -67,6 +67,12 @@ module.exports = {
       tagName: Joi.string().min(2).max(50).required(), // TODO: valid
     },
   },
+  personalTags: {
+    body: {
+      tags: Joi.array().max(20).items(Joi.string().regex(idMongoRegex))
+        .required(),
+    },
+  },
   social: {
     body: {
       uniqueId: Joi.string().guid({

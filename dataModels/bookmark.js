@@ -18,6 +18,10 @@ const Bookmark = new Schema({
   openTime: {
     type: Date,
   },
+  counter: {
+    type: Number,
+    default: 0,
+  },
 });
 
 

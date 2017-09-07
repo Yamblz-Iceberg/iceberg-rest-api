@@ -43,6 +43,9 @@ const User = new Schema({
   createdCollections: {
     type: [Bookmark],
   },
+  personalTags: {
+    type: [Bookmark],
+  },
   photo: {
     type: String,
     required: false,
