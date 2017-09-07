@@ -44,11 +44,12 @@ function getPublicUrl(filename) {
   return `https://storage.googleapis.com/${CLOUD_BUCKET}/${filename}`;
 }
 
-function sendUploadToGCS(req, res, next) {
+const sendUploadToGCS = (prefix = '') => (req, res, next) => {
   if (!req.file) {
     return next(new error.BadRequest('NO_FILE_ERR', 'File not found'));
   }
-  const gcsname = `images/${uuidv4()}.${mime.extension(req.file.mimetype)}`;
+  const name = uuidv4();
+  const gcsname = `images/${(req.file.cloudStorageName ? req.file.cloudStorageName : name) + prefix}.${mime.extension(req.file.mimetype)}`;
   const file = bucket.file(gcsname);
 
   const stream = file.createWriteStream({
@@ -66,12 +67,13 @@ function sendUploadToGCS(req, res, next) {
     req.file.cloudStorageObject = gcsname;
     file.makePublic().then(() => {
       req.file.cloudStoragePublicUrl = getPublicUrl(gcsname);
+      req.file.cloudStorageName = name;
       return next();
     });
   });
 
   return stream.end(req.file.buffer);
-}
+};
 
 const getImageBuffer = (image, imageMime) => new Promise((resolve, reject) => {
   image.getBuffer(imageMime, (err, buffer) => {
@@ -82,29 +84,31 @@ const getImageBuffer = (image, imageMime) => new Promise((resolve, reject) => {
   });
 });
 
-function resizeImage(req, res, next) {
+const resizeImage = size => (req, res, next) => {
   if (!req.file) {
     return next(new error.BadRequest('NO_FILE_ERR', 'File not found'));
   }
   return Jimp.read(req.file.buffer)
     .then(image => image
-      .resize(Jimp.AUTO, 1000))
+      .resize(Jimp.AUTO, size > image.bitmap.height ? image.bitmap.height : size))
     .then(image => getImageBuffer(image, req.file.mimetype))
     .then((buffer) => {
       req.file.buffer = buffer;
       return next();
     });
-}
+};
 
-router.post('/', multer.single('photo'), resizeImage, sendUploadToGCS, (req, res, next) => {
+router.post('/', multer.single('photo'), resizeImage(1000), sendUploadToGCS(), resizeImage(100), sendUploadToGCS('_islands100'), (req, res, next) => {
   const colorThief = new ColorThief();
 
   return Jimp.read(req.file.buffer)
     .then(image => image
-      .cover(100, 100)
-      .crop(50, 90, 90, 15))
+      .crop(image.bitmap.width / 2,
+        image.bitmap.height - Math.round(image.bitmap.height / 20),
+        image.bitmap.width,
+        Math.round(image.bitmap.height / 10)))
     .then(image => getImageBuffer(image, req.file.mimetype))
-    .then(buffer => res.json({ fileName: req.file.cloudStoragePublicUrl, mainColor: `rgb(${colorThief.getColor(buffer).join(', ')})` }))
+    .then(buffer => res.json({ fileName: req.file.cloudStoragePublicUrl.replace('_islands100', ''), mainColor: `rgb(${colorThief.getColor(buffer).join(', ')})` }))
     .catch(err => next(new error.InternalServerError('FILE_POST_PROCCES_ERR', err)));
 });
 
