@@ -217,11 +217,12 @@ function updateUsers(callback) {
     .then(collectionsDB => mongoose.models.Link.find({})
       .then(linksDB => mongoose.models.User.find({})
         .then(usersDB => Promise.all(usersDB.map((user) => {
-          user.savedCollections = collectionsDB.map(collection => (collection.usersSaved.indexOf(user.userId) !== -1 ? { bookmarkId: collection._id } : undefined)).filter(Boolean);
-          user.createdCollections = _.filter(collectionsDB, { authorId: user.userId }).map(collection => ({ bookmarkId: collection._id }));
-          user.addedLinks = _.filter(linksDB, { userAdded: user.userId }).map(link => ({ bookmarkId: link._id }));
-          user.savedLinks = linksDB.map(link => (link.usersSaved.indexOf(user.userId) !== -1 ? { bookmarkId: link._id } : undefined)).filter(Boolean);
-          return user.save();
+          const userObject = user;
+          userObject.savedCollections = collectionsDB.map(collection => (collection.usersSaved.indexOf(userObject.userId) !== -1 ? { bookmarkId: collection._id } : undefined)).filter(Boolean);
+          userObject.createdCollections = _.filter(collectionsDB, { authorId: userObject.userId }).map(collection => ({ bookmarkId: collection._id }));
+          userObject.addedLinks = _.filter(linksDB, { userAdded: userObject.userId }).map(link => ({ bookmarkId: link._id }));
+          userObject.savedLinks = linksDB.map(link => (link.usersSaved.indexOf(userObject.userId) !== -1 ? { bookmarkId: link._id } : undefined)).filter(Boolean);
+          return userObject.save();
         }))
           .then(() => callback())
           .catch(err => log.error(err)))));

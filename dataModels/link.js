@@ -33,6 +33,9 @@ const Link = new Schema({
   usersSaved: {
     type: Array,
   },
+  usersLiked: {
+    type: Array,
+  },
 });
 
 Link.plugin(findOrCreate);

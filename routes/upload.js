@@ -97,11 +97,15 @@ function resizeImage(req, res, next) {
 }
 
 router.post('/', multer.single('photo'), resizeImage, sendUploadToGCS, (req, res, next) => {
-  try {
-    return res.json({ fileName: req.file.cloudStoragePublicUrl, mainColor: `rgb(${new ColorThief().getColor(req.file.buffer).join(', ')})` });
-  } catch (err) {
-    return next(new error.InternalServerError('FILE_POST_PROCCES_ERR', err.message));
-  }
+  const colorThief = new ColorThief();
+
+  return Jimp.read(req.file.buffer)
+    .then(image => image
+      .cover(100, 100)
+      .crop(50, 90, 90, 15))
+    .then(image => getImageBuffer(image, req.file.mimetype))
+    .then(buffer => res.json({ fileName: req.file.cloudStoragePublicUrl, mainColor: `rgb(${colorThief.getColor(buffer).join(', ')})` }))
+    .catch(err => next(new error.InternalServerError('FILE_POST_PROCCES_ERR', err)));
 });
 
 

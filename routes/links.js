@@ -25,9 +25,25 @@ router.post('/', validation(validationParams.addLink), passport.authenticate('be
     .catch(err => next(err));
 });
 
-router.put('/read/:linkId', validation(validationParams.readLink), passport.authenticate('bearer', { session: false }), (req, res, next) => {
-
-
+router.put('/like/:linkId', validation(validationParams.readLink), passport.authenticate('bearer', { session: false }), (req, res, next) => {
+  const linkId = mongoose.Types.ObjectId(req.params.linkId);
+  Link.findOne({ _id: linkId })
+    .then((link) => {
+      const linkObject = link;
+      if (!linkObject) {
+        throw new error.NotFound('LINK_LIKE_ERR', 'Cannot like link that doesnt exist');
+      }
+      if (linkObject.usersLiked.indexOf(req.user.userId) !== -1) {
+        linkObject.usersLiked = _.remove(linkObject.usersLiked, req.user.userId);
+        linkObject.likes -= 1;
+      } else {
+        linkObject.usersLiked.push(req.user.userId);
+        linkObject.likes += 1;
+      }
+      return linkObject.save()
+        .then(() => res.end());
+    })
+    .catch(err => next(err));
 });
 
 module.exports = router;
