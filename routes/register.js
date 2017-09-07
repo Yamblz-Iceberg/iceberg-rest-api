@@ -121,7 +121,7 @@ router.get('/fb', validation(validationParams.social), passport.authenticate('ba
   })(req, res, next);
 });
 
-router.get('/ya', validation(validationParams.social), (req, res, next) => {
+router.get('/ya', validation(validationParams.social), passport.authenticate('basic', { session: false }), (req, res, next) => {
   passport.authenticate('yandex', {
     state: `${req.query.clientId},${req.query.clientSecret},${req.query.uniqueId}`,
   })(req, res, next);
