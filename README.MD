@@ -32,14 +32,15 @@ npm run stop //убить процесс
 
 - **POST** `/register/demo` - регистрация по uniqueId(генерируем на устройстве) и password со статусом demo (по дефолту при старте приложения)
 - **POST** `/register/basic` - регистрация по userId и password со статусом user (для тестирования)
-- **POST** `/register/fb json={"uniqueId": "43e022dfd972b50a37af0a1ad090f2c996431"}` - авторизация через facebook и запись в демо аккаунт(теперь он будет полным)
-- **POST** `/register/vk json={"uniqueId": "43ydsfdd972b50a37wl7af0a1ad090f2c996431"}` - авторизация через vkontakte и запись в демо аккаунт(теперь он будет полным)
+- **GET** `/register/fb json={"uniqueId": "43e022dfd972b50a37af0a1ad090f2c996431"}` - авторизация через facebook и запись в демо аккаунт(теперь он будет полным)
+- **GET** `/register/vk json={"uniqueId": "43ydsfdd972b50a37wl7af0a1ad090f2c996431"}` - авторизация через vkontakte и запись в демо аккаунт(теперь он будет полным)
+- **GET** `/register/ya json={"uniqueId": "43ydsfdd972b50a37wl7af0a1ad090f2c996431"}` - авторизация через yandex и запись в демо аккаунт(теперь он будет полным)
 - **PUT** `/register/logout json={"refreshToken": "43ydsfdd972b50a37wl7af0a1ad090f2c996431", "accesToken": "43ydsfdd972b50a37wl7af0a1ad090f2c996431"}` - удаление доступа
 - **PUT** `/register/logoutall` -  деавторизация на всех устройствах
 
 После получения статуса `user`, `userId` будет вида `fb_14000233422`
 
-Получаем ответ в `/register/vk/callback` или `/register/fb/callback`
+Получаем ответ в `/register/vk/callback`, `/register/yandex/callback` или `/register/fb/callback`
 с содержанием:
 
 ```json
@@ -62,7 +63,7 @@ npm run stop //убить процесс
 
 ### Feed route
 
-- **GET** `/feed?sort=time&search=Colle`- получение ленты, по умолчанию сортировка по рейтингу, non-case-sensetive поиск
+- **GET** `/feed?sort=time&search=Colle&only=tags`- получение ленты, по умолчанию сортировка по рейтингу, non-case-sensetive поиск, только теги (tags, collections)
 
 ### Links route
 
@@ -71,6 +72,7 @@ npm run stop //убить процесс
 ### Tags route
 
 - **POST** `/tags/котики`- если тег существует то вернем id, если нет создадим и вернем id
+- **PUT** `/tags/personal json = {"tags": ["59a57bfcc7291c53b91c94ca", "59a57bfcc7291c53b91c94ca"]}`- добавление персональных тегов
 
 ### Collections route
 
