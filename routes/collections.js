@@ -66,6 +66,7 @@ router.get('/:collectionId', passport.authenticate('bearer', { session: false })
     {
       $addFields: { 'link.savedTimesCount': { $cond: { if: { $isArray: '$link.usersSaved' }, then: { $size: '$link.usersSaved' }, else: 0 } },
         'link.saved': { $cond: { if: { $and: [{ $isArray: '$link.usersSaved' }, { $in: [req.user.userId, '$link.usersSaved'] }] }, then: true, else: false } },
+        'link.liked': { $cond: { if: { $and: [{ $isArray: '$link.usersLiked' }, { $in: [req.user.userId, '$link.usersLiked'] }] }, then: true, else: false } },
       },
     },
     {
@@ -128,6 +129,7 @@ router.get('/:collectionId', passport.authenticate('bearer', { session: false })
         'author.addedLinks': 0,
         'links.userAdded._id': 0,
         'links.usersSaved': 0,
+        'links.usersLiked': 0,
         'links.userAdded.hash': 0,
         'links.userAdded.salt': 0,
         'links.userAdded.banned': 0,
