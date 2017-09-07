@@ -105,15 +105,15 @@ router.get('/', validation(validationParams.feed), passport.authenticate('bearer
         throw new error.NotFound('NO_COLLECTIONS_ERR', 'Collections cannot be found');
       } else {
         if (req.query.only === 'collections') {
-          return res.json({ collections });
+          return res.json({ collections: collections.slice(0, req.query.count ? req.query.count : collections.length) });
         }
         return Tag.find(req.query.search ? { name: { $regex: new RegExp(req.query.search.replace('#', ''), 'i') } } : {}, { __v: 0 })
           .then((tags) => {
             if (!tags) {
               throw new error.NotFound('NO_TAGS_ERR', 'Tags not found');
             }
-            res.json({ collections: !req.query.only ? collections : undefined,
-              tags: req.query.only === 'tags' || !req.query.only ? tags : undefined });
+            res.json({ collections: !req.query.only ? collections.slice(0, req.query.count ? req.query.count : collections.length) : undefined,
+              tags: req.query.only === 'tags' || !req.query.only ? tags.slice(0, req.query.count ? req.query.count : tags.length) : undefined });
           });
       }
     })

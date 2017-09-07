@@ -60,6 +60,7 @@ module.exports = {
       search: Joi.string(),
       sort: Joi.string().valid(['time', 'rating']),
       only: Joi.string().valid(['tags', 'collections']),
+      count: Joi.number().min(0),
     },
   },
   tag: {
