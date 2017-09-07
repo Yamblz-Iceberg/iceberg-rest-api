@@ -11,6 +11,7 @@ passport.use(new VKontakteStrategy({
   clientSecret: process.env.VK_SECRET || config.get('vk_secret'),
   callbackURL: `${process.env.URL || `${config.get('base_url')}:${config.get('port')}/`}register/vk/callback`,
   profileFields: ['photo_max_orig'],
+  lang: 'ru',
   passReqToCallback: true,
 },
   ((req, accessToken, refreshToken, params, profile, next) => {
