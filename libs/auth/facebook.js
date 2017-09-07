@@ -3,6 +3,7 @@ const passport = require('passport');
 
 const config = require('../config');
 const User = require('../../dataModels/user').User;
+const _ = require('lodash');
 
 
 passport.use(new FacebookStrategy({
@@ -17,6 +18,7 @@ passport.use(new FacebookStrategy({
       userId: `fb_${profile.id}`,
       firstName: profile.displayName.split(' ')[0],
       lastName: profile.displayName.split(' ')[1],
+      photo: profile.photos && profile.photos.length ? profile.photos[0].value : undefined,
       fbToken: accessToken,
       accType: 'user',
     };

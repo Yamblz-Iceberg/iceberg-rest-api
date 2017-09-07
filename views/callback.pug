@@ -2,6 +2,7 @@ doctype html
 html(lang='en')
   head
     title Callback
+    body= response
     script(type='text/javascript').
       var app = 'iceberg';
       var str = "";
@@ -11,5 +12,4 @@ html(lang='en')
       }
       str += key + "=" + encodeURIComponent(!{response}[key]);
       }
-      console.log(str);
       window.location = app + '://?data=' + str;
