@@ -32,7 +32,17 @@ passport.use(new YandexStrategy({
             .then(_user => next(null, _user));
         } else {
           User.findOneAndUpdate({ userId: uniqueId }, user, { new: true })
-            .then(_user => next(null, _user));
+            .then((_user) => {
+              if (!_user) {
+                User.register(user, accessToken, (err, account) => {
+                  if (err) {
+                    throw err;
+                  }
+                  return next(null, account);
+                });
+              }
+              return next(null, _user);
+            });
         }
       })
       .catch(err => next(err));

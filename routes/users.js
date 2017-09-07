@@ -16,7 +16,7 @@ const social = require('../libs/social');
 router.all('/*', passport.authenticate('bearer', { session: false }));
 
 router.get('/:userId?', (req, res, next) => {
-  User.findOne({ userId: req.params.userId ? req.params.userId : req.user.userId }, '-hash -salt -_id -__v -createdCollections -savedCollections -addedLinks -savedLinks')
+  User.findOne({ userId: req.params.userId ? req.params.userId : req.user.userId }, '-hash -salt -_id -__v -createdCollections -personalTags -savedCollections -addedLinks -savedLinks')
     .then((user) => {
       if (!user) {
         throw new error.NotFound('NO_USER_ERR', 'User cannot be found');

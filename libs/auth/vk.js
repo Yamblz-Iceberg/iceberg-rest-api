@@ -19,14 +19,15 @@ passport.use(new VKontakteStrategy({
 
     const user = {
       userId: `vk_${profile.id}`,
-      firstName: profile.name.familyName,
-      lastName: profile.name.givenName,
+      firstName: profile.name.givenName,
+      lastName: profile.name.familyName,
       photo: _.chain(profile.photos).find(['type', 'photo_max_orig']).get('value', 'iceberg.png'),
       sex: profile.gender,
       socialLink: profile.profileUrl,
       vkToken: accessToken,
       accType: 'user',
     };
+
 
     User.findOne({ userId: user.userId })
       .then((userFound) => {
@@ -35,7 +36,17 @@ passport.use(new VKontakteStrategy({
             .then(_user => next(null, _user));
         } else {
           User.findOneAndUpdate({ userId: uniqueId }, user, { new: true })
-            .then(_user => next(null, _user));
+            .then((_user) => {
+              if (!_user) {
+                User.register(user, accessToken, (err, account) => {
+                  if (err) {
+                    throw err;
+                  }
+                  return next(null, account);
+                });
+              }
+              return next(null, _user);
+            });
         }
       })
       .catch(err => next(err));

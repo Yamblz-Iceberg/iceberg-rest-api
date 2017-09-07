@@ -23,6 +23,7 @@ passport.use(new FacebookStrategy({
       accType: 'user',
     };
 
+    // FIXME: функция одинаковая для всех соцсетей, вынести в модуль
     User.findOne({ userId: user.userId })
       .then((userFound) => {
         if (userFound) {
@@ -30,7 +31,17 @@ passport.use(new FacebookStrategy({
             .then(_user => next(null, _user));
         } else {
           User.findOneAndUpdate({ userId: uniqueId }, user, { new: true })
-            .then(_user => next(null, _user));
+            .then((_user) => {
+              if (!_user) {
+                User.register(user, accessToken, (err, account) => {
+                  if (err) {
+                    throw err;
+                  }
+                  return next(null, account);
+                });
+              }
+              return next(null, _user);
+            });
         }
       })
       .catch(err => next(err));
