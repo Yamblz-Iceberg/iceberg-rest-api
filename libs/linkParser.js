@@ -5,7 +5,7 @@ const ImageResolver = require('image-resolver');
 const findFavicon = require('find-favicon');
 
 const getInfo = url => new Promise((resolve, reject) => {
-  request({ method: 'GET', url }, (err, response, body) => {
+  request({ method: 'GET', url: url.replace(/[ |$%@"<>()+,]/g, '') }, (err, response, body) => {
     try {
       if (err) {
         reject(err);

@@ -57,9 +57,9 @@ async.series([
     .catch(error => log.error(error));
 });
 
-const numberOfUsers = 10;
-const tagsCount = 10;
-const collectionsCount = 20;
+const numberOfUsers = 0;
+const tagsCount = 0;
+const collectionsCount = 0;
 
 function open(callback) {
   mongoose.connection.on('connected', callback);

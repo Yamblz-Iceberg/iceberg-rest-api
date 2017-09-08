@@ -52,6 +52,9 @@ router.get('/', validation(validationParams.feed), passport.authenticate('bearer
     {
       $unwind: { path: '$author', preserveNullAndEmptyArrays: true },
     },
+    // {
+    //   $addFields: { 'tag.rel': { $cond: { if: { $and: [{ $isArray: '$author.personalTags' }, { $in: ['$tag._id', '$author.personalTags'] }] }, then: true, else: false } } },
+    // },
     {
       $group: {
         _id: '$_id',

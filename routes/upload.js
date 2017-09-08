@@ -103,7 +103,6 @@ router.post('/', multer.single('photo'), resizeImage(1000), sendUploadToGCS(), r
 
   return Jimp.read(req.file.buffer)
     .then(image => image
-      .cover(100, 100)
       .crop(image.bitmap.width / 2,
         image.bitmap.height - Math.round(image.bitmap.height / 20),
         image.bitmap.width,
