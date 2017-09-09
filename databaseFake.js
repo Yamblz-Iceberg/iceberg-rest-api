@@ -37,22 +37,16 @@ async.series([
     log.info(err);
   }
   mongoose.models.User.count({})
-    .then((count0) => {
-      log.info('Users created:', count0);
-      return mongoose.models.Tag.count({})
-        .then((count1) => {
-          log.info('Tags created:', count1);
-          return mongoose.models.Link.count({})
-            .then((count2) => {
-              log.info('Links created:', count2);
-              return mongoose.models.Collection.count({})
-                .then((count3) => {
-                  log.info('Collections created:', count3);
-                  log.info('DB recreated successfully!');
-                  process.exit(0);
-                });
-            });
-        });
+    .then(count0 => log.info('Users created:', count0))
+    .then(() => mongoose.models.Tag.count({}))
+    .then(count1 => log.info('Users created:', count1))
+    .then(() => mongoose.models.Link.count({}))
+    .then(count2 => log.info('Users created:', count2))
+    .then(() => mongoose.models.Collection.count({}))
+    .then((count3) => {
+      log.info('Collections created:', count3);
+      log.info('DB recreated successfully!');
+      process.exit(0);
     })
     .catch(error => log.error(error));
 });

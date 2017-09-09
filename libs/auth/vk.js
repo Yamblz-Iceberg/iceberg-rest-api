@@ -1,7 +1,7 @@
 const VKontakteStrategy = require('passport-vkontakte').Strategy;
 const passport = require('passport');
 
-const _ = require('lodash/chain');
+const _ = require('lodash');
 const config = require('../config');
 const social = require('../social');
 

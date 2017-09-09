@@ -18,151 +18,159 @@ const _ = require('lodash');
 router.all('/*', passport.authenticate('bearer', { session: false }));
 
 router.get('/:collectionId', (req, res, next) => {
-  Collection.aggregate([
-    {
-      $match: { _id: mongoose.Types.ObjectId(req.params.collectionId) },
-    },
-    {
-      $unwind: { path: '$links', preserveNullAndEmptyArrays: true },
-    },
-    {
-      $lookup:
+  User.findOne({ userId: req.user.userId })
+    .then(user => Collection.aggregate([
+      {
+        $match: { _id: mongoose.Types.ObjectId(req.params.collectionId) },
+      },
+      {
+        $unwind: { path: '$links', preserveNullAndEmptyArrays: true },
+      },
+      {
+        $lookup:
          {
            from: 'links',
            localField: 'links',
            foreignField: '_id',
            as: 'link',
          },
-    },
-    {
-      $unwind: { path: '$link', preserveNullAndEmptyArrays: true },
-    },
-    {
-      $unwind: { path: '$tags', preserveNullAndEmptyArrays: true },
-    },
-    {
-      $lookup:
+      },
+      {
+        $unwind: { path: '$link', preserveNullAndEmptyArrays: true },
+      },
+      {
+        $unwind: { path: '$tags', preserveNullAndEmptyArrays: true },
+      },
+      {
+        $lookup:
          {
            from: 'tags',
            localField: 'tags',
            foreignField: '_id',
            as: 'tag',
          },
-    },
+      },
 
-    {
-      $unwind: { path: '$tag', preserveNullAndEmptyArrays: true },
-    },
-    {
-      $lookup:
+      {
+        $unwind: { path: '$tag', preserveNullAndEmptyArrays: true },
+      },
+      {
+        $lookup:
          {
            from: 'users',
            localField: 'authorId',
            foreignField: 'userId',
            as: 'author',
          },
-    },
-    {
-      $unwind: { path: '$author', preserveNullAndEmptyArrays: true },
-    },
-    {
-      $addFields: { 'link.savedTimesCount': { $cond: { if: { $isArray: '$link.usersSaved' }, then: { $size: '$link.usersSaved' }, else: 0 } },
-        'link.saved': { $cond: { if: { $and: [{ $isArray: '$link.usersSaved' }, { $in: [req.user.userId, '$link.usersSaved'] }] }, then: true, else: false } },
-        'link.liked': { $cond: { if: { $and: [{ $isArray: '$link.usersLiked' }, { $in: [req.user.userId, '$link.usersLiked'] }] }, then: true, else: false } },
       },
-    },
-    {
-      $group: {
-        _id: '$_id',
-        name: { $first: '$name' },
-        author: { $first: '$author' },
-        photo: { $first: '$photo' },
-        color: { $first: '$color' },
-        links: { $addToSet: '$link' },
-        tags: { $addToSet: '$tag' },
-        description: { $first: '$description' },
-        usersSaved: { $first: '$usersSaved' },
+      {
+        $unwind: { path: '$author', preserveNullAndEmptyArrays: true },
       },
-    },
-    {
-      $unwind: { path: '$links', preserveNullAndEmptyArrays: true },
-    },
-    {
-      $lookup:
+      {
+        $addFields: {
+          'link.savedTimesCount': { $cond: { if: { $isArray: '$link.usersSaved' }, then: { $size: '$link.usersSaved' }, else: 0 } },
+          'link.saved': { $cond: { if: { $and: [{ $isArray: '$link.usersSaved' }, { $in: [req.user.userId, '$link.usersSaved'] }] }, then: true, else: false } },
+          'link.liked': { $cond: { if: { $and: [{ $isArray: '$link.usersLiked' }, { $in: [req.user.userId, '$link.usersLiked'] }] }, then: true, else: false } },
+          'link.opened': { $cond: { if: { $in: ['$link._id',
+            user.savedLinks.map(savedLink => (savedLink.opened ? savedLink.bookmarkId : undefined)).filter(Boolean)] },
+          then: true,
+          else: false } },
+        },
+      },
+      {
+        $group: {
+          _id: '$_id',
+          name: { $first: '$name' },
+          author: { $first: '$author' },
+          openedLinks: { $first: '$openedLinks' },
+          photo: { $first: '$photo' },
+          color: { $first: '$color' },
+          links: { $addToSet: '$link' },
+          tags: { $addToSet: '$tag' },
+          description: { $first: '$description' },
+          usersSaved: { $first: '$usersSaved' },
+        },
+      },
+      {
+        $unwind: { path: '$links', preserveNullAndEmptyArrays: true },
+      },
+      {
+        $lookup:
          {
            from: 'users',
            localField: 'links.userAdded',
            foreignField: 'userId',
            as: 'links.userAdded',
          },
-    },
-    {
-      $unwind: { path: '$links.userAdded', preserveNullAndEmptyArrays: true },
-    },
-    {
-      $group: {
-        _id: '$_id',
-        name: { $first: '$name' },
-        author: { $first: '$author' },
-        photo: { $first: '$photo' },
-        color: { $first: '$color' },
-        links: { $addToSet: '$links' },
-        tags: { $first: '$tags' },
-        description: { $first: '$description' },
-        usersSaved: { $first: '$usersSaved' },
       },
-    },
-    {
-      $addFields: {
-        saved: { $cond: { if: { $and: [{ $isArray: '$usersSaved' }, { $in: [req.user.userId, '$usersSaved'] }] }, then: true, else: false } },
-        savedTimesCount: { $size: '$usersSaved' },
+      {
+        $unwind: { path: '$links.userAdded', preserveNullAndEmptyArrays: true },
       },
-    },
-    {
-      $project: { 'author.salt': 0,
-        'author._id': 0,
-        usersSaved: 0,
-        'author.hash': 0,
-        'author.banned': 0,
-        'author.created': 0,
-        'author.createdCollections': 0,
-        'author.savedCollections': 0,
-        'author.savedLinks': 0,
-        'author.addedLinks': 0,
-        'links.userAdded._id': 0,
-        'links.usersSaved': 0,
-        'links.usersLiked': 0,
-        'links.userAdded.hash': 0,
-        'links.userAdded.salt': 0,
-        'links.userAdded.banned': 0,
-        'links.userAdded.created': 0,
-        'links.userAdded.__v': 0,
-        'links.userAdded.accType': 0,
-        'links.userAdded.description': 0,
-        'links.userAdded.createdCollections': 0,
-        'links.userAdded.savedCollections': 0,
-        'links.userAdded.addedLinks': 0,
-        'links.userAdded.savedLinks': 0,
-        'author.__v': 0,
-        'links.__v': 0,
-        'tags.__v': 0,
-        'tags.textColor': 0,
-        'tags.color': 0,
+      {
+        $group: {
+          _id: '$_id',
+          name: { $first: '$name' },
+          author: { $first: '$author' },
+          openedLinks: { $first: '$openedLinks' },
+          photo: { $first: '$photo' },
+          color: { $first: '$color' },
+          links: { $addToSet: '$links' },
+          tags: { $first: '$tags' },
+          description: { $first: '$description' },
+          usersSaved: { $first: '$usersSaved' },
+        },
       },
-    },
-  ])
-    .then((returnedCollection) => {
-      if (!returnedCollection || !returnedCollection.length) {
-        throw new error.NotFound('NO_COLLECTIONS_ERR', 'Collections not found');
-      } else {
-        const collection = returnedCollection[0];
-        if (!_.find(collection.links, 'userAdded')) { // FIXME: очень некрасивый костыль
-          collection.links = [];
+      {
+        $addFields: {
+          saved: { $cond: { if: { $and: [{ $isArray: '$usersSaved' }, { $in: [req.user.userId, '$usersSaved'] }] }, then: true, else: false } },
+          savedTimesCount: { $size: '$usersSaved' },
+        },
+      },
+      {
+        $project: { 'author.salt': 0,
+          'author._id': 0,
+          usersSaved: 0,
+          'author.hash': 0,
+          'author.banned': 0,
+          'author.created': 0,
+          'author.createdCollections': 0,
+          'author.savedCollections': 0,
+          'author.savedLinks': 0,
+          'author.addedLinks': 0,
+          'links.userAdded._id': 0,
+          'links.usersSaved': 0,
+          'links.usersLiked': 0,
+          'links.userAdded.hash': 0,
+          'links.userAdded.salt': 0,
+          'links.userAdded.banned': 0,
+          'links.userAdded.created': 0,
+          'links.userAdded.__v': 0,
+          'links.userAdded.accType': 0,
+          'links.userAdded.description': 0,
+          'links.userAdded.createdCollections': 0,
+          'links.userAdded.savedCollections': 0,
+          'links.userAdded.addedLinks': 0,
+          'links.userAdded.savedLinks': 0,
+          'author.__v': 0,
+          'links.__v': 0,
+          'tags.__v': 0,
+          'tags.textColor': 0,
+          'tags.color': 0,
+        },
+      },
+    ])
+      .then((returnedCollection) => {
+        if (!returnedCollection || !returnedCollection.length) {
+          throw new error.NotFound('NO_COLLECTIONS_ERR', 'Collections not found');
+        } else {
+          const collection = returnedCollection[0];
+          if (!_.find(collection.links, 'userAdded')) { // FIXME: очень некрасивый костыль
+            collection.links = [];
+          }
+          res.json({ collection });
         }
-        res.json({ collection });
-      }
-    })
-    .catch(err => next(err));
+      })
+      .catch(err => next(err)));
 });
 
 router.post('/', status.accountTypeMiddleware, validation(validationParams.collection), (req, res, next) => {
@@ -196,6 +204,18 @@ router.post('/addLink/:collectionId/:linkId', validation(validationParams.descri
             }
             res.end();
           });
+      }
+      return res.end();
+    })
+    .catch(err => next(err));
+});
+
+router.put('/open/:collectionId', validation(validationParams.readLink), (req, res, next) => {
+  User.findOneAndUpdate({ userId: req.user.userId, 'savedCollections.bookmarkId': mongoose.Types.ObjectId(req.params.collectionId) },
+    { $set: { 'savedCollections.$.opened': true } })
+    .then((savedCollection) => {
+      if (!savedCollection) {
+        throw new error.NotFound('METRICS_OPEN_ERR', 'Cannot mark this collection as opened');
       }
       return res.end();
     })
