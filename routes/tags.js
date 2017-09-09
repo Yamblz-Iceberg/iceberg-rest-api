@@ -24,7 +24,7 @@ router.post('/:tagName', validation(validationParams.tag), (req, res, next) => {
 });
 
 router.put('/personal', validation(validationParams.personalTags), (req, res, next) =>
-  Promise.all(req.body.tags.map(tag =>
+  Promise.each(req.body.tags, (tag =>
     User.findOne({ userId: req.user.userId })
       .then((user) => {
         if (!user) {

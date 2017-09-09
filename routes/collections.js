@@ -12,10 +12,12 @@ const mongoose = require('mongoose');
 const validation = require('./validation/validator');
 const validationParams = require('./validation/params');
 const error = require('rest-api-errors');
-
+const status = require('../libs/auth/status');
 const _ = require('lodash');
 
-router.get('/:collectionId', passport.authenticate('bearer', { session: false }), (req, res, next) => {
+router.all('/*', passport.authenticate('bearer', { session: false }));
+
+router.get('/:collectionId', (req, res, next) => {
   Collection.aggregate([
     {
       $match: { _id: mongoose.Types.ObjectId(req.params.collectionId) },
@@ -163,7 +165,7 @@ router.get('/:collectionId', passport.authenticate('bearer', { session: false })
     .catch(err => next(err));
 });
 
-router.post('/', passport.authenticate('bearer', { session: false }), validation(validationParams.collection), (req, res, next) => {
+router.post('/', status.accountTypeMiddleware, validation(validationParams.collection), (req, res, next) => {
   req.body.authorId = req.user.userId;
   req.body.tags = req.body.tags.map(tag => mongoose.Types.ObjectId(tag));
   const newCollection = new Collection(req.body);
@@ -179,7 +181,7 @@ router.post('/', passport.authenticate('bearer', { session: false }), validation
     .catch(err => next(err));
 });
 
-router.post('/addLink/:collectionId/:linkId', validation(validationParams.description), passport.authenticate('bearer', { session: false }), (req, res, next) => { // FIXME: проверка по url
+router.post('/addLink/:collectionId/:linkId', validation(validationParams.description), status.accountTypeMiddleware, (req, res, next) => { // FIXME: проверка по url
   Collection.findOneAndUpdate({ _id: mongoose.Types.ObjectId(req.params.collectionId) },
     { $addToSet: { links: mongoose.Types.ObjectId(req.params.linkId) } })
     .then((collection) => {

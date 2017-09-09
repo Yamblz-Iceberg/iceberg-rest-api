@@ -39,14 +39,14 @@ const createUser = (user, uniqueId, accessToken) => new Promise((resolve, reject
         .then(_user => resolve(_user));
     }
     if (/^(fb|ya|vk)/.test(uniqueId)) {
-      return reject(new error.Unauthorized('AUTH_ERR', 'User unique id contains illegal characters'));
+      return reject(new error.BadRequest('AUTH_ERR', 'User unique id contains illegal characters, maybe you trying to overwrite existing user'));
     }
     return User.findOneAndUpdate({ userId: uniqueId }, user, { new: true })
       .then((_user) => {
         if (!_user) {
           User.register(user, accessToken, (err, account) => {
             if (err) {
-              throw err;
+              reject(err);
             }
             return resolve(account);
           });

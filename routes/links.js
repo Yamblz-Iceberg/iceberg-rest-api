@@ -16,9 +16,9 @@ const status = require('../libs/auth/status');
 
 const _ = require('lodash');
 
-router.all('/*', passport.authenticate('bearer', { session: false }), status.accountTypeMiddleware);
+router.all('/*', passport.authenticate('bearer', { session: false }));
 
-router.post('/', validation(validationParams.addLink), (req, res, next) => {
+router.post('/', validation(validationParams.addLink), status.accountTypeMiddleware, (req, res, next) => {
   linkParser.getInfo(req.body.link)
     .then(info => Link.findOrCreate({ userAdded: req.user.userId, url: req.body.link },
       { favicon: info.favicon, name: info.name, photo: info.photo, description: req.body.description }, { upsert: true })
@@ -45,6 +45,18 @@ router.put('/like/:linkId', validation(validationParams.readLink), status.accoun
       }
       return linkObject.save()
         .then(() => res.end());
+    })
+    .catch(err => next(err));
+});
+
+router.put('/open/:linkId', validation(validationParams.readLink), (req, res, next) => {
+  User.findOneAndUpdate({ userId: req.user.userId, 'savedLinks.bookmarkId': mongoose.Types.ObjectId(req.params.linkId) },
+    { $set: { 'savedLinks.$.opened': true } })
+    .then((savedLink) => {
+      if (!savedLink) {
+        throw new error.NotFound('METRICS_OPEN_ERR', 'Cannot mark this link as opened');
+      }
+      return res.end();
     })
     .catch(err => next(err));
 });
