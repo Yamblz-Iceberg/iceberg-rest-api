@@ -4,17 +4,13 @@ const router = express.Router();
 
 const passport = require('passport');
 
-const User = require('.././dataModels/user').User;
 const Collection = require('.././dataModels/collection').Collection;
 const Tag = require('.././dataModels/tag').Tag;
-const uuidv4 = require('uuid/v4');
-const mongoose = require('mongoose');
 
 const validation = require('./validation/validator');
 const validationParams = require('./validation/params');
 const error = require('rest-api-errors');
 
-const _ = require('lodash');
 
 router.get('/', validation(validationParams.feed), passport.authenticate('bearer', { session: false }), (req, res, next) => {
   Collection.aggregate([

@@ -1,18 +1,11 @@
 const express = require('express');
 
 const router = express.Router();
-
 const passport = require('passport');
-
-const Tag = require('.././dataModels/tag').Tag;
-const mongoose = require('mongoose');
 const uuidv4 = require('uuid');
-
-const validation = require('./validation/validator');
-const validationParams = require('./validation/params');
 const error = require('rest-api-errors');
+const status = require('../libs/auth/status');
 
-const _ = require('lodash');
 const mime = require('mime-types');
 const ColorThief = require('color-thief');
 const Jimp = require('jimp');
@@ -98,19 +91,21 @@ const resizeImage = size => (req, res, next) => {
     });
 };
 
-router.post('/', multer.single('photo'), resizeImage(1000), sendUploadToGCS(), resizeImage(100), sendUploadToGCS('_islands100'), (req, res, next) => {
-  const colorThief = new ColorThief();
+router.post('/', passport.authenticate('bearer', { session: false }), status.accountTypeMiddleware,
+  multer.single('photo'), resizeImage(1000), sendUploadToGCS(), resizeImage(100), sendUploadToGCS('_islands100'), (req, res, next) => {
+    const colorThief = new ColorThief();
 
-  return Jimp.read(req.file.buffer)
-    .then(image => image
-      .crop(image.bitmap.width / 2,
-        image.bitmap.height - Math.round(image.bitmap.height / 20),
-        image.bitmap.width,
-        Math.round(image.bitmap.height / 10)))
-    .then(image => getImageBuffer(image, req.file.mimetype))
-    .then(buffer => res.json({ fileName: req.file.cloudStoragePublicUrl.replace('_islands100', ''), mainColor: `rgb(${colorThief.getColor(buffer).join(', ')})` }))
-    .catch(err => next(new error.InternalServerError('FILE_POST_PROCCES_ERR', err)));
-});
+    return Jimp.read(req.file.buffer)
+      .then(image => image
+        .crop(image.bitmap.width / 2,
+          image.bitmap.height - Math.round(image.bitmap.height / 20),
+          image.bitmap.width,
+          Math.round(image.bitmap.height / 10)))
+      .then(image => getImageBuffer(image, req.file.mimetype))
+      .then(buffer => res.json({ fileName: req.file.cloudStoragePublicUrl.replace('_islands100', ''),
+        mainColor: `rgb(${colorThief.getColor(buffer).join(', ')})` }))
+      .catch(err => next(new error.InternalServerError('FILE_POST_PROCCES_ERR', err)));
+  });
 
 
 module.exports = router;

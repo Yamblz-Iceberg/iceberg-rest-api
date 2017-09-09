@@ -77,11 +77,7 @@ module.exports = {
   },
   social: {
     query: {
-      uniqueId: Joi.string().guid({
-        version: [
-          'uuidv4',
-        ],
-      }).required(),
+      // uniqueId: Joi.string().guid().required(),
       clientId: Joi.string().required(),
       clientSecret: Joi.string().required(),
     },

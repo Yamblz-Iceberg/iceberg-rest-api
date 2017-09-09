@@ -1,10 +1,9 @@
 const VKontakteStrategy = require('passport-vkontakte').Strategy;
 const passport = require('passport');
 
+const _ = require('lodash/chain');
 const config = require('../config');
-const User = require('../../dataModels/user').User;
-const _ = require('lodash');
-const error = require('rest-api-errors');
+const social = require('../social');
 
 
 passport.use(new VKontakteStrategy({
@@ -29,29 +28,8 @@ passport.use(new VKontakteStrategy({
       accType: 'user',
     };
 
-
-    User.findOne({ userId: user.userId })
-      .then((userFound) => {
-        if (userFound) {
-          return User.findOneAndUpdate({ userId: user.userId }, user, { new: true })
-            .then(_user => next(null, _user));
-        }
-        if (/^(fb|ya|vk)/.test(uniqueId)) {
-          return next(new error.Unauthorized('AUTH_ERR', 'User unique id contains illegal characters'));
-        }
-        return User.findOneAndUpdate({ userId: uniqueId }, user, { new: true })
-          .then((_user) => {
-            if (!_user) {
-              User.register(user, accessToken, (err, account) => {
-                if (err) {
-                  throw err;
-                }
-                return next(null, account);
-              });
-            }
-            return next(null, _user);
-          });
-      })
+    social.createUser(user, uniqueId, accessToken)
+      .then(socialUser => next(null, socialUser))
       .catch(err => next(err));
   })));
 

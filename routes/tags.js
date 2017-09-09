@@ -11,16 +11,19 @@ const mongoose = require('mongoose');
 const validation = require('./validation/validator');
 const validationParams = require('./validation/params');
 const error = require('rest-api-errors');
+const status = require('../libs/auth/status');
 
 const _ = require('lodash');
 
-router.post('/:tagName', validation(validationParams.tag), passport.authenticate('bearer', { session: false }), (req, res, next) => {
+router.all('/*', passport.authenticate('bearer', { session: false }), status.accountTypeMiddleware);
+
+router.post('/:tagName', validation(validationParams.tag), (req, res, next) => {
   Tag.findOrCreate({ name: req.params.tagName })
     .then(tag => res.json({ tag }))
     .catch(err => next(err));
 });
 
-router.put('/personal', validation(validationParams.personalTags), passport.authenticate('bearer', { session: false }), (req, res, next) =>
+router.put('/personal', validation(validationParams.personalTags), (req, res, next) =>
   Promise.all(req.body.tags.map(tag =>
     User.findOne({ userId: req.user.userId })
       .then((user) => {

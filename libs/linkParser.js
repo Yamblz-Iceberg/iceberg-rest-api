@@ -1,6 +1,5 @@
 const cheerio = require('cheerio');
 const request = require('request');
-const _ = require('lodash');
 const ImageResolver = require('image-resolver');
 const findFavicon = require('find-favicon');
 

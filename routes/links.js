@@ -12,10 +12,13 @@ const validation = require('./validation/validator');
 const validationParams = require('./validation/params');
 const linkParser = require('./../libs/linkParser');
 const error = require('rest-api-errors');
+const status = require('../libs/auth/status');
 
 const _ = require('lodash');
 
-router.post('/', validation(validationParams.addLink), passport.authenticate('bearer', { session: false }), (req, res, next) => {
+router.all('/*', passport.authenticate('bearer', { session: false }), status.accountTypeMiddleware);
+
+router.post('/', validation(validationParams.addLink), (req, res, next) => {
   linkParser.getInfo(req.body.link)
     .then(info => Link.findOrCreate({ userAdded: req.user.userId, url: req.body.link },
       { favicon: info.favicon, name: info.name, photo: info.photo, description: req.body.description }, { upsert: true })
@@ -25,7 +28,7 @@ router.post('/', validation(validationParams.addLink), passport.authenticate('be
     .catch(err => next(err));
 });
 
-router.put('/like/:linkId', validation(validationParams.readLink), passport.authenticate('bearer', { session: false }), (req, res, next) => {
+router.put('/like/:linkId', validation(validationParams.readLink), status.accountTypeMiddleware, (req, res, next) => {
   const linkId = mongoose.Types.ObjectId(req.params.linkId);
   Link.findOne({ _id: linkId })
     .then((link) => {
