@@ -67,7 +67,7 @@ module.exports = {
   tag: {
     body: {},
     params: {
-      tagName: Joi.string().min(2).max(50).required(), // TODO: valid tag
+      tagName: Joi.string().min(2).max(50).required(),
     },
   },
   personalTags: {

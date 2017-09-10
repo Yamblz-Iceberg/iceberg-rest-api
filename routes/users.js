@@ -78,7 +78,7 @@ router.all('/bookmarks/:type/:id?', validation(validationParams.bookmarks), pass
   if (req.method === 'PUT' && req.params.id && types.indexOf(req.params.type) !== -1) {
     bookmarksAction = { $addToSet: userActionDestination };
     userAction = { $addToSet: req.params.type === SAVED_COLLECTIONS ? collectionsActionDestination : linksActionDestination };
-    userDuplicateCheck = { userId: req.query.userId, 'bookmarks.bookmarkId': { $ne: addingId } };
+    userDuplicateCheck = { userId: req.user.userId, 'bookmarks.bookmarkId': { $ne: addingId } };
   } else if (req.method === 'DELETE' && req.params.id) {
     switch (req.params.type) {
     case (SAVED_COLLECTIONS): userAction = { $pull: collectionsActionDestination };

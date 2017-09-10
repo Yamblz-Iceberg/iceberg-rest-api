@@ -48,7 +48,7 @@ router.get('/', validation(validationParams.feed), passport.authenticate('bearer
     {
       $unwind: { path: '$author', preserveNullAndEmptyArrays: true },
     },
-    // FIXME: `добавить рейтинг у тега 
+    // FIXME: добавить рейтинг у тега 
     // {
     //   $lookup:
     //      {
