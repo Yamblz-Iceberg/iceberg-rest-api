@@ -68,7 +68,7 @@ router.all('/bookmarks/:type/:id?', validation(validationParams.bookmarks), pass
 
   const collectionsActionDestination = { bookmarks: { bookmarkId: addingId, type: SAVED_COLLECTIONS } };
   const collectionsCreatedActionDestination = { bookmarks: { bookmarkId: addingId, type: CREATED_COLLECTIONS } };
-  const linksActionDestination = { bookmarks: { bookmarks: addingId, type: SAVED_LINKS } };
+  const linksActionDestination = { bookmarks: { bookmarkId: addingId, type: SAVED_LINKS } };
   const linksActionAddedDestination = { bookmarks: { bookmarkId: addingId, type: ADDED_LINKS } };
 
   const userActionDestination = { usersSaved: req.user.userId };
@@ -278,6 +278,8 @@ router.all('/bookmarks/:type/:id?', validation(validationParams.bookmarks), pass
                   'userAdded.salt': 0,
                   'userAdded.bookmarks': 0,
                   'metrics._id': 0,
+                  'metrics.contentId': 0,
+                  'metrics.type': 0,
                   'metrics.bookmarkId': 0,
                   'metrics.counter': 0,
                   'userAdded._id': 0,
