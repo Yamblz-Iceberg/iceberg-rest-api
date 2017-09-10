@@ -2,110 +2,26 @@ const express = require('express');
 
 const router = express.Router();
 const passport = require('passport');
-const uuidv4 = require('uuid');
-const error = require('rest-api-errors');
 const status = require('../libs/auth/status');
-
-const mime = require('mime-types');
-const ColorThief = require('color-thief');
-const Jimp = require('jimp');
-
+const postProccess = require('../libs/imagePostProcces');
+const gcs = require('../libs/gcUpload');
 const Multer = require('multer');
 
 const multer = new Multer({
   storage: Multer.MemoryStorage,
   limits: {
-    fileSize: 10 * 1024 * 1024, // no larger than 5mb
+    fileSize: 10 * 1024 * 1024,
   },
 });
 
-const root = process.cwd();
-const KEY_FILENAME = '/google-credentials.json';
-const PROJECT_ID = 'iceberg-cfa80';
-const CLOUD_BUCKET = `${PROJECT_ID}.appspot.com`;
-
-const GCS = require('@google-cloud/storage');
-
-const gcs = new GCS({
-  projectId: PROJECT_ID,
-  keyFilename: root + KEY_FILENAME,
-});
-
-const bucket = gcs.bucket(CLOUD_BUCKET);
-
-function getPublicUrl(filename) {
-  return `https://storage.googleapis.com/${CLOUD_BUCKET}/${filename}`;
-}
-
-const sendUploadToGCS = (prefix = '') => (req, res, next) => {
-  if (!req.file) {
-    return next(new error.BadRequest('NO_FILE_ERR', 'File not found'));
-  }
-  const name = uuidv4();
-  const gcsname = `images/${(req.file.cloudStorageName ? req.file.cloudStorageName : name) + prefix}.${mime.extension(req.file.mimetype)}`;
-  const file = bucket.file(gcsname);
-
-  const stream = file.createWriteStream({
-    metadata: {
-      contentType: req.file.mimetype,
-    },
-  });
-
-  stream.on('error', (err) => {
-    req.file.cloudStorageError = err;
-    return next(new error.BandwidthLimitExceeded('GC_UPLOAD_ERR', err.message));
-  });
-
-  stream.on('finish', () => {
-    req.file.cloudStorageObject = gcsname;
-    file.makePublic().then(() => {
-      req.file.cloudStoragePublicUrl = getPublicUrl(gcsname);
-      req.file.cloudStorageName = name;
-      return next();
-    });
-  });
-
-  return stream.end(req.file.buffer);
-};
-
-const getImageBuffer = (image, imageMime) => new Promise((resolve, reject) => {
-  image.getBuffer(imageMime, (err, buffer) => {
-    if (err) {
-      reject(err);
-    }
-    return resolve(buffer);
-  });
-});
-
-const resizeImage = size => (req, res, next) => {
-  if (!req.file) {
-    return next(new error.BadRequest('NO_FILE_ERR', 'File not found'));
-  }
-  return Jimp.read(req.file.buffer)
-    .then(image => image
-      .resize(Jimp.AUTO, size > image.bitmap.height ? image.bitmap.height : size))
-    .then(image => getImageBuffer(image, req.file.mimetype))
-    .then((buffer) => {
-      req.file.buffer = buffer;
-      return next();
-    });
-};
-// TODO: переделать на нормальные чистые функции для загрузки и изменения размера, вынести в отдельный модуль
-router.post('/', /* passport.authenticate('bearer', { session: false }), status.accountTypeMiddleware, */
-  multer.single('photo'), resizeImage(1000), sendUploadToGCS(), resizeImage(100), sendUploadToGCS('_islands100'), (req, res, next) => {
-    const colorThief = new ColorThief();
-
-    return Jimp.read(req.file.buffer)
-      .then(image => image
-        .crop(image.bitmap.width / 2,
-          image.bitmap.height - Math.round(image.bitmap.height / 20),
-          image.bitmap.width,
-          Math.round(image.bitmap.height / 10)))
-      .then(image => getImageBuffer(image, req.file.mimetype))
-      .then(buffer => res.json({ fileName: req.file.cloudStoragePublicUrl.replace('_islands100', ''),
-        mainColor: `rgb(${colorThief.getColor(buffer).join(', ')})` }))
-      .catch(err => next(new error.InternalServerError('FILE_POST_PROCCES_ERR', err)));
-  });
-
+router.post('/', passport.authenticate('bearer', { session: false }), status.accountTypeMiddleware,
+  multer.single('photo'), (req, res, next) =>
+    postProccess.resize(req.file, 100)
+      .then(resizedImage100 => gcs.upload(resizedImage100, '_islands100')
+        .then(link100 => postProccess.resize(req.file, 1000)
+          .then(resizedImage1000 => gcs.upload(resizedImage1000)
+            .then(link1000 => postProccess.average(req.file)
+              .then(average => res.json({ link: link1000, linkIslands100: link100, mainColor: average }))))))
+      .catch(err => next(err)));
 
 module.exports = router;
