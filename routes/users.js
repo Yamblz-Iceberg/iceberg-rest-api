@@ -17,7 +17,7 @@ router.all('/*', passport.authenticate('bearer', { session: false }));
 
 router.get('/:userId?', (req, res, next) => {
   User.findOne({ userId: req.params.userId ? req.params.userId : req.user.userId },
-    { hash: 0, salt: 0, id: 0, __v: 0, createdCollections: 0, personalTags: 0, savedCollections: 0, addedLinks: 0, savedLinks: 0 })
+    { hash: 0, salt: 0, id: 0, __v: 0, bookmarks: 0, metrics: 0, savedLinks: 0 })
     .then(user => (!user ? new error.NotFound('NO_USER_ERR', 'User cannot be found') : user))
     .then(user => res.json(user))
     .catch(err => next(err));
@@ -285,10 +285,7 @@ router.all('/bookmarks/:type/:id?', validation(validationParams.bookmarks), pass
                   'userAdded.banned': 0,
                   'userAdded.created': 0,
                   'userAdded.accType': 0,
-                  'userAdded.createdCollections': 0,
-                  'userAdded.savedCollections': 0,
-                  'userAdded.savedLinks': 0,
-                  'userAdded.addedLinks': 0,
+                  'userAdded.metrics': 0,
                   'userAdded.__v': 0,
                 },
               },

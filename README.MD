@@ -1,4 +1,4 @@
-# REST API проекта ICEBERG
+# API проекта ICEBERG
 
 - Вам необходимо установить **Node.js** и **MongoDB**
 - Все настройки находятся в файле `config.json`
@@ -68,8 +68,8 @@ npm run stop //убить процесс
 ### Links route
 
 - **POST** `/links/ json = {"link": "http://telegra.ph/Iceberg-Sample-08-31", "description": "Описание ссылки"}`- добавление ссылки
-- **PUT** `/links/open/:linkId - отметить ссылку открытой
-- **PUT** `/links/like/:linkId - лайкнуть ссылку
+- **PUT** `/links/open/:linkId` - отметить ссылку открытой
+- **PUT** `/links/like/:linkId` - лайкнуть ссылку
 
 ### Tags route
 
@@ -81,7 +81,7 @@ npm run stop //убить процесс
 - **GET** `/collections/:collectionId`- получение коллекция
 - **POST** `/collections json = {"description": "Очень хочу котика", "name": "Как завести кота", "photo": "https://pp.userapi.com/c543100/v543100915/2fbfb/IoVG_UEW-yw.jpg", "tags": ["59a57bfcc7291c53b91c94ca",  "59a57bfcc7291c53b91c94ca"]}`- добавление коллекции
 - **PUT** `/collections/addLink/:collectionId/:linkId`- добавление ссылки в коллекцию
-- **PUT** `/collections/open/:collectionId - отметить коллекцию открытой
+- **PUT** `/collections/open/:collectionId` - отметить коллекцию открытой
 
 ### Users route
 

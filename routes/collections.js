@@ -147,6 +147,7 @@ router.get('/:collectionId', (req, res, next) => {
           'links.userAdded.accType': 0,
           'links.userAdded.description': 0,
           'links.userAdded.bookmarks': 0,
+          'links.userAdded.metrics': 0,
           'author.__v': 0,
           'links.__v': 0,
           'tags.__v': 0,
