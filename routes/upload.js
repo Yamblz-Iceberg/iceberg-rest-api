@@ -14,7 +14,7 @@ const multer = new Multer({
   },
 });
 
-router.post('/', passport.authenticate('bearer', { session: false }), status.accountTypeMiddleware,
+router.post('/', // passport.authenticate('bearer', { session: false }), status.accountTypeMiddleware,
   multer.single('photo'), (req, res, next) =>
     postProccess.resize(req.file, 100)
       .then(resizedImage100 => gcs.upload(resizedImage100, '_islands100')
