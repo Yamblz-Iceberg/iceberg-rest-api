@@ -21,7 +21,7 @@ router.post('/', // passport.authenticate('bearer', { session: false }), status.
         .then(link100 => postProccess.resize(req.file, 1000)
           .then(resizedImage1000 => gcs.upload(resizedImage1000)
             .then(link1000 => postProccess.average(req.file)
-              .then(average => res.json({ link: link1000, linkIslands100: link100, mainColor: average }))))))
+              .then(average => res.json({ fileName: link1000, fileNameislands100: link100, mainColor: average }))))))
       .catch(err => next(err)));
 
 module.exports = router;
