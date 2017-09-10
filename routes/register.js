@@ -20,7 +20,7 @@ const getGrants = (userObject, type = 'user') => new Promise((resolve, reject) =
     reject(new error.BadRequest('INVALID_USER_DATA_ERR', 'User data is invalid or emty'));
   }
   const user = {};
-  user.main = _.omit(userObject, 'password');
+  user.main = _.omit(userObject, 'password'); // убрать lodash
   user.password = _.get(userObject, 'password');
   user.main.accType = type;
   resolve(user);
@@ -96,7 +96,7 @@ const checkVKToken = (userId, token) => new Promise((resolve, reject) => {
 
 router.post('/demo', validation(validationParams.register), passport.authenticate(['basic'], { session: false }), (req, res, next) => {
   getGrants(req.body, 'demo')
-    .then(user => User.register(user.main, user.password, (err, account) => {
+    .then(user => User.register(user.main, user.password, (err, account) => { // переделать на promise
       if (err) {
         return next(err);
       }
@@ -150,7 +150,7 @@ router.get('/yandex/callback', passport.authenticate('yandex', { session: false 
 
 router.put('/logout', validation(validationParams.logout), passport.authenticate('basic', { session: false }), (req, res, next) => {
   AccessToken.remove({ clientId: req.user.clientId, token: req.body.accessToken })
-    .then(() => RefreshToken.remove({ clientId: req.user.clientId, token: req.body.refreshToken })) // все равно на ошибки, ведь мы удаляем
+    .then(() => RefreshToken.remove({ clientId: req.user.clientId, token: req.body.refreshToken }))
     .then(() => res.end())
     .catch(err => next(err));
 });

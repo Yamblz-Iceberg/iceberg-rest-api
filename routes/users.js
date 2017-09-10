@@ -17,38 +17,23 @@ router.all('/*', passport.authenticate('bearer', { session: false }));
 
 router.get('/:userId?', (req, res, next) => {
   User.findOne({ userId: req.params.userId ? req.params.userId : req.user.userId },
-    '-hash -salt -_id -__v -createdCollections -personalTags -savedCollections -addedLinks -savedLinks')
-    .then((user) => {
-      if (!user) {
-        throw new error.NotFound('NO_USER_ERR', 'User cannot be found');
-      } else {
-        res.json(user);
-      }
-    })
+    { hash: 0, salt: 0, id: 0, __v: 0, createdCollections: 0, personalTags: 0, savedCollections: 0, addedLinks: 0, savedLinks: 0 })
+    .then(user => (!user ? new error.NotFound('NO_USER_ERR', 'User cannot be found') : user))
+    .then(user => res.json(user))
     .catch(err => next(err));
 });
 
 router.put('/', validation(validationParams.editUser), (req, res, next) => {
   User.findOneAndUpdate({ userId: req.user.userId }, req.body)
-    .then((user) => {
-      if (!user) {
-        throw new error.NotFound('NO_USER_ERR', 'User cannot be found');
-      } else {
-        res.end();
-      }
-    })
+    .then(user => (!user ? new error.NotFound('NO_USER_ERR', 'User cannot be found') : user))
+    .then(() => res.end())
     .catch(err => next(err));
 });
 
 router.delete('/', (req, res, next) => {
   User.findOneAndRemove({ userId: req.user.userId })
-    .then((user) => {
-      if (!user) {
-        throw new error.NotFound('NO_USER_ERR', 'User cannot be found');
-      } else {
-        res.end();
-      }
-    })
+    .then(user => (!user ? new error.NotFound('NO_USER_ERR', 'User cannot be found') : user))
+    .then(() => res.end())
     .catch(err => next(err));
 });
 
@@ -58,6 +43,7 @@ router.get('/social/friends', status.accountTypeMiddleware, (req, res, next) => 
     .catch(err => next(err));
 });
 
+// TODO: Рефакторинг на единую схему для сохранненых закладок и метрик
 router.all('/bookmarks/:type/:id?', validation(validationParams.bookmarks), passport.authenticate('bearer', { session: false }), (req, res, next) => {
   const COLLECTIONS = 'collections';
   const MY_COLLECTIONS = 'myCollections';

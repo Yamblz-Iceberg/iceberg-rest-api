@@ -91,5 +91,3 @@ passport.use(new BearerStrategy(
       .catch(err => next(err));
   }));
 
-// passport.serializeUser(User.serializeUser());
-// passport.deserializeUser(User.deserializeUser());

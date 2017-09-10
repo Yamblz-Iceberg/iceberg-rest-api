@@ -13,7 +13,7 @@ const Collection = new Schema({
     required: true,
   },
   tags: {
-    type: Array,
+    type: [Schema.Types.ObjectId],
   },
   description: {
     type: String,
@@ -23,7 +23,7 @@ const Collection = new Schema({
     type: String,
   },
   links: {
-    type: Array,
+    type: [Schema.Types.ObjectId],
   },
   color: {
     type: String,

@@ -34,7 +34,7 @@ router.put('/personal', validation(validationParams.personalTags), (req, res, ne
         if (!bookmark) {
           user.personalTags.push({ bookmarkId: mongoose.Types.ObjectId(tag) });
         } else {
-          bookmark.counter += 1; // FIXME: когда асинхронное добавление, то независимо от количества тегов в массиве (одинаковых), увеличится на 1
+          bookmark.counter += 1;
         }
         return user.save();
       })))

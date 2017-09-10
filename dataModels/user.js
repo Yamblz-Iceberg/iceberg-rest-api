@@ -1,5 +1,4 @@
 const mongoose = require('../libs/db/mongoose');
-// const crypto = require('crypto');
 const findOrCreate = require('findorcreate-promise');
 const passportLocalMongoose = require('passport-local-mongoose');
 const Bookmark = require('./bookmark');
@@ -11,6 +10,7 @@ const User = new Schema({
     type: String,
     unique: true,
     required: true,
+    lowercase: true,
   },
   description: {
     type: String,
@@ -80,7 +80,7 @@ const User = new Schema({
     default: false,
   },
 });
-// TODO: переделать userId на id монго
+
 User.plugin(findOrCreate);
 User.plugin(passportLocalMongoose, {
   usernameField: 'userId',

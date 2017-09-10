@@ -1,13 +1,11 @@
 global.Promise = require('bluebird');
 const express = require('express');
-const socketIo = require('socket.io');
 const helmet = require('helmet');
 const path = require('path');
 const favicon = require('serve-favicon');
 const logger = require('morgan');
 const compression = require('compression');
 const bodyParser = require('body-parser');
-// const config = require('./libs/config');
 const passport = require('passport');
 const methodOverride = require('method-override');
 const errorHandler = require('./libs/error');
@@ -15,12 +13,11 @@ const cors = require('cors');
 
 const RateLimit = require('express-rate-limit');
 
-// TODO: bruttforce
 
 const limiter = new RateLimit({
   windowMs: 10 * 60 * 1000, //  10 minutes 
-  max: 100, // limit each IP to 100 requests per windowMs 
-  delayMs: 0, // disable delaying - full speed until the max limit is reached
+  max: 100, 
+  delayMs: 0,
   statusCode: 429,
   message: 'too fast bro',
   handler(req, res, next) {
@@ -40,12 +37,7 @@ require('./libs/auth/vk');
 require('./libs/auth/facebook');
 require('./libs/auth/yandex');
 
-const io = socketIo();
-app.io = io;
-require('./libs/websocket/socketIO')(io);
 
-
-const index = require('./routes/index');
 const users = require('./routes/users');
 const collections = require('./routes/collections');
 const register = require('./routes/register');
@@ -79,18 +71,6 @@ app.use(helmet({
 }));
 // app.use(limiter);
 
-// FIXME: Redirect to https 
-// app.all('*', ensureSecure);
-
-// function ensureSecure(req, res, next) {
-//   if (req.secure) {
-//     return next();
-//   }
-//   return res.redirect(`https:// localhost.daplie.me:3001${req.url}`);
-// }
-
-
-app.use('/', index);
 app.use('/users', users);
 app.use('/register', register);
 app.use('/oauth', oauth);

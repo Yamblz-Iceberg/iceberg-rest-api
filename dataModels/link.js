@@ -3,7 +3,6 @@ const findOrCreate = require('findorcreate-promise');
 
 const Schema = mongoose.Schema;
 
-// TODO: category link
 const Link = new Schema({
   name: {
     type: String,

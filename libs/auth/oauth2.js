@@ -9,7 +9,6 @@ const RefreshToken = require('../../dataModels/refreshToken');
 const error = require('rest-api-errors');
 
 
-// create OAuth 2.0 server
 const aserver = oauth2orize.createServer();
 
 

@@ -5,7 +5,7 @@ const VK = require('node-vkapi');
 
 const User = require('./../dataModels/user').User;
 
-const getFriends = (user, fast = false) => new Promise((resolve, reject) => {
+const getFriends = (user, fast = false) => new Promise((resolve, reject) => { // убрать fast
   if (!fast) {
     resolve();
   } else if (user.fbToken) {
@@ -36,14 +36,14 @@ const createUser = (user, uniqueId, accessToken) => new Promise((resolve, reject
   .then((userFound) => {
     if (userFound) {
       return User.findOneAndUpdate({ userId: user.userId }, user, { new: true })
-        .then(_user => resolve(_user));
+        .then(registeredUser => resolve(registeredUser));
     }
     if (/^(fb|ya|vk)/.test(uniqueId)) {
       return reject(new error.BadRequest('AUTH_ERR', 'User unique id contains illegal characters, maybe you trying to overwrite existing user'));
     }
     return User.findOneAndUpdate({ userId: uniqueId }, user, { new: true })
-      .then((_user) => {
-        if (!_user) {
+      .then((userFromDemo) => {
+        if (!userFromDemo) {
           User.register(user, accessToken, (err, account) => {
             if (err) {
               reject(err);
@@ -51,7 +51,7 @@ const createUser = (user, uniqueId, accessToken) => new Promise((resolve, reject
             return resolve(account);
           });
         }
-        return resolve(_user);
+        return resolve(userFromDemo);
       });
   })
   .catch(err => reject(err)));

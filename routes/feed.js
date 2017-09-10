@@ -6,6 +6,7 @@ const passport = require('passport');
 
 const Collection = require('.././dataModels/collection').Collection;
 const Tag = require('.././dataModels/tag').Tag;
+const _ = require('lodash');
 
 const validation = require('./validation/validator');
 const validationParams = require('./validation/params');
@@ -48,8 +49,23 @@ router.get('/', validation(validationParams.feed), passport.authenticate('bearer
     {
       $unwind: { path: '$author', preserveNullAndEmptyArrays: true },
     },
+    // FIXME: `добавить рейтинг у тега 
     // {
-    //   $addFields: { 'tag.rel': { $cond: { if: { $and: [{ $isArray: '$author.personalTags' }, { $in: ['$tag._id', '$author.personalTags'] }] }, then: true, else: false } } },
+    //   $lookup:
+    //      {
+    //        from: 'users',
+    //        localField: 'tag._id',
+    //        foreignField: 'personalTags.bookmarkId',
+    //        as: 'tag.rel',
+    //      },
+    // },
+    // {
+    //   $unwind: { path: '$tag.rel', preserveNullAndEmptyArrays: true },
+    // },
+    // {
+    //   $addFields: { 'tag.rel': { $cond: { if: { $in: ['$tag._id', user.personalTags.map(personalTag => personalTag.bookmarkId)] },
+    //     then: true,
+    //     else: false } } },
     // },
     {
       $group: {

@@ -52,12 +52,8 @@ router.put('/like/:linkId', validation(validationParams.readLink), status.accoun
 router.put('/open/:linkId', validation(validationParams.readLink), (req, res, next) => {
   User.findOneAndUpdate({ userId: req.user.userId, 'savedLinks.bookmarkId': mongoose.Types.ObjectId(req.params.linkId) },
     { $set: { 'savedLinks.$.opened': true } })
-    .then((savedLink) => {
-      if (!savedLink) {
-        throw new error.NotFound('METRICS_OPEN_ERR', 'Cannot mark this link as opened');
-      }
-      return res.end();
-    })
+    .then(savedLink => (!savedLink ? new error.NotFound('METRICS_OPEN_ERR', 'Cannot mark this link as opened') : savedLink))
+    .then(() => res.end())
     .catch(err => next(err));
 });
 

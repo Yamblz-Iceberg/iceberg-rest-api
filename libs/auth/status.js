@@ -1,13 +1,13 @@
 const error = require('rest-api-errors');
 
-const accountTypeMiddleware = (req, res, next) => {
+const accountTypeMiddleware = (req, res, next) => { // добавить параметр
   if (req.user.accType === 'demo') {
     throw next(new error.MethodNotAllowed('AUTH_ERR', 'Upgrade your account to full'));
   }
   return next();
 };
 
-const isBlocked = (user, next, info) => {
+const isBlocked = (user, next, info) => { // Переделать
   if (user.banned) {
     throw next(new error.Forbidden('AUTH_ERR', 'Account is banned here'));
   } else {

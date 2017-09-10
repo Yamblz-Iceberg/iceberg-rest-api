@@ -90,8 +90,8 @@ const resizeImage = size => (req, res, next) => {
       return next();
     });
 };
-
-router.post('/', passport.authenticate('bearer', { session: false }), status.accountTypeMiddleware,
+// TODO: переделать на нормальные чистые функции для загрузки и изменения размера, вынести в отдельный модуль
+router.post('/', /* passport.authenticate('bearer', { session: false }), status.accountTypeMiddleware, */
   multer.single('photo'), resizeImage(1000), sendUploadToGCS(), resizeImage(100), sendUploadToGCS('_islands100'), (req, res, next) => {
     const colorThief = new ColorThief();
 
