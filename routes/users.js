@@ -45,14 +45,14 @@ router.get('/social/friends', status.accountTypeMiddleware, (req, res, next) => 
 
 // TODO: Рефакторинг на единую схему для сохранненых закладок и метрик
 router.all('/bookmarks/:type/:id?', validation(validationParams.bookmarks), passport.authenticate('bearer', { session: false }), (req, res, next) => {
-  const COLLECTIONS = 'collections';
-  const MY_COLLECTIONS = 'myCollections';
-  const LINKS = 'links';
-  const MY_LINKS = 'myLinks';
+  const SAVED_COLLECTIONS = 'savedCollections';
+  const MY_COLLECTIONS = 'createdCollections';
+  const SAVED_LINKS = 'savedLinks';
+  const MY_LINKS = 'addedLinks';
 
   const addingId = mongoose.Types.ObjectId(req.params.id);
 
-  const types = [COLLECTIONS, LINKS];
+  const types = [SAVED_COLLECTIONS, SAVED_LINKS];
   const myTypes = [MY_COLLECTIONS, MY_LINKS];
 
   if (['GET', 'PUT', 'DELETE'].indexOf(req.method) === -1 && types.indexOf(req.params.type) !== -1) {
@@ -65,28 +65,27 @@ router.all('/bookmarks/:type/:id?', validation(validationParams.bookmarks), pass
   let userAction = {};
   let userDuplicateCheck = { userId: req.user.userId };
 
-  const collectionsActionDestination = { savedCollections: { bookmarkId: addingId } };
-  const collectionsCreatedActionDestination = { createdCollections: { bookmarkId: addingId } };
-  const linksActionDestination = { savedLinks: { bookmarkId: addingId } };
-  const linksActionAddedDestination = { addedLinks: { bookmarkId: addingId } };
+  const collectionsActionDestination = { bookmarks: { bookmarkId: addingId, type: SAVED_COLLECTIONS } };
+  const collectionsCreatedActionDestination = { bookmarks: { bookmarkId: addingId, type: MY_COLLECTIONS } };
+  const linksActionDestination = { bookmarks: { bookmarks: addingId, type: SAVED_LINKS } };
+  const linksActionAddedDestination = { bookmarks: { bookmarkId: addingId, type: MY_LINKS } };
 
   const userActionDestination = { usersSaved: req.user.userId };
 
-  const mongoCollection = (req.params.type === COLLECTIONS || req.params.type === MY_COLLECTIONS) ? Collection : Link;
+  const mongoCollection = (req.params.type === SAVED_COLLECTIONS || req.params.type === MY_COLLECTIONS) ? Collection : Link;
 
   if (req.method === 'PUT' && req.params.id && types.indexOf(req.params.type) !== -1) {
     bookmarksAction = { $addToSet: userActionDestination };
-    userAction = { $addToSet: req.params.type === COLLECTIONS ? collectionsActionDestination : linksActionDestination };
-    userDuplicateCheck = req.params.type === COLLECTIONS ? { userId: req.user.userId, 'savedCollections.bookmarkId': { $ne: addingId } } :
-      { userId: req.user.userId, 'savedLinks.bookmarkId': { $ne: addingId } };
+    userAction = { $addToSet: req.params.type === SAVED_COLLECTIONS ? collectionsActionDestination : linksActionDestination };
+    userDuplicateCheck = { userId: req.user.userId, 'bookmarks.bookmarkId': { $ne: addingId } };
   } else if (req.method === 'DELETE' && req.params.id) {
     switch (req.params.type) {
-    case (COLLECTIONS): userAction = { $pull: collectionsActionDestination };
+    case (SAVED_COLLECTIONS): userAction = { $pull: collectionsActionDestination };
       bookmarksAction = { $pull: userActionDestination };
       break;
     case (MY_COLLECTIONS): userAction = { $pull: collectionsCreatedActionDestination };
       break;
-    case (LINKS): userAction = { $pull: linksActionDestination };
+    case (SAVED_LINKS): userAction = { $pull: linksActionDestination };
       bookmarksAction = { $pull: userActionDestination };
       break;
     case (MY_LINKS): userAction = { $pull: linksActionAddedDestination };
@@ -109,11 +108,10 @@ router.all('/bookmarks/:type/:id?', validation(validationParams.bookmarks), pass
             throw new error.NotFound('BOOKMARK_ADD_ERR', 'User not found, cannot update this user, or this bookmark is already added');
           }
           if (req.method === 'GET') {
-            if (req.params.type === COLLECTIONS || req.params.type === MY_COLLECTIONS) {
+            if (req.params.type === SAVED_COLLECTIONS || req.params.type === MY_COLLECTIONS) {
               return Collection.aggregate([
                 {
-                  $match: { _id: req.params.type === COLLECTIONS ? { $in: user.savedCollections.map(savedCollection => savedCollection.bookmarkId) } :
-                    { $in: user.createdCollections.map(createdCollection => createdCollection.bookmarkId) } },
+                  $match: { _id: { $in: user.bookmarks.map(bookmarkElem => (bookmarkElem.type === req.params.type ? bookmarkElem.bookmarkId : undefined)).filter(Boolean) } },
                 },
                 {
                   $unwind: { path: '$author', preserveNullAndEmptyArrays: true },
@@ -135,7 +133,7 @@ router.all('/bookmarks/:type/:id?', validation(validationParams.bookmarks), pass
                      {
                        from: 'users',
                        localField: '_id',
-                       foreignField: req.params.type === COLLECTIONS ? 'savedCollections.bookmarkId' : 'createdCollections.bookmarkId',
+                       foreignField: 'metrics.contentId',
                        as: 'metrics',
                      },
                 },
@@ -146,10 +144,10 @@ router.all('/bookmarks/:type/:id?', validation(validationParams.bookmarks), pass
                   $addFields: {
                     metrics: {
                       $filter: {
-                        input: req.params.type === COLLECTIONS ? '$metrics.savedCollections' : '$metrics.createdCollections',
+                        input: '$metrics.metrics',
                         as: 'metric',
                         cond: { $and: [
-                          { $eq: ['$$metric.bookmarkId', '$_id'] },
+                          { $eq: ['$$metric.contentId', '$_id'] },
                           { $eq: ['$metrics.userId', req.user.userId] }] },
                       },
                     },
@@ -182,16 +180,16 @@ router.all('/bookmarks/:type/:id?', validation(validationParams.bookmarks), pass
                   $project: { 'author.salt': 0,
                     usersSaved: 0,
                     'metrics._id': 0,
-                    'metrics.bookmarkId': 0,
+                    'metrics.type': 0,
+                    'metrics.counter': 0,
+                    'metrics.contentId': 0,
                     'author._id': 0,
                     'author.hash': 0,
                     'author.banned': 0,
                     'author.created': 0,
                     'author.accType': 0,
-                    'author.createdCollections': 0,
-                    'author.savedCollections': 0,
-                    'author.savedLinks': 0,
-                    'author.addedLinks': 0,
+                    'author.bookmarks': 0,
+                    'author.metrics': 0,
                     'author.__v': 0,
                     links: 0,
                     'tags.__v': 0,
@@ -200,12 +198,9 @@ router.all('/bookmarks/:type/:id?', validation(validationParams.bookmarks), pass
                   },
                 },
                 {
-                  $match:
-                   (req.query.filter === 'new') ?
-                     { 'metrics.opened': false } :
-                     (req.query.filter === 'opened') ?
-                       { 'metrics.opened': true } :
-                       { _id: { $exists: true } },
+                  $match: (req.query.filter === 'new') ? { $or: [{ 'metrics.opened': null }, { 'metrics.opened': false }] } :
+                    (req.query.filter === 'opened') ? { 'metrics.opened': true } :
+                      { _id: { $exists: true } },
                 },
                 {
                   $sort: { 'metrics.addTime': -1 },
@@ -215,8 +210,7 @@ router.all('/bookmarks/:type/:id?', validation(validationParams.bookmarks), pass
             }
             return Link.aggregate([
               {
-                $match: { _id: req.params.type === LINKS ? { $in: user.savedLinks.map(savedLink => savedLink.bookmarkId) } :
-                  { $in: user.addedLinks.map(addedLink => addedLink.bookmarkId) } },
+                $match: { _id: { $in: user.bookmarks.map(bookmarkElem => (bookmarkElem.type === req.params.type ? bookmarkElem.bookmarkId : undefined)).filter(Boolean) } },
               },
               {
                 $unwind: { path: '$author', preserveNullAndEmptyArrays: true },
@@ -238,7 +232,7 @@ router.all('/bookmarks/:type/:id?', validation(validationParams.bookmarks), pass
                    {
                      from: 'users',
                      localField: '_id',
-                     foreignField: req.params.type === LINKS ? 'savedLinks.bookmarkId' : 'addedLinks.bookmarkId',
+                     foreignField: 'metrics.contentId',
                      as: 'metrics',
                    },
               },
@@ -249,10 +243,10 @@ router.all('/bookmarks/:type/:id?', validation(validationParams.bookmarks), pass
                 $addFields: {
                   metrics: {
                     $filter: {
-                      input: req.params.type === LINKS ? '$metrics.savedLinks' : '$metrics.addedLinks',
+                      input: '$metrics.metrics',
                       as: 'metric',
                       cond: { $and: [
-                        { $eq: ['$$metric.bookmarkId', '$_id'] },
+                        { $eq: ['$$metric.contentId', '$_id'] },
                         { $eq: ['$metrics.userId', req.user.userId] }] },
                     },
                   },
@@ -281,8 +275,10 @@ router.all('/bookmarks/:type/:id?', validation(validationParams.bookmarks), pass
                 $project: { __v: 0,
                   usersSaved: 0,
                   'userAdded.salt': 0,
+                  'userAdded.bookmarks': 0,
                   'metrics._id': 0,
                   'metrics.bookmarkId': 0,
+                  'metrics.counter': 0,
                   'userAdded._id': 0,
                   'userAdded.hash': 0,
                   'userAdded.banned': 0,
@@ -298,7 +294,7 @@ router.all('/bookmarks/:type/:id?', validation(validationParams.bookmarks), pass
               {
                 $match:
                 (req.query.filter === 'new') ?
-                  { 'metrics.opened': false } :
+                  { $or: [{ 'metrics.opened': null }, { 'metrics.opened': false }] } :
                   (req.query.filter === 'opened') ?
                     { 'metrics.opened': true } :
                     { _id: { $exists: true } },

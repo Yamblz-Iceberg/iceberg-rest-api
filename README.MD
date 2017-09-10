@@ -85,9 +85,9 @@ npm run stop //убить процесс
 - **GET** `/users/:userId?`- получение информации о пользователе
 - **PUT** `/users json={object}` - изменение своего профиля
 - **DELETE** `/users` - удалить пользователя
-- **PUT** `/users/bookmarks/:type/:id` - добавить в закладки (:type = collections, links)
-- **DELETE** `/users/bookmarks/:type/:id` - удалить из закладкок (:type = collections, links, myLinks, myCollections)
-- **GET** `/users/bookmarks/:type/` - получить закладки (:type = collections, links, myLinks, myCollections)
+- **PUT** `/users/bookmarks/:type/:id` - добавить в закладки (:type = savedCollections, savedLinks)
+- **DELETE** `/users/bookmarks/:type/:id` - удалить из закладкок (:type = savedCollections, savedLinks, addedLinks, createdCollections)
+- **GET** `/users/bookmarks/:type/` - получить закладки (:type = savedCollections, savedLinks, addedLinks, createdCollections)
 
 ### Upload route
 

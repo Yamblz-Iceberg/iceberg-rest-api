@@ -1,13 +1,8 @@
 const Joi = require('joi');
 const badUsernames = require('./badUsernames');
 
-// TODO: length of params
-// TODO: нормальную вадлидацию для id из бд
-
-const coordinatesJoi = Joi.array().length(2).items(Joi.number().min(-180).max(180)).required();
 const nicknameJoi = Joi.string().alphanum().min(3).max(12)
   .invalid(badUsernames);
-const messageJoi = Joi.string().max(4096);
 const urlJoi = /^((?:https\:\/\/)|(?:http\:\/\/)|(?:www\.))?([a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(?:\??)[a-zA-Z0-9\-\._\?\,\'\/\\\+&%\$#\=~]+)$/;
 const idMongoRegex = /^[0-9a-fA-F]{24}$/;
 const textShortJoi = Joi.string().min(2).max(20).invalid(badUsernames);
@@ -34,6 +29,11 @@ module.exports = {
   readLink: {
     params: {
       linkId: Joi.string().regex(idMongoRegex).required(),
+    },
+  },
+  readCollection: {
+    params: {
+      collectionId: Joi.string().regex(idMongoRegex).required(),
     },
   },
   description: {
@@ -66,7 +66,7 @@ module.exports = {
   tag: {
     body: {},
     params: {
-      tagName: Joi.string().min(2).max(50).required(), // TODO: valid
+      tagName: Joi.string().min(2).max(50).required(), // TODO: valid tag
     },
   },
   personalTags: {
@@ -77,7 +77,7 @@ module.exports = {
   },
   social: {
     query: {
-      // uniqueId: Joi.string().guid().required(),
+      uniqueId: Joi.string().guid().required(),
       clientId: Joi.string().required(),
       clientSecret: Joi.string().required(),
     },
@@ -94,7 +94,7 @@ module.exports = {
   },
   bookmarks: {
     params: {
-      type: Joi.string().valid(['collections', 'links', 'myCollections', 'myLinks']).required(),
+      type: Joi.string().valid(['savedCollections', 'savedLinks', 'createdCollections', 'addedLinks']).required(),
       id: Joi.string().regex(idMongoRegex),
     },
     query: {

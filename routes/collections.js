@@ -72,7 +72,7 @@ router.get('/:collectionId', (req, res, next) => {
           'link.saved': { $cond: { if: { $and: [{ $isArray: '$link.usersSaved' }, { $in: [req.user.userId, '$link.usersSaved'] }] }, then: true, else: false } },
           'link.liked': { $cond: { if: { $and: [{ $isArray: '$link.usersLiked' }, { $in: [req.user.userId, '$link.usersLiked'] }] }, then: true, else: false } },
           'link.opened': { $cond: { if: { $in: ['$link._id',
-            user.savedLinks.map(savedLink => (savedLink.opened ? savedLink.bookmarkId : undefined)).filter(Boolean)] },
+            user.metrics.map(metricElem => (metricElem.opened ? metricElem.bookmarkId : undefined)).filter(Boolean)] },
           then: true,
           else: false } },
         },
@@ -133,10 +133,9 @@ router.get('/:collectionId', (req, res, next) => {
           'author.hash': 0,
           'author.banned': 0,
           'author.created': 0,
-          'author.createdCollections': 0,
-          'author.savedCollections': 0,
-          'author.savedLinks': 0,
-          'author.addedLinks': 0,
+          'author.bookmarks': 0,
+          'author.metrics': 0,
+          'metrics.contentId': 0,
           'links.userAdded._id': 0,
           'links.usersSaved': 0,
           'links.usersLiked': 0,
@@ -147,10 +146,7 @@ router.get('/:collectionId', (req, res, next) => {
           'links.userAdded.__v': 0,
           'links.userAdded.accType': 0,
           'links.userAdded.description': 0,
-          'links.userAdded.createdCollections': 0,
-          'links.userAdded.savedCollections': 0,
-          'links.userAdded.addedLinks': 0,
-          'links.userAdded.savedLinks': 0,
+          'links.userAdded.bookmarks': 0,
           'author.__v': 0,
           'links.__v': 0,
           'tags.__v': 0,
@@ -179,7 +175,7 @@ router.post('/', status.accountTypeMiddleware, validation(validationParams.colle
   const newCollection = new Collection(req.body);
   newCollection.save()
     .then(collection => User.findOneAndUpdate({ userId: req.user.userId },
-      { $push: { createdCollections: { bookmarkId: collection._id } } })
+      { $push: { bookmarks: { bookmarkId: collection._id, type: 'createdCollections' } } })
       .then((user) => {
         if (!user) {
           throw new error.NotFound('NO_USER_ERR', 'User not found');
@@ -210,14 +206,18 @@ router.post('/addLink/:collectionId/:linkId', validation(validationParams.descri
     .catch(err => next(err));
 });
 
-router.put('/open/:collectionId', validation(validationParams.readLink), (req, res, next) => {
-  User.findOneAndUpdate({ userId: req.user.userId, 'savedCollections.bookmarkId': mongoose.Types.ObjectId(req.params.collectionId) },
-    { $set: { 'savedCollections.$.opened': true } })
-    .then((savedCollection) => {
-      if (!savedCollection) {
+router.put('/open/:collectionId', validation(validationParams.readCollection), (req, res, next) => {
+  User.findOne({ userId: req.user.userId })
+    .then((user) => {
+      if (!user) {
         throw new error.NotFound('METRICS_OPEN_ERR', 'Cannot mark this collection as opened');
       }
-      return res.end();
+      const contentId = mongoose.Types.ObjectId(req.params.collectionId);
+      if (!_.find(user.metrics, ['contentId', contentId])) {
+        user.metrics.push({ contentId, opened: true, type: 'collection' });
+      }
+      return user.save()
+        .then(() => res.end());
     })
     .catch(err => next(err));
 });

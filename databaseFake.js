@@ -212,10 +212,10 @@ function updateUsers(callback) {
       .then(linksDB => mongoose.models.User.find({})
         .then(usersDB => Promise.all(usersDB.map((user) => {
           const userObject = user;
-          userObject.savedCollections = collectionsDB.map(collection => (collection.usersSaved.indexOf(userObject.userId) !== -1 ? { bookmarkId: collection._id } : undefined)).filter(Boolean);
-          userObject.createdCollections = _.filter(collectionsDB, { authorId: userObject.userId }).map(collection => ({ bookmarkId: collection._id }));
-          userObject.addedLinks = _.filter(linksDB, { userAdded: userObject.userId }).map(link => ({ bookmarkId: link._id }));
-          userObject.savedLinks = linksDB.map(link => (link.usersSaved.indexOf(userObject.userId) !== -1 ? { bookmarkId: link._id } : undefined)).filter(Boolean);
+          userObject.bookmarks = collectionsDB.map(collection => (collection.usersSaved.indexOf(userObject.userId) !== -1 ? { bookmarkId: collection._id, type: 'savedCollections' } : undefined)).filter(Boolean);
+          userObject.bookmarks = _.concat(userObject.bookmarks, _.filter(collectionsDB, { authorId: userObject.userId }).map(collection => ({ bookmarkId: collection._id, type: 'createdCollections' })));
+          userObject.bookmarks = _.concat(userObject.bookmarks, _.filter(linksDB, { userAdded: userObject.userId }).map(link => ({ bookmarkId: link._id, type: 'addedLinks' })));
+          userObject.bookmarks = _.concat(userObject.bookmarks, linksDB.map(link => (link.usersSaved.indexOf(userObject.userId) !== -1 ? { bookmarkId: link._id, type: 'savedLinks' } : undefined)).filter(Boolean));
           return userObject.save();
         }))
           .then(() => callback())
