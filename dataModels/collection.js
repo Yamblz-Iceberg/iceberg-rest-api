@@ -41,6 +41,10 @@ const Collection = new Schema({
     type: Date,
     default: Date.now,
   },
+  closed: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 Collection.plugin(findOrCreate);

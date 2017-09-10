@@ -18,7 +18,7 @@ const _ = require('lodash');
 router.all('/*', passport.authenticate('bearer', { session: false }));
 
 router.post('/:tagName', validation(validationParams.tag), status.accountTypeMiddleware, (req, res, next) => {
-  Tag.findOrCreate({ name: req.params.tagName })
+  Tag.findOrCreate({ name: req.params.tagName.replace(/[^A-Z_a-z0-9]/g, '') })
     .then(tag => res.json({ tag }))
     .catch(err => next(err));
 });
@@ -30,10 +30,11 @@ router.put('/personal', validation(validationParams.personalTags), (req, res, ne
         if (!user) {
           throw new error.BadRequest('ADD_PERSONAL_TAGS_ERR', 'Cannot add personal tags for user that doesnt exist');
         }
-        const bookmark = _.find(user.personalTags, ['bookmarkId', mongoose.Types.ObjectId(tag)]);
+        const bookmark = _.find(user.bookmarks, ['bookmarkId', mongoose.Types.ObjectId(tag)]);
         if (!bookmark) {
-          user.personalTags.push({ bookmarkId: mongoose.Types.ObjectId(tag) });
+          user.bookmarks.push({ bookmarkId: mongoose.Types.ObjectId(tag), type: 'personalTags' });
         } else {
+          if (!bookmark.counter) bookmark.counter = 0;
           bookmark.counter += 1;
         }
         return user.save();

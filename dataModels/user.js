@@ -2,6 +2,7 @@ const mongoose = require('../libs/db/mongoose');
 const findOrCreate = require('findorcreate-promise');
 const passportLocalMongoose = require('passport-local-mongoose');
 const Bookmark = require('./bookmark');
+const Metric = require('./metrics');
 
 const Schema = mongoose.Schema;
 
@@ -31,20 +32,11 @@ const User = new Schema({
     unique: false,
     required: false,
   },
-  savedLinks: {
+  bookmarks: {
     type: [Bookmark],
   },
-  addedLinks: {
-    type: [Bookmark],
-  },
-  savedCollections: {
-    type: [Bookmark],
-  },
-  createdCollections: {
-    type: [Bookmark],
-  },
-  personalTags: {
-    type: [Bookmark],
+  metrics: {
+    type: [Metric],
   },
   photo: {
     type: String,

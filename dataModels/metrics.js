@@ -2,23 +2,24 @@ const mongoose = require('../libs/db/mongoose');
 
 const Schema = mongoose.Schema;
 
-const Bookmark = new Schema({
-  bookmarkId: {
+const Metrcic = new Schema({
+  contentId: {
     type: Schema.Types.ObjectId,
     required: true,
   },
   type: {
     type: String,
-    enum: ['addedLinks', 'createdCollections', 'savedLinks', 'savedCollections', 'personalTags'],
+    enum: ['link', 'collection'],
   },
-  addTime: {
+  opened: {
+    type: Boolean,
+    default: false,
+  },
+  openTime: {
     type: Date,
     default: Date.now,
-  },
-  counter: {
-    type: Number,
   },
 });
 
 
-module.exports = Bookmark;
+module.exports = Metrcic;

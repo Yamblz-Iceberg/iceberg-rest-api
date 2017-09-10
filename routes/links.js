@@ -22,8 +22,8 @@ router.post('/', validation(validationParams.addLink), status.accountTypeMiddlew
   linkParser.getInfo(req.body.link)
     .then(info => Link.findOrCreate({ userAdded: req.user.userId, url: req.body.link },
       { favicon: info.favicon, name: info.name, photo: info.photo, description: req.body.description }, { upsert: true })
-      .then(link => User.findOneAndUpdate({ userId: req.user.userId, 'addedLinks.bookmarkId': { $ne: link.result._id } },
-        { $addToSet: { addedLinks: { bookmarkId: link.result._id } } })
+      .then(link => User.findOneAndUpdate({ userId: req.user.userId, 'bookmarks.bookmarkId': { $ne: link.result._id } },
+        { $addToSet: { bookmarks: { bookmarkId: link.result._id, type: 'addedLinks' } } })
         .then(() => res.json(link))))
     .catch(err => next(err));
 });
@@ -50,10 +50,18 @@ router.put('/like/:linkId', validation(validationParams.readLink), status.accoun
 });
 
 router.put('/open/:linkId', validation(validationParams.readLink), (req, res, next) => {
-  User.findOneAndUpdate({ userId: req.user.userId, 'savedLinks.bookmarkId': mongoose.Types.ObjectId(req.params.linkId) },
-    { $set: { 'savedLinks.$.opened': true } })
-    .then(savedLink => (!savedLink ? new error.NotFound('METRICS_OPEN_ERR', 'Cannot mark this link as opened') : savedLink))
-    .then(() => res.end())
+  User.findOne({ userId: req.user.userId })
+    .then((user) => {
+      if (!user) {
+        throw new error.NotFound('METRICS_OPEN_ERR', 'Cannot mark this collection as opened');
+      }
+      const contentId = mongoose.Types.ObjectId(req.params.linkId);
+      if (!_.find(user.metrics, ['contentId', contentId])) {
+        user.metrics.push({ contentId, opened: true, type: 'link' });
+      }
+      return user.save()
+        .then(() => res.end());
+    })
     .catch(err => next(err));
 });
 

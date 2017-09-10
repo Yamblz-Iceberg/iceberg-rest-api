@@ -63,11 +63,13 @@ npm run stop //убить процесс
 
 ### Feed route
 
-- **GET** `/feed?sort=time&search=Colle&only=tags`- получение ленты, по умолчанию сортировка по рейтингу, non-case-sensetive поиск, только теги (tags, collections)
+- **GET** `/feed?sort=time&search=Colle&only=tags&count=10`- получение ленты, по умолчанию сортировка по рейтингу, non-case-sensetive поиск, только теги (tags, collections), количество в выдаче
 
 ### Links route
 
 - **POST** `/links/ json = {"link": "http://telegra.ph/Iceberg-Sample-08-31", "description": "Описание ссылки"}`- добавление ссылки
+- **PUT** `/links/open/:linkId - отметить ссылку открытой
+- **PUT** `/links/like/:linkId - лайкнуть ссылку
 
 ### Tags route
 
@@ -76,18 +78,19 @@ npm run stop //убить процесс
 
 ### Collections route
 
-- **GET** `/collections/:collectionId`- получение карточки
-- **POST** `/collections json = {"description": "Очень хочу котика", "name": "Как завести кота", "photo": "https://pp.userapi.com/c543100/v543100915/2fbfb/IoVG_UEW-yw.jpg", "tags": ["59a57bfcc7291c53b91c94ca",  "59a57bfcc7291c53b91c94ca"]}`- добавление карточки
-- **POST** `/collections/addLink/:collectionId/:linkId`- добавление ссылки в карточку
+- **GET** `/collections/:collectionId`- получение коллекция
+- **POST** `/collections json = {"description": "Очень хочу котика", "name": "Как завести кота", "photo": "https://pp.userapi.com/c543100/v543100915/2fbfb/IoVG_UEW-yw.jpg", "tags": ["59a57bfcc7291c53b91c94ca",  "59a57bfcc7291c53b91c94ca"]}`- добавление коллекции
+- **PUT** `/collections/addLink/:collectionId/:linkId`- добавление ссылки в коллекцию
+- **PUT** `/collections/open/:collectionId - отметить коллекцию открытой
 
 ### Users route
 
 - **GET** `/users/:userId?`- получение информации о пользователе
 - **PUT** `/users json={object}` - изменение своего профиля
 - **DELETE** `/users` - удалить пользователя
-- **PUT** `/users/bookmarks/:type/:id` - добавить в закладки (:type = collections, links)
-- **DELETE** `/users/bookmarks/:type/:id` - удалить из закладкок (:type = collections, links, myLinks, myCollections)
-- **GET** `/users/bookmarks/:type/` - получить закладки (:type = collections, links, myLinks, myCollections)
+- **PUT** `/users/bookmarks/:type/:id` - добавить в закладки (:type = savedCollections, savedLinks)
+- **DELETE** `/users/bookmarks/:type/:id` - удалить из закладкок (:type = savedCollections, savedLinks, addedLinks, createdCollections)
+- **GET** `/users/bookmarks/:type/` - получить закладки (:type = savedCollections, savedLinks, addedLinks, createdCollections)
 
 ### Upload route
 
