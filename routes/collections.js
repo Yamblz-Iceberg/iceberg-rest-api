@@ -18,7 +18,7 @@ const _ = require('lodash');
 router.all('/*', passport.authenticate('bearer', { session: false }));
 
 router.get('/:collectionId', (req, res, next) => {
-  User.findOne({ userId: req.user.userId })
+  User.findOne({ userId: req.user.userId })// TODO: убрать из выдачи закрытую подборку, если тот, кто запрашивает не автор
     .then(user => Collection.aggregate([
       {
         $match: { _id: mongoose.Types.ObjectId(req.params.collectionId) },

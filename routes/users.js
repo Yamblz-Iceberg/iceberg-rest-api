@@ -43,52 +43,53 @@ router.get('/social/friends', status.accountTypeMiddleware, (req, res, next) => 
     .catch(err => next(err));
 });
 
-// TODO: Рефакторинг на единую схему для сохранненых закладок и метрик
 router.all('/bookmarks/:type/:id?', validation(validationParams.bookmarks), passport.authenticate('bearer', { session: false }), (req, res, next) => {
   const SAVED_COLLECTIONS = 'savedCollections';
-  const MY_COLLECTIONS = 'createdCollections';
+  const CREATED_COLLECTIONS = 'createdCollections';
   const SAVED_LINKS = 'savedLinks';
-  const MY_LINKS = 'addedLinks';
+  const ADDED_LINKS = 'addedLinks';
 
   const addingId = mongoose.Types.ObjectId(req.params.id);
 
   const types = [SAVED_COLLECTIONS, SAVED_LINKS];
-  const myTypes = [MY_COLLECTIONS, MY_LINKS];
+  const myTypes = [CREATED_COLLECTIONS, ADDED_LINKS];
 
   if (['GET', 'PUT', 'DELETE'].indexOf(req.method) === -1 && types.indexOf(req.params.type) !== -1) {
     return next(new error.MethodNotAllowed('API_WARN', 'Method not allowed for saved content'));
   } else if (['GET', 'DELETE'].indexOf(req.method) === -1 && myTypes.indexOf(req.params.type) !== -1) {
     return next(new error.MethodNotAllowed('API_WARN', 'Method not allowed for user created content'));
+  } else if ((req.method !== 'GET' && req.query.userId) || (req.params.type !== CREATED_COLLECTIONS && req.query.userId)) { // FIXME: не уврен на счет условия
+    return next(new error.MethodNotAllowed('API_WARN', 'Method not allowed, if userId specified only GET method is allowed'));
   }
 
   let bookmarksAction = {};
   let userAction = {};
-  let userDuplicateCheck = { userId: req.user.userId };
+  let userDuplicateCheck = { userId: req.query.userId ? req.query.userId : req.user.userId };
 
   const collectionsActionDestination = { bookmarks: { bookmarkId: addingId, type: SAVED_COLLECTIONS } };
-  const collectionsCreatedActionDestination = { bookmarks: { bookmarkId: addingId, type: MY_COLLECTIONS } };
+  const collectionsCreatedActionDestination = { bookmarks: { bookmarkId: addingId, type: CREATED_COLLECTIONS } };
   const linksActionDestination = { bookmarks: { bookmarks: addingId, type: SAVED_LINKS } };
-  const linksActionAddedDestination = { bookmarks: { bookmarkId: addingId, type: MY_LINKS } };
+  const linksActionAddedDestination = { bookmarks: { bookmarkId: addingId, type: ADDED_LINKS } };
 
   const userActionDestination = { usersSaved: req.user.userId };
 
-  const mongoCollection = (req.params.type === SAVED_COLLECTIONS || req.params.type === MY_COLLECTIONS) ? Collection : Link;
+  const mongoCollection = (req.params.type === SAVED_COLLECTIONS || req.params.type === CREATED_COLLECTIONS) ? Collection : Link;
 
   if (req.method === 'PUT' && req.params.id && types.indexOf(req.params.type) !== -1) {
     bookmarksAction = { $addToSet: userActionDestination };
     userAction = { $addToSet: req.params.type === SAVED_COLLECTIONS ? collectionsActionDestination : linksActionDestination };
-    userDuplicateCheck = { userId: req.user.userId, 'bookmarks.bookmarkId': { $ne: addingId } };
+    userDuplicateCheck = { userId: req.query.userId, 'bookmarks.bookmarkId': { $ne: addingId } };
   } else if (req.method === 'DELETE' && req.params.id) {
     switch (req.params.type) {
     case (SAVED_COLLECTIONS): userAction = { $pull: collectionsActionDestination };
       bookmarksAction = { $pull: userActionDestination };
       break;
-    case (MY_COLLECTIONS): userAction = { $pull: collectionsCreatedActionDestination };
+    case (CREATED_COLLECTIONS): userAction = { $pull: collectionsCreatedActionDestination };
       break;
     case (SAVED_LINKS): userAction = { $pull: linksActionDestination };
       bookmarksAction = { $pull: userActionDestination };
       break;
-    case (MY_LINKS): userAction = { $pull: linksActionAddedDestination };
+    case (ADDED_LINKS): userAction = { $pull: linksActionAddedDestination };
       break;
     default:
       return next(new error.BadRequest('BOOKMARKS_ERR', 'Bookmarks destination not found'));
@@ -105,10 +106,10 @@ router.all('/bookmarks/:type/:id?', validation(validationParams.bookmarks), pass
         userAction)
         .then((user) => {
           if (!user) {
-            throw new error.NotFound('BOOKMARK_ADD_ERR', 'User not found, cannot update this user, or this bookmark is already added');
+            throw new error.NotFound('BOOKMARK_ADD_ERR', 'User not found');
           }
           if (req.method === 'GET') {
-            if (req.params.type === SAVED_COLLECTIONS || req.params.type === MY_COLLECTIONS) {
+            if (req.params.type === SAVED_COLLECTIONS || req.params.type === CREATED_COLLECTIONS) { // TODO: убрать из выдачи закрытые подборки, если тот, кто запрашивает не автор
               return Collection.aggregate([
                 {
                   $match: { _id: { $in: user.bookmarks.map(bookmarkElem => (bookmarkElem.type === req.params.type ? bookmarkElem.bookmarkId : undefined)).filter(Boolean) } },
@@ -305,7 +306,7 @@ router.all('/bookmarks/:type/:id?', validation(validationParams.bookmarks), pass
             ])
               .then(links => res.json({ links }));
           } else if (req.method === 'DELETE' && myTypes.indexOf(req.params.type) !== -1) {
-            return mongoCollection.findOneAndRemove(req.params.type === MY_COLLECTIONS ?
+            return mongoCollection.findOneAndRemove(req.params.type === CREATED_COLLECTIONS ?
               { _id: addingId, authorId: req.user.userId } :
               { _id: addingId, userAdded: req.user.userId })
               .then((deletedContent) => {

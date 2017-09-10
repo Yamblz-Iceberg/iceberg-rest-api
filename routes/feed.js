@@ -6,7 +6,6 @@ const passport = require('passport');
 
 const Collection = require('.././dataModels/collection').Collection;
 const Tag = require('.././dataModels/tag').Tag;
-const _ = require('lodash');
 
 const validation = require('./validation/validator');
 const validationParams = require('./validation/params');
@@ -78,6 +77,7 @@ router.get('/', validation(validationParams.feed), passport.authenticate('bearer
         links: { $addToSet: '$links' },
         tags: { $addToSet: '$tag' },
         usersSaved: { $first: '$usersSaved' },
+        closed: { $first: '$closed' },
       },
     },
     {
@@ -108,6 +108,12 @@ router.get('/', validation(validationParams.feed), passport.authenticate('bearer
         'tags.textColor': 0,
         'tags.color': 0,
       },
+    },
+    {
+      $match: { $or: [{ closed: false }, { closed: null }] },
+    },
+    {
+      $match: req.query.sort !== 'time' ? { linksCount: { $gt: 0 } } : { _id: { $exists: true } },
     },
     {
       $sort: req.query.sort === 'time' ? { created: -1 } : { savedTimesCount: -1 },

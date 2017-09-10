@@ -22,4 +22,4 @@ const Metrcic = new Schema({
 });
 
 
-module.exports = Metrcic  ;
+module.exports = Metrcic;

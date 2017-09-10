@@ -48,6 +48,7 @@ module.exports = {
   collection: {
     body: {
       name: Joi.string().min(5).max(50).required(),
+      closed: Joi.boolean(),
       description: Joi.string().allow('').max(300),
       color: Joi.string().regex(/rgb\((?:([0-9]{1,2}|1[0-9]{1,2}|2[0-4][0-9]|25[0-5]), ?)(?:([0-9]{1,2}|1[0-9]{1,2}|2[0-4][0-9]|25[0-5]), ?)(?:([0-9]{1,2}|1[0-9]{1,2}|2[0-4][0-9]|25[0-5]))\)/).required(),
       tags: Joi.array().min(1).max(10).items(Joi.string().regex(idMongoRegex))
@@ -99,6 +100,7 @@ module.exports = {
     },
     query: {
       filter: Joi.string().valid(['new', 'opened']),
+      userId: Joi.string(),
     },
   },
   messagesDelete: {
