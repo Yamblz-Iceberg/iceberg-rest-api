@@ -48,7 +48,7 @@ router.get('/', validation(validationParams.feed), passport.authenticate('bearer
     {
       $unwind: { path: '$author', preserveNullAndEmptyArrays: true },
     },
-    // FIXME: добавить рейтинг у тега 
+    // FIXME: добавить рейтинг у тега, проблема в том, что я не могу получить количесто, могу лишь поставить true
     // {
     //   $lookup:
     //      {
@@ -118,7 +118,7 @@ router.get('/', validation(validationParams.feed), passport.authenticate('bearer
       $match: { $or: [{ closed: false }, { closed: null }] },
     },
     {
-      $match: req.query.sort !== 'time' && !req.query.search ? { linksCount: { $gt: 0 } } : { _id: { $exists: true } },
+      $match: { linksCount: { $gt: 0 } },
     },
     {
       $sort: req.query.sort === 'time' ? { created: -1 } : { savedTimesCount: -1 },
