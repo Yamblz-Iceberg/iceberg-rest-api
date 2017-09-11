@@ -118,7 +118,7 @@ router.get('/', validation(validationParams.feed), passport.authenticate('bearer
       $match: { $or: [{ closed: false }, { closed: null }] },
     },
     {
-      $match: req.query.sort !== 'time' ? { linksCount: { $gt: 0 } } : { _id: { $exists: true } },
+      $match: req.query.sort !== 'time' && !req.query.search ? { linksCount: { $gt: 0 } } : { _id: { $exists: true } },
     },
     {
       $sort: req.query.sort === 'time' ? { created: -1 } : { savedTimesCount: -1 },
