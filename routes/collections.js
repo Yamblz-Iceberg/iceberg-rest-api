@@ -18,7 +18,7 @@ const _ = require('lodash');
 router.all('/*', passport.authenticate('bearer', { session: false }));
 
 router.get('/:collectionId', (req, res, next) => {
-  User.findOne({ userId: req.user.userId })// TODO: убрать из выдачи закрытую подборку, если тот, кто запрашивает не автор
+  User.findOne({ userId: req.user.userId }
     .then(user => Collection.aggregate([
       {
         $match: { _id: mongoose.Types.ObjectId(req.params.collectionId) },
@@ -91,6 +91,7 @@ router.get('/:collectionId', (req, res, next) => {
           tags: { $addToSet: '$tag' },
           description: { $first: '$description' },
           usersSaved: { $first: '$usersSaved' },
+          closed: { $first: '$closed' },
         },
       },
       {
@@ -119,6 +120,7 @@ router.get('/:collectionId', (req, res, next) => {
           tags: { $first: '$tags' },
           description: { $first: '$description' },
           usersSaved: { $first: '$usersSaved' },
+          closed: { $first: '$closed' },
         },
       },
       {
@@ -164,12 +166,12 @@ router.get('/:collectionId', (req, res, next) => {
           'tags.__v': 0,
           'tags.textColor': 0,
           'tags.color': 0,
-        }, // TODO: сортировка
+        },
       },
     ])
       .then((returnedCollection) => {
-        if (!returnedCollection || !returnedCollection.length) {
-          throw new error.NotFound('NO_COLLECTIONS_ERR', 'Collections not found');
+        if (!returnedCollection || !returnedCollection.length || (returnedCollection[0].authorId !== req.user.userId && returnedCollection[0].closed)) {
+          throw new error.NotFound('NO_COLLECTIONS_ERR', 'Collection not found, or maybe it is private');
         } else {
           const collection = returnedCollection[0];
           if (!_.find(collection.links, 'userAdded')) { // FIXME: очень некрасивый костыль
