@@ -78,6 +78,9 @@ router.get('/:collectionId', (req, res, next) => {
         },
       },
       {
+        $sort: { 'links.added': -1 },
+      },
+      {
         $group: {
           _id: '$_id',
           name: { $first: '$name' },
@@ -123,7 +126,7 @@ router.get('/:collectionId', (req, res, next) => {
           saved: { $cond: { if: { $and: [{ $isArray: '$usersSaved' }, { $in: [req.user.userId, '$usersSaved'] }] }, then: true, else: false } },
           savedTimesCount: { $size: '$usersSaved' },
         },
-      }, // TODO: сортировка ссылок в карточке
+      },
       {
         $project: { 'author.salt': 0,
           'author._id': 0,
