@@ -200,7 +200,7 @@ router.post('/', status.accountTypeMiddleware, validation(validationParams.colle
 });
 
 router.post('/addLink/:collectionId/:linkId', validation(validationParams.description), status.accountTypeMiddleware, (req, res, next) => { // FIXME: проверка по url
-  Collection.findOneAndUpdate({ _id: mongoose.Types.ObjectId(req.params.collectionId) },
+  Collection.findOneAndUpdate({ _id: mongoose.Types.ObjectId(req.params.collectionId), authorId: req.user.userId },
     { $addToSet: { links: mongoose.Types.ObjectId(req.params.linkId) } })
     .then((collection) => {
       if (!collection) {
