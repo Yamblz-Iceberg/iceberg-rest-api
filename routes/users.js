@@ -109,7 +109,7 @@ router.all('/bookmarks/:type/:id?', validation(validationParams.bookmarks), pass
             throw new error.NotFound('BOOKMARK_ADD_ERR', 'User not found');
           }
           if (req.method === 'GET') {
-            if (req.params.type === SAVED_COLLECTIONS || req.params.type === CREATED_COLLECTIONS) { // TODO: убрать из выдачи закрытые подборки, если тот, кто запрашивает не автор
+            if (req.params.type === SAVED_COLLECTIONS || req.params.type === CREATED_COLLECTIONS) {
               return Collection.aggregate([
                 {
                   $match: { _id: { $in: user.bookmarks.map(bookmarkElem => (bookmarkElem.type === req.params.type ? bookmarkElem.bookmarkId : undefined)).filter(Boolean) } },
@@ -207,6 +207,9 @@ router.all('/bookmarks/:type/:id?', validation(validationParams.bookmarks), pass
                   $match: (req.query.filter === 'new') ? { $or: [{ 'metrics.opened': null }, { 'metrics.opened': false }] } :
                     (req.query.filter === 'opened') ? { 'metrics.opened': true } :
                       { _id: { $exists: true } },
+                },
+                {
+                  $match: req.query.userId && req.query.userId !== req.user.userId ? { closed: false } : { _id: { $exists: true } },
                 },
                 {
                   $sort: { 'metrics.addTime': -1 },

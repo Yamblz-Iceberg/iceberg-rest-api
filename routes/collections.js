@@ -18,7 +18,7 @@ const _ = require('lodash');
 router.all('/*', passport.authenticate('bearer', { session: false }));
 
 router.get('/:collectionId', (req, res, next) => {
-  User.findOne({ userId: req.user.userId }
+  User.findOne({ userId: req.user.userId })
     .then(user => Collection.aggregate([
       {
         $match: { _id: mongoose.Types.ObjectId(req.params.collectionId) },
@@ -169,12 +169,12 @@ router.get('/:collectionId', (req, res, next) => {
         },
       },
     ])
-      .then((returnedCollection) => {
+      .then((returnedCollection) => { // FIXME: очень некрасивый костыли
         if (!returnedCollection || !returnedCollection.length || (returnedCollection[0].authorId !== req.user.userId && returnedCollection[0].closed)) {
           throw new error.NotFound('NO_COLLECTIONS_ERR', 'Collection not found, or maybe it is private');
         } else {
           const collection = returnedCollection[0];
-          if (!_.find(collection.links, 'userAdded')) { // FIXME: очень некрасивый костыль
+          if (!_.find(collection.links, 'userAdded')) {
             collection.links = [];
           }
           res.json({ collection });
