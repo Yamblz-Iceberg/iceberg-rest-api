@@ -78,7 +78,7 @@ router.get('/:collectionId', (req, res, next) => {
         },
       },
       {
-        $sort: { 'links.added': -1 },
+        $sort: { 'link.added': -1 },
       },
       {
         $group: {
