@@ -72,7 +72,7 @@ router.get('/:collectionId', (req, res, next) => {
           'link.saved': { $cond: { if: { $and: [{ $isArray: '$link.usersSaved' }, { $in: [req.user.userId, '$link.usersSaved'] }] }, then: true, else: false } },
           'link.liked': { $cond: { if: { $and: [{ $isArray: '$link.usersLiked' }, { $in: [req.user.userId, '$link.usersLiked'] }] }, then: true, else: false } },
           'link.opened': { $cond: { if: { $in: ['$link._id',
-            user.metrics.map(metricElem => (metricElem.opened ? metricElem.bookmarkId : undefined)).filter(Boolean)] },
+            user.metrics.map(metricElem => (metricElem.opened ? metricElem.contentId : undefined)).filter(Boolean)] },
           then: true,
           else: false } },
         },
@@ -82,7 +82,6 @@ router.get('/:collectionId', (req, res, next) => {
           _id: '$_id',
           name: { $first: '$name' },
           author: { $first: '$author' },
-          openedLinks: { $first: '$openedLinks' },
           photo: { $first: '$photo' },
           color: { $first: '$color' },
           links: { $addToSet: '$link' },
@@ -111,7 +110,6 @@ router.get('/:collectionId', (req, res, next) => {
           _id: '$_id',
           name: { $first: '$name' },
           author: { $first: '$author' },
-          openedLinks: { $first: '$openedLinks' },
           photo: { $first: '$photo' },
           color: { $first: '$color' },
           links: { $addToSet: '$links' },
@@ -163,7 +161,7 @@ router.get('/:collectionId', (req, res, next) => {
           'tags.__v': 0,
           'tags.textColor': 0,
           'tags.color': 0,
-        },
+        }, // TODO: сортировка
       },
     ])
       .then((returnedCollection) => {
