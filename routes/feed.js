@@ -48,24 +48,18 @@ router.get('/', validation(validationParams.feed), passport.authenticate('bearer
     {
       $unwind: { path: '$author', preserveNullAndEmptyArrays: true },
     },
-    // FIXME: добавить рейтинг у тега, проблема в том, что я не могу получить количесто, могу лишь поставить true
-    // {
-    //   $lookup:
-    //      {
-    //        from: 'users',
-    //        localField: 'tag._id',
-    //        foreignField: 'personalTags.bookmarkId',
-    //        as: 'tag.rel',
-    //      },
-    // },
-    // {
-    //   $unwind: { path: '$tag.rel', preserveNullAndEmptyArrays: true },
-    // },
-    // {
-    //   $addFields: { 'tag.rel': { $cond: { if: { $in: ['$tag._id', user.personalTags.map(personalTag => personalTag.bookmarkId)] },
-    //     then: true,
-    //     else: false } } },
-    // },
+    {
+      $lookup:
+         {
+           from: 'users',
+           localField: 'tag._id',
+           foreignField: 'bookmarks.bookmarkId',
+           as: 'tagRel',
+         },
+    },
+    {
+      $unwind: { path: '$tagRel', preserveNullAndEmptyArrays: true },
+    },
     {
       $group: {
         _id: '$_id',
@@ -76,9 +70,42 @@ router.get('/', validation(validationParams.feed), passport.authenticate('bearer
         created: { $first: '$created' },
         links: { $addToSet: '$links' },
         tags: { $addToSet: '$tag' },
+        tagRel: { $addToSet: '$tagRel' },
         usersSaved: { $first: '$usersSaved' },
         closed: { $first: '$closed' },
       },
+    },
+    { $addFields: { tagRel: {
+      $filter: {
+        input: '$tagRel',
+        as: 'tag',
+        cond: { $and: [{ $eq: ['$$tag.userId', req.user.userId ] }] },
+      } } },
+    },
+    { $addFields: { tagRel: '$tagRel.bookmarks' },
+    },
+    {
+      $unwind: { path: '$tagRel', preserveNullAndEmptyArrays: true },
+    },
+    {
+      $addFields: { tagsClear: {
+        $map:
+               {
+                 input: '$tags',
+                 as: 'tag',
+                 in: '$$tag._id',
+               },
+      } },
+    },
+    { $addFields: { tagRel: {
+      $filter: {
+        input: '$tagRel',
+        as: 'tag',
+        cond: { $and: [{ $eq: ['$$tag.type', 'personalTags'] }, { $in: ['$$tag.bookmarkId', '$tagsClear'] }] },
+      } } },
+    },
+    {
+      $addFields: { personalRating: { $sum: '$tagRel.counter' } },
     },
     {
       $match: req.query.search && /^#/.test(req.query.search) ?
@@ -86,7 +113,6 @@ router.get('/', validation(validationParams.feed), passport.authenticate('bearer
     },
     {
       $addFields: {
-        // tags: { $slice: ['$tags', 2] },
         linksCount: { $size: '$links' },
         savedTimesCount: { $size: '$usersSaved' },
         saved: { $cond: { if: { $and: [{ $isArray: '$usersSaved' }, { $in: [req.user.userId, '$usersSaved'] }] }, then: true, else: false } },
@@ -95,6 +121,8 @@ router.get('/', validation(validationParams.feed), passport.authenticate('bearer
     {
       $project: { 'author.salt': 0,
         usersSaved: 0,
+        tagRel: 0,
+        tagsClear: 0,
         'author._id': 0,
         'author.hash': 0,
         'author.vkToken': 0,
@@ -121,7 +149,7 @@ router.get('/', validation(validationParams.feed), passport.authenticate('bearer
       $match: { linksCount: { $gt: 0 } },
     },
     {
-      $sort: req.query.sort === 'time' ? { created: -1 } : { savedTimesCount: -1 },
+      $sort: req.query.sort === 'time' ? { created: -1 } : { personalRating: -1 },
     },
   ])
     .then((collections) => {
