@@ -17,7 +17,7 @@ router.all('/*', passport.authenticate('bearer', { session: false }));
 
 router.get('/:userId?', (req, res, next) => {
   User.findOne({ userId: req.params.userId ? req.params.userId : req.user.userId },
-    { hash: 0, salt: 0, id: 0, __v: 0, bookmarks: 0, metrics: 0, savedLinks: 0 })
+    { hash: 0, salt: 0, id: 0, __v: 0, bookmarks: 0, metrics: 0, savedLinks: 0, vkToken: 0, fbToken: 0, yaToken: 0 })
     .then(user => (!user ? new error.NotFound('NO_USER_ERR', 'User cannot be found') : user))
     .then(user => res.json(user))
     .catch(err => next(err));
@@ -68,7 +68,7 @@ router.all('/bookmarks/:type/:id?', validation(validationParams.bookmarks), pass
 
   const collectionsActionDestination = { bookmarks: { bookmarkId: addingId, type: SAVED_COLLECTIONS } };
   const collectionsCreatedActionDestination = { bookmarks: { bookmarkId: addingId, type: CREATED_COLLECTIONS } };
-  const linksActionDestination = { bookmarks: { bookmarks: addingId, type: SAVED_LINKS } };
+  const linksActionDestination = { bookmarks: { bookmarkId: addingId, type: SAVED_LINKS } };
   const linksActionAddedDestination = { bookmarks: { bookmarkId: addingId, type: ADDED_LINKS } };
 
   const userActionDestination = { usersSaved: req.user.userId };
@@ -109,7 +109,7 @@ router.all('/bookmarks/:type/:id?', validation(validationParams.bookmarks), pass
             throw new error.NotFound('BOOKMARK_ADD_ERR', 'User not found');
           }
           if (req.method === 'GET') {
-            if (req.params.type === SAVED_COLLECTIONS || req.params.type === CREATED_COLLECTIONS) { // TODO: убрать из выдачи закрытые подборки, если тот, кто запрашивает не автор
+            if (req.params.type === SAVED_COLLECTIONS || req.params.type === CREATED_COLLECTIONS) {
               return Collection.aggregate([
                 {
                   $match: { _id: { $in: user.bookmarks.map(bookmarkElem => (bookmarkElem.type === req.params.type ? bookmarkElem.bookmarkId : undefined)).filter(Boolean) } },
@@ -167,6 +167,7 @@ router.all('/bookmarks/:type/:id?', validation(validationParams.bookmarks), pass
                     created: { $first: '$created' },
                     links: { $first: '$links' },
                     metrics: { $addToSet: '$metrics' },
+                    closed: { $first: '$closed' },
                   },
                 },
                 {
@@ -191,6 +192,11 @@ router.all('/bookmarks/:type/:id?', validation(validationParams.bookmarks), pass
                     'author.accType': 0,
                     'author.bookmarks': 0,
                     'author.metrics': 0,
+                    'author.vkToken': 0,
+                    'author.fbToken': 0,
+                    'author.yaToken': 0,
+                    'author.socialLink': 0,
+                    'author.sex': 0,
                     'author.__v': 0,
                     links: 0,
                     'tags.__v': 0,
@@ -202,6 +208,9 @@ router.all('/bookmarks/:type/:id?', validation(validationParams.bookmarks), pass
                   $match: (req.query.filter === 'new') ? { $or: [{ 'metrics.opened': null }, { 'metrics.opened': false }] } :
                     (req.query.filter === 'opened') ? { 'metrics.opened': true } :
                       { _id: { $exists: true } },
+                },
+                {
+                  $match: req.query.userId && req.query.userId !== req.user.userId ? { closed: false } : { _id: { $exists: true } },
                 },
                 {
                   $sort: { 'metrics.addTime': -1 },
@@ -277,7 +286,14 @@ router.all('/bookmarks/:type/:id?', validation(validationParams.bookmarks), pass
                   usersSaved: 0,
                   'userAdded.salt': 0,
                   'userAdded.bookmarks': 0,
+                  'userAdded.vkToken': 0,
+                  'userAdded.fbToken': 0,
+                  'userAdded.yaToken': 0,
+                  'userAdded.socialLink': 0,
+                  'userAdded.sex': 0,
                   'metrics._id': 0,
+                  'metrics.contentId': 0,
+                  'metrics.type': 0,
                   'metrics.bookmarkId': 0,
                   'metrics.counter': 0,
                   'userAdded._id': 0,

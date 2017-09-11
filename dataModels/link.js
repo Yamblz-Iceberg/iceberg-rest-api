@@ -29,6 +29,10 @@ const Link = new Schema({
     type: Number,
     default: 0,
   },
+  added: {
+    type: Date,
+    default: Date.now,
+  },
   usersSaved: {
     type: Array,
   },

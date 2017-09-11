@@ -18,7 +18,7 @@ const _ = require('lodash');
 router.all('/*', passport.authenticate('bearer', { session: false }));
 
 router.get('/:collectionId', (req, res, next) => {
-  User.findOne({ userId: req.user.userId })// TODO: убрать из выдачи закрытую подборку, если тот, кто запрашивает не автор
+  User.findOne({ userId: req.user.userId })
     .then(user => Collection.aggregate([
       {
         $match: { _id: mongoose.Types.ObjectId(req.params.collectionId) },
@@ -72,23 +72,26 @@ router.get('/:collectionId', (req, res, next) => {
           'link.saved': { $cond: { if: { $and: [{ $isArray: '$link.usersSaved' }, { $in: [req.user.userId, '$link.usersSaved'] }] }, then: true, else: false } },
           'link.liked': { $cond: { if: { $and: [{ $isArray: '$link.usersLiked' }, { $in: [req.user.userId, '$link.usersLiked'] }] }, then: true, else: false } },
           'link.opened': { $cond: { if: { $in: ['$link._id',
-            user.metrics.map(metricElem => (metricElem.opened ? metricElem.bookmarkId : undefined)).filter(Boolean)] },
+            user.metrics.map(metricElem => (metricElem.opened ? metricElem.contentId : undefined)).filter(Boolean)] },
           then: true,
           else: false } },
         },
+      },
+      {
+        $sort: { 'link.added': -1 },
       },
       {
         $group: {
           _id: '$_id',
           name: { $first: '$name' },
           author: { $first: '$author' },
-          openedLinks: { $first: '$openedLinks' },
           photo: { $first: '$photo' },
           color: { $first: '$color' },
           links: { $addToSet: '$link' },
           tags: { $addToSet: '$tag' },
           description: { $first: '$description' },
           usersSaved: { $first: '$usersSaved' },
+          closed: { $first: '$closed' },
         },
       },
       {
@@ -111,13 +114,13 @@ router.get('/:collectionId', (req, res, next) => {
           _id: '$_id',
           name: { $first: '$name' },
           author: { $first: '$author' },
-          openedLinks: { $first: '$openedLinks' },
           photo: { $first: '$photo' },
           color: { $first: '$color' },
           links: { $addToSet: '$links' },
           tags: { $first: '$tags' },
           description: { $first: '$description' },
           usersSaved: { $first: '$usersSaved' },
+          closed: { $first: '$closed' },
         },
       },
       {
@@ -125,7 +128,7 @@ router.get('/:collectionId', (req, res, next) => {
           saved: { $cond: { if: { $and: [{ $isArray: '$usersSaved' }, { $in: [req.user.userId, '$usersSaved'] }] }, then: true, else: false } },
           savedTimesCount: { $size: '$usersSaved' },
         },
-      }, // TODO: сортировка ссылок в карточке
+      },
       {
         $project: { 'author.salt': 0,
           'author._id': 0,
@@ -135,12 +138,22 @@ router.get('/:collectionId', (req, res, next) => {
           'author.created': 0,
           'author.bookmarks': 0,
           'author.metrics': 0,
+          'author.vkToken': 0,
+          'author.fbToken': 0,
+          'author.yaToken': 0,
+          'author.socialLink': 0,
+          'author.sex': 0,
           'metrics.contentId': 0,
           'links.userAdded._id': 0,
           'links.usersSaved': 0,
           'links.usersLiked': 0,
           'links.userAdded.hash': 0,
           'links.userAdded.salt': 0,
+          'links.userAdded.vkToken': 0,
+          'links.userAdded.fbToken': 0,
+          'links.userAdded.yaToken': 0,
+          'links.userAdded.socialLink': 0,
+          'links.userAdded.sex': 0,
           'links.userAdded.banned': 0,
           'links.userAdded.created': 0,
           'links.userAdded.__v': 0,
@@ -156,12 +169,12 @@ router.get('/:collectionId', (req, res, next) => {
         },
       },
     ])
-      .then((returnedCollection) => {
-        if (!returnedCollection || !returnedCollection.length) {
-          throw new error.NotFound('NO_COLLECTIONS_ERR', 'Collections not found');
+      .then((returnedCollection) => { // FIXME: очень некрасивые костыли
+        if (!returnedCollection || !returnedCollection.length || (returnedCollection[0].author.userId !== req.user.userId && returnedCollection[0].closed)) {
+          throw new error.NotFound('NO_COLLECTIONS_ERR', 'Collection not found, or maybe it is private');
         } else {
           const collection = returnedCollection[0];
-          if (!_.find(collection.links, 'userAdded')) { // FIXME: очень некрасивый костыль
+          if (!_.find(collection.links, 'userAdded')) {
             collection.links = [];
           }
           res.json({ collection });
@@ -187,7 +200,7 @@ router.post('/', status.accountTypeMiddleware, validation(validationParams.colle
 });
 
 router.post('/addLink/:collectionId/:linkId', validation(validationParams.description), status.accountTypeMiddleware, (req, res, next) => { // FIXME: проверка по url
-  Collection.findOneAndUpdate({ _id: mongoose.Types.ObjectId(req.params.collectionId) },
+  Collection.findOneAndUpdate({ _id: mongoose.Types.ObjectId(req.params.collectionId), authorId: req.user.userId },
     { $addToSet: { links: mongoose.Types.ObjectId(req.params.linkId) } })
     .then((collection) => {
       if (!collection) {
