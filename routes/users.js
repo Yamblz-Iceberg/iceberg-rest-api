@@ -167,6 +167,7 @@ router.all('/bookmarks/:type/:id?', validation(validationParams.bookmarks), pass
                     created: { $first: '$created' },
                     links: { $first: '$links' },
                     metrics: { $addToSet: '$metrics' },
+                    closed: { $first: '$closed' },
                   },
                 },
                 {

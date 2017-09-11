@@ -170,7 +170,7 @@ router.get('/:collectionId', (req, res, next) => {
       },
     ])
       .then((returnedCollection) => { // FIXME: очень некрасивый костыли
-        if (!returnedCollection || !returnedCollection.length || (returnedCollection[0].authorId !== req.user.userId && returnedCollection[0].closed)) {
+        if (!returnedCollection || !returnedCollection.length || (returnedCollection[0].author.userId !== req.user.userId && returnedCollection[0].closed)) {
           throw new error.NotFound('NO_COLLECTIONS_ERR', 'Collection not found, or maybe it is private');
         } else {
           const collection = returnedCollection[0];
