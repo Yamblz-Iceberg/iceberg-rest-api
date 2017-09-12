@@ -1,0 +1,867 @@
+FORMAT: 1A
+HOST: https://iceberg-project.herokuapp.com/
+# API проекта ICEBERG
+Учебный проект Мобилизации Яндекс 2017
+
+- Вам необходимо установить **Node.js** и **MongoDB**
+- Все настройки находятся в файле `config.json`
+- Секретные настройки в `config_secret.json` - без них или переменных среды сервер локально  **не запустится**!
+
+```bash
+npm install
+node databaseFake.js
+npm run start
+```
+
+- Для livereload используй команду
+
+```bash
+npm run dev
+npm run stop //убить процесс
+```
+
+- Если все сделано правильно, сервер будет доступен по адресу `http://localhost:1337`
+
+## Типы запросов к серверу
+
+- После исполнения `databaseFake.js` будет досутпен пользователь `myapi` с токеном `token`
+- Для тестирования запросов используй [httpie](https://github.com/jkbr/httpie), а лучше [insomnia](https://insomnia.rest/download)
+- Все запросы, для получения данных пользователей в должны сопровождаться **Bearer** токеном
+
+# Group Ссылки
+
+
+## Операции над ссылками [/links]
+
+### Добавить ссылку в базу данных [POST]
+
++ Request (application/json)
+
+            + Headers
+                Authorization: Bearer token
+
+    + Attributes
+        + link: http://www.stackoverflow.com/questions/33267597/ (required, string) - URI
+        
+
++ Response 200 (application/json)
+
+        {
+           "result": {
+              "__v": 0,
+              "userAdded": "myapi",
+              "url": "http://www.stackoverflow.com/questions/33267597/blur-content-behind-a-div-using-css3",
+              "favicon": "https://cdn.sstatic.net/Sites/stackoverflow/img/favicon.ico?v=4f32ecc8f43d",
+              "name": "css - Blur content behind a div using CSS3 - Stack Overflow",
+              "photo": "https://cdn.sstatic.net/Sites/stackoverflow/img/apple-touch-icon@2.png?v=73d79a89bded",
+              "_id": "59b6a17a950f3e4f5632ce91",
+              "usersLiked": [],
+              "usersSaved": [],
+              "added": "2017-09-11T14:45:14.672Z",
+              "likes": 0
+           },
+           "created": true
+        }
+### Удалить добавленную ссылку [DELETE /bookmarks/addedLinks/{linkId}]
++ Parameters
+    + linkId: 59b6a17a950f3e4f5632ce91 (optional, string) - MongoDB id
+
++ Request
+
+    + Headers
+    
+            Authorization: Bearer token
++ Response 200
++ Response 404 
+
+        {
+          "code": "NO_BOOKMARKS_ERR",
+          "type": "API_ERROR",
+          "message": "Bookmarks not found"
+        }
+        
+### Получить добавленные ссылки [GET /bookmarks/addedLinks/]
++ Request
+
+    + Headers
+    
+            Authorization: Bearer token
++ Response 200 (application/json)
+
+        {
+          "links": [
+            {
+              "_id": "59b6a17a950f3e4f5632ce91",
+              "name": "css - Blur content behind a div using CSS3 - Stack Overflow",
+              "userAdded": {
+                "userId": "myapi",
+                "firstName": "Юрий",
+                "lastName": "Козлова",
+                "photo": "https://s3.amazonaws.com/uifaces/faces/twitter/nateschulte/128.jpg",
+                "description": "Chief Division Producer",
+                "rating": 5
+              },
+              "photo": "https://cdn.sstatic.net/Sites/stackoverflow/img/apple-touch-icon@2.png?v=73d79a89bded",
+              "description": "Привет",
+              "favicon": "https://cdn.sstatic.net/Sites/stackoverflow/img/favicon.ico?v=4f32ecc8f43d",
+              "likes": 0,
+              "url": "http://www.stackoverflow.com/questions/33267597/blur-content-behind-a-div-using-css3",
+              "metrics": null
+            },
+            {
+              "_id": "59b695138005242eeccb0ddb",
+              "name": "Magni omnis totam quis est quas.",
+              "userAdded": {
+                "userId": "myapi",
+                "firstName": "Юрий",
+                "lastName": "Козлова",
+                "photo": "https://s3.amazonaws.com/uifaces/faces/twitter/nateschulte/128.jpg",
+                "description": "Chief Division Producer",
+                "rating": 5
+              },
+              "photo": "http://lorempixel.com/640/480/nightlife",
+              "description": "Voluptatibus magnam molestiae sapiente enim non. Magnam sed iure. Magni accusamus et repellat.",
+              "favicon": "https://s3.amazonaws.com/uifaces/faces/twitter/id835559/128.jpg",
+              "likes": 85,
+              "url": "https://любовь.net",
+              "metrics": null
+            },
+            {
+              "_id": "59b695138005242eeccb0dd9",
+              "name": "Sapiente nostrum id necessitatibus consectetur magnam aut eius voluptatum sapiente.",
+              "userAdded": {
+                "userId": "myapi",
+                "firstName": "Юрий",
+                "lastName": "Козлова",
+                "photo": "https://s3.amazonaws.com/uifaces/faces/twitter/nateschulte/128.jpg",
+                "description": "Chief Division Producer",
+                "rating": 5
+              },
+              "photo": "http://lorempixel.com/640/480/fashion",
+              "description": "",
+              "favicon": "https://s3.amazonaws.com/uifaces/faces/twitter/samscouto/128.jpg",
+              "likes": 71,
+              "url": "https://эдуард.org",
+              "metrics": null
+            }
+          ]
+        }
+ 
+
+# Group Коллекции
+
+## Операции над коллекциями [/collections]
+
+### Добавить коллекции в базу данных [POST]
+
++ Request (application/json)
+
+            + Headers
+                Authorization: Bearer token
+
+    + Attributes
+        + description: Как начать играть на пианино (optional, string) - Описание
+        + name: Хочу научится играть на пианино (required, string) - Название
+        + color: rgb 96, 57, 89 (required, string) - Цвет карточки
+        + tags: 59a57bfcc7291c53b91c94ca (required, array) - массив с id тегов
+        + closed: true (optional, string) - URI
+        + photo: https://help.apiary.io/images/oracleapiarylogo.png (optional, string) - Ссылка на обложку карточки
+
++ Response 200 (application/json)
+
+        {
+          "collection": {
+            "__v": 0,
+            "name": "Хочу научится играть на пианино",
+            "authorId": "myapi",
+            "_id": "59b6a1a6950f3e4f5632ce95",
+            "closed": true,
+            "created": "2017-09-11T14:45:58.422Z",
+            "usersSaved": [],
+            "color": "rgb(96, 57, 89)",
+            "links": [],
+            "description": "Как начать играть на пианино",
+            "tags": [
+              "59a57bfcc7291c53b91c94ca"
+            ]
+          }
+        }
+  
+
+### Добавить ссылку в коллекцию [POST /collections/{collectionId}/{linkId}]
+
++ Parameters
+    + collectionId: 59b56eceeb5c1761674ffc7d (required, string) - MongoDB id
+    + linkId: 59b56eceeb5c1761674ffc7d (required, string) - MongoDB id
+
+    
+
+
++ Request (application/json)
+
+    + Headers
+    
+            Authorization: Bearer token
+
+    + Attributes
+        + description: Очень крутая ссылка (optional, string) - Описание ссылки
+
+                
++ Response 200
++ Response 404
+
+        {
+          "code": "NO_COLLECTION_ERR",
+          "type": "API_ERROR",
+          "message": "Collection not found, cannot update this collection"
+        }
++ Response 404
+
+        {
+          "code": "NO_LINK_ERR",
+          "type": "API_ERROR",
+          "message": "Link not found, cannot update this link description"
+        }
+      
+### Получить коллекцию и содержащиеся в ней ссылки [GET /collections/{collectionId}]
++ Parameters
+    + collectionId: 59b56eceeb5c1761674ffc7d (required, string) - MongoDB id
+
++ Request
+
+    + Headers
+    
+            Authorization: Bearer token
+                
++ Response 200
+
+        {
+          "collection": {
+            "_id": "59b695138005242eeccb0de9",
+            "name": "Velit illum natus placeat commodi error quod unde enim.",
+            "author": {
+              "userId": "d991f354-7ce1-46ce-b792-ebad9b64aa3a",
+              "firstName": "Людмила",
+              "lastName": "Щукин",
+              "photo": "https://s3.amazonaws.com/uifaces/faces/twitter/chaensel/128.jpg",
+              "description": "Global Interactions Agent",
+              "rating": 5,
+              "accType": "user"
+            },
+            "photo": "http://lorempixel.com/640/480/animals",
+            "color": "#506a46",
+            "links": [
+              {
+                "_id": "59b695138005242eeccb0ddd",
+                "name": "Blanditiis sint non in.",
+                "userAdded": {
+                  "userId": "0684fa6d-bd3e-4185-ae12-24f7f890dd2e",
+                  "firstName": "Татьяна",
+                  "lastName": "Ильина",
+                  "photo": "https://s3.amazonaws.com/uifaces/faces/twitter/jqiuss/128.jpg",
+                  "rating": 5
+                },
+                "description": "",
+                "favicon": "https://s3.amazonaws.com/uifaces/faces/twitter/shesgared/128.jpg",
+                "photo": "http://lorempixel.com/640/480/sports",
+                "url": "http://вероника.ru",
+                "added": "2017-09-11T13:52:19.488Z",
+                "likes": 25,
+                "savedTimesCount": 1,
+                "saved": false,
+                "liked": false,
+                "opened": false
+              },
+              {
+                "_id": "59b695138005242eeccb0ddb",
+                "name": "Magni omnis totam quis est quas.",
+                "userAdded": {
+                  "userId": "myapi",
+                  "firstName": "Юрий",
+                  "lastName": "Козлова",
+                  "photo": "https://s3.amazonaws.com/uifaces/faces/twitter/nateschulte/128.jpg",
+                  "rating": 5
+                },
+                "description": "Voluptatibus magnam molestiae sapiente enim non. Magnam sed iure. Magni accusamus et repellat.",
+                "favicon": "https://s3.amazonaws.com/uifaces/faces/twitter/id835559/128.jpg",
+                "photo": "http://lorempixel.com/640/480/nightlife",
+                "url": "https://любовь.net",
+                "added": "2017-09-11T13:52:19.487Z",
+                "likes": 85,
+                "savedTimesCount": 1,
+                "saved": false,
+                "liked": false,
+                "opened": false
+              },
+              {
+                "_id": "59b695138005242eeccb0dd9",
+                "name": "Sapiente nostrum id necessitatibus consectetur magnam aut eius voluptatum sapiente.",
+                "userAdded": {
+                  "userId": "myapi",
+                  "firstName": "Юрий",
+                  "lastName": "Козлова",
+                  "photo": "https://s3.amazonaws.com/uifaces/faces/twitter/nateschulte/128.jpg",
+                  "rating": 5
+                },
+                "description": "",
+                "favicon": "https://s3.amazonaws.com/uifaces/faces/twitter/samscouto/128.jpg",
+                "photo": "http://lorempixel.com/640/480/fashion",
+                "url": "https://эдуард.org",
+                "added": "2017-09-11T13:52:19.485Z",
+                "likes": 71,
+                "savedTimesCount": 1,
+                "saved": false,
+                "liked": false,
+                "opened": false
+              }
+            ],
+            "tags": [
+              {
+                "_id": "59b695138005242eeccb0dd5",
+                "name": "hicofficiis"
+              },
+              {
+                "_id": "59b695138005242eeccb0dcc",
+                "name": "velitut"
+              },
+              {
+                "_id": "59b695138005242eeccb0dd3",
+                "name": "ettotam"
+              }
+            ],
+            "description": "Consequatur iste qui molestiae officia consectetur esse non. Ratione sit animi sunt vitae. Rerum distinctio reprehenderit. Iusto omnis ut nesciunt modi occaecati accusamus optio. Praesentium id molestiae qui. Qui voluptate reprehenderit illum deserunt corrupti.",
+            "closed": false,
+            "saved": false,
+            "savedTimesCount": 2
+          }
+        }
++ Response 404
+
+        {
+          "code": "NO_COLLECTIONS_ERR",
+          "type": "API_ERROR",
+          "message": "Collection not found, or maybe it is private"
+        }
+       
+       
+### Получить все созданные коллекции [GET /bookmarks/createdCollections/]
++ Request
+
+    + Headers
+    
+            Authorization: Bearer token
++ Response 200 (application/json)
+
+        {
+          "collections": [
+            {
+              "_id": "59b695138005242eeccb0de6",
+              "name": "Quas voluptatem aut aspernatur voluptatem.",
+              "author": {
+                "userId": "myapi",
+                "firstName": "Юрий",
+                "lastName": "Козлова",
+                "photo": "https://s3.amazonaws.com/uifaces/faces/twitter/nateschulte/128.jpg",
+                "description": "Chief Division Producer",
+                "rating": 5
+              },
+              "photo": "http://lorempixel.com/640/480/business",
+              "color": "#107712",
+              "created": "2017-09-11T13:52:19.583Z",
+              "metrics": null,
+              "closed": false,
+              "linksCount": 7
+            },
+            {
+              "_id": "59b695138005242eeccb0de2",
+              "name": "Commodi harum deleniti.",
+              "author": {
+                "userId": "myapi",
+                "firstName": "Юрий",
+                "lastName": "Козлова",
+                "photo": "https://s3.amazonaws.com/uifaces/faces/twitter/nateschulte/128.jpg",
+                "description": "Chief Division Producer",
+                "rating": 5
+              },
+              "photo": "http://lorempixel.com/640/480/city",
+              "color": "#3b3f7b",
+              "created": "2017-09-11T13:52:19.582Z",
+              "metrics": null,
+              "closed": false,
+              "linksCount": 9
+            }
+          ]
+        }
+
+### Удалить созданную колеекцию [DELETE /bookmarks/createdCollections/{collectionId}]
++ Parameters
+    + collectionId: 59b6a17a950f3e4f5632ce91 (optional, string) - MongoDB id
+
++ Request
+
+    + Headers
+    
+            Authorization: Bearer token
++ Response 200
++ Response 404 
+
+        {
+          "code": "NO_BOOKMARKS_ERR",
+          "type": "API_ERROR",
+          "message": "Bookmarks not found"
+        }
+ 
+
+# Group Теги
+
+## Операции над тегами [/tags/{tagName}]
+
+
++ Parameters
+    + tagName: котики (required, string) - Название тега
+
+    
+
+### Добавить тег [POST]
+
++ Request
+
+    + Headers
+    
+            Authorization: Bearer token
+                     
++ Response 200 (application/json)
+
+        {
+          "tag": {
+            "result": {
+              "__v": 0,
+              "name": "котики",
+              "_id": "59b1343fe6525678f784e82d"
+            },
+            "created": true
+          }
+        }
+
+
+# Group Лента и поиск
+
+## Коллекции и теги [/feed{?sort,search,only,count}]
+
++ Parameters
+
+    + sort = `time` (optional, string) ... Сортировка
+        + Values
+            + `time`
+            + `rating`
+    + search = ape (optional, string) - Поиск строки или по хештегу
+    + only = collections (optional, string) - Выдача только определенных элементов ленты
+        + Values
+            + `collections`
+            + `tags`
+    + count = 2 (optional, number) - Ограничение количества элементов в выдаче
+    
+    
+### Получить коллекции и теги [GET]
++ Request
+
+    + Headers
+    
+            Authorization: Bearer token
+                     
++ Response 200 (application/json)
+
+        {
+          "collections": [
+            {
+              "_id": "59b695138005242eeccb0de8",
+              "name": "Aut in et aperiam libero recusandae atque eos cumque.",
+              "author": {
+                "userId": "6400061d-5d95-46ff-b4e1-dcbeb9fabab9",
+                "firstName": "Матвей",
+                "lastName": "Борисова",
+                "photo": "https://s3.amazonaws.com/uifaces/faces/twitter/bolzanmarco/128.jpg",
+                "description": "Forward Branding Liaison",
+                "rating": 5
+              },
+              "photo": "http://lorempixel.com/640/480/sports",
+              "color": "#392a77",
+              "created": "2017-09-11T13:52:19.584Z",
+              "tags": [
+                {
+                  "_id": "59b695138005242eeccb0dd2",
+                  "name": "illumratione"
+                },
+                {
+                  "_id": "59b695138005242eeccb0dd0",
+                  "name": "magnamdolorem"
+                }
+              ],
+              "closed": false,
+              "personalRating": 3,
+              "linksCount": 9,
+              "savedTimesCount": 1,
+              "saved": false
+            }
+          ]
+        }
+
+# Group Профиль пользователя
+
+## Операции над профилем пользователя [/users/]
+
+
+### Информация о пользователе [GET /users/{userId}]
++ Parameters
+    + userId: myapi (optional, string) - Id пользователя
+
+
++ Request
+
+    + Headers
+    
+            Authorization: Bearer token
+          
++ Response 200 (application/json)  
+
+        {
+          "_id": "59b695118005242eeccb0dc9",
+          "userId": "myapi",
+          "firstName": "Юрий",
+          "lastName": "Козлова",
+          "photo": "https://s3.amazonaws.com/uifaces/faces/twitter/nateschulte/128.jpg",
+          "description": "Chief Division Producer",
+          "banned": false,
+          "created": "2017-09-11T13:52:17.044Z",
+          "rating": 5,
+          "accType": "user"
+        }
+
++ Response 404
+
+        {
+          "code": "NO_USER_ERR",
+          "type": "API_ERROR",
+          "message": "User cannot be found"
+        }
+        
+### Обновить информацию о пользователе [PUT]
+
+
++ Request (application/json) 
+
+    + Headers
+    
+            Authorization: Bearer token
+
+    + Attributes
+        + nickName: Bonn3r (optional, string) - Никнейм
+        + firstName: Leksi (optional, string) - Имя
+        + lastName: Hammer (optional, string) - Фамилия
+        + sex: male (optional, string) - Пол
+        + socialLink: https://vk.com/1 (optional, string) - Ссылка пользователя на его страницу
+        + photo: https://help.apiary.io/images/oracleapiarylogo.png (optional, string) - Ссылка на фото
+
+             
++ Response 200
++ Response 404
+
+        {
+          "code": "NO_USER_ERR",
+          "type": "API_ERROR",
+          "message": "User cannot be found"
+        }
+        
+### Удалить профиль [DELETE]
++ Request
+
+    + Headers
+    
+            Authorization: Bearer token
+           
++ Response 200
++ Response 404
+
+        {
+          "code": "NO_USER_ERR",
+          "type": "API_ERROR",
+          "message": "User cannot be found"
+        }
+        
+
+
+## Социальные возможности [/users/social/]
+
+
+### Получить список друзей из социальных сетей [GET]
++ Request
+
+    + Headers
+    
+            Authorization: Bearer token
+           
++ Response 200 (application/json)
+
+        {
+            "friends": ["vk_1", "vk_2"],
+        }
+        
++ Response 404
+
+        {
+          "code": "NO_SOCIAL_TOKEN",
+          "type": "API_ERROR",
+          "message": "Social token not found in user profile, try to relogin"
+        }
+
+# Group Закладки пользователя
+
+## Сохраненные ссылки [/bookmarks/savedLinks/{linkId}]
+
++ Parameters
+    + linkId: 59b6a17a950f3e4f5632ce91 (optional, string) - MongoDB id
+
+### Получить сохраненные ссылки [GET /bookmarks/savedLinks/]
++ Request
+
+    + Headers
+    
+            Authorization: Bearer token
++ Response 200 (application/json)
+
+        {
+          "links": [
+            {
+              "_id": "59b695138005242eeccb0dd6",
+              "name": "Consequatur suscipit ullam dolorem rem.",
+              "userAdded": {
+                "userId": "d64ca6d6-8f9d-4bdd-bfc5-034c1c988329",
+                "firstName": "Эдуард",
+                "lastName": "Устинов",
+                "photo": "https://s3.amazonaws.com/uifaces/faces/twitter/imcoding/128.jpg",
+                "description": "Forward Tactics Architect",
+                "rating": 5
+              },
+              "photo": "http://lorempixel.com/640/480/people",
+              "description": "",
+              "favicon": "https://s3.amazonaws.com/uifaces/faces/twitter/antjanus/128.jpg",
+              "likes": 17,
+              "url": "http://дмитрий.info",
+              "metrics": null
+            }
+          ]
+        }
+        
+ 
+
+### Добавить ссылку в сохраненные [PUT]
++ Request
+
+    + Headers
+    
+            Authorization: Bearer token
++ Response 200
++ Response 404 
+
+        {
+          "code": "NO_BOOKMARKS_ERR",
+          "type": "API_ERROR",
+          "message": "Bookmarks not found"
+        }
+        
+### Удалить ссылку из сохраненных [DELETE]
++ Request
+
+    + Headers
+    
+            Authorization: Bearer token
++ Response 200
++ Response 404 
+
+        {
+          "code": "NO_BOOKMARKS_ERR",
+          "type": "API_ERROR",
+          "message": "Bookmarks not found"
+        }
+        
+       
+
+## Сохраненные коллекции [/bookmarks/savedCollections/{collectionId}]
+
++ Parameters
+    + collectionId: 59b6a17a950f3e4f5632ce91 (optional, string) - MongoDB id
+
+        
+### Получить сохраненные коллекции [GET /bookmarks/savedCollections/]
++ Request
+
+    + Headers
+    
+            Authorization: Bearer token
++ Response 200 (application/json)
+
+        {
+          "collections": [
+            {
+              "_id": "59b695138005242eeccb0de6",
+              "name": "Quas voluptatem aut aspernatur voluptatem.",
+              "author": {
+                "userId": "myapi",
+                "firstName": "Юрий",
+                "lastName": "Козлова",
+                "photo": "https://s3.amazonaws.com/uifaces/faces/twitter/nateschulte/128.jpg",
+                "description": "Chief Division Producer",
+                "rating": 5
+              },
+              "photo": "http://lorempixel.com/640/480/business",
+              "color": "#107712",
+              "created": "2017-09-11T13:52:19.583Z",
+              "metrics": null,
+              "closed": false,
+              "linksCount": 7
+            },
+            {
+              "_id": "59b695138005242eeccb0de2",
+              "name": "Commodi harum deleniti.",
+              "author": {
+                "userId": "myapi",
+                "firstName": "Юрий",
+                "lastName": "Козлова",
+                "photo": "https://s3.amazonaws.com/uifaces/faces/twitter/nateschulte/128.jpg",
+                "description": "Chief Division Producer",
+                "rating": 5
+              },
+              "photo": "http://lorempixel.com/640/480/city",
+              "color": "#3b3f7b",
+              "created": "2017-09-11T13:52:19.582Z",
+              "metrics": null,
+              "closed": false,
+              "linksCount": 9
+            }
+          ]
+        }
+
+### Добавить коллекцию в сохраненные [PUT]
++ Request
+
+    + Headers
+    
+            Authorization: Bearer token
++ Response 200
++ Response 404 
+
+        {
+          "code": "NO_BOOKMARKS_ERR",
+          "type": "API_ERROR",
+          "message": "Bookmarks not found"
+        }
+        
+### Удалить коллекцию из сохраненных [DELETE]
++ Request
+
+    + Headers
+    
+            Authorization: Bearer token
++ Response 200
++ Response 404 
+
+        {
+          "code": "NO_BOOKMARKS_ERR",
+          "type": "API_ERROR",
+          "message": "Bookmarks not found"
+        }
+
+
+# Group Метрики
+
+## Метрики ссылок [/links/]
+
+### Поставить лайк [PUT /links/like/{linkId}]
+
++ Parameters
+    + linkId: 59b56eceeb5c1761674ffc7d (required, string) - MongoDB id
+
++ Request
+
+    + Headers
+    
+            Authorization: Bearer token
+
++ Response 200
++ Response 401
+
+        {
+          "code": "AUTH_ERR",
+          "type": "API_ERROR",
+          "message": "ERROR_MESSAGE"
+        }
++ Response 404
+
+        {
+          "code": "LINK_LIKE_ERR",
+          "type": "API_ERROR",
+          "message": "Cannot like link that doesnt exist"
+        }
+        
+
+### Отметить ссылку открытой [PUT /links/open/{linkId}]
+
++ Request
+
+    + Headers
+    
+            Authorization: Bearer token
+                
++ Response 200 (application/json)
++ Response 404
+
+        {
+          "code": "METRICS_OPEN_ERR",
+          "type": "API_ERROR",
+          "message": "Cannot mark this link as opened"
+        }
+        
+## Метрики коллекций [/links/open/{collectionId}]
+
++ Parameters
+    + collectionId: 59b56eceeb5c1761674ffc7d (required, string) - MongoDB id
+
+### Отметить коллекцию открытой [PUT]
+
++ Request
+
+    + Headers
+    
+            Authorization: Bearer token
+                
++ Response 200 
++ Response 404
+
+        {
+          "code": "METRICS_OPEN_ERR",
+          "type": "API_ERROR",
+          "message": "Cannot mark this collection as opened"
+        }
+
+
+## Метрики тегов [/tags/personal]
+
+### Добавить персональных тегов [PUT]
+
++ Request (application/json)
+
+            + Headers
+                Authorization: Bearer token
+
+    + Attributes
+        + tags: 59b56eceeb5c1761674ffc7d, 59b56eceeb5c1761674ffc7a  (required, array) - MongoDB tags ids
+        
+
++ Response 200
++ Response 400
+
+        {
+          "code": "ADD_PERSONAL_TAGS_ERR",
+          "type": "API_ERROR",
+          "message": "Cannot add personal tags for user that doesnt exist"
+        }
