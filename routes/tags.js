@@ -34,7 +34,7 @@ router.put('/personal', validation(validationParams.personalTags), (req, res, ne
         if (!bookmark) {
           user.bookmarks.push({ bookmarkId: mongoose.Types.ObjectId(tag), type: 'personalTags' });
         } else {
-          if (!bookmark.counter) bookmark.counter = 0;
+          if (!bookmark.counter) bookmark.counter = 1;
           bookmark.counter += 1;
         }
         return user.save();

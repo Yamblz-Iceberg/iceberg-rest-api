@@ -28,23 +28,53 @@ npm run stop //убить процесс
 - Для тестирования запросов используй [httpie](https://github.com/jkbr/httpie), а лучше [insomnia](https://insomnia.rest/download)
 - Все запросы, для получения данных пользователей в должны сопровождаться **Bearer** токеном
 
-# Group Ссылки
+# Group Теги
 
+## Операции над тегами [/tags/{tagName}]
+
+
++ Parameters
+    + tagName: котики (required, string) - Название тега
+
+### Добавить тег [POST]
+
++ Request
+
+    + Headers
+    
+            Authorization: Bearer token
+                     
++ Response 200 (application/json; charset=utf-8)
+
+        {
+          "tag": {
+            "result": {
+              "__v": 0,
+              "name": "котики",
+              "_id": "59b1343fe6525678f784e82d"
+            },
+            "created": true
+          }
+        }
+
+
+# Group Ссылки
 
 ## Операции над ссылками [/links]
 
 ### Добавить ссылку в базу данных [POST]
 
-+ Request (application/json)
++ Request (application/json; charset=utf-8)
 
-            + Headers
-                Authorization: Bearer token
+    + Headers
+
+            Authorization: Bearer token
 
     + Attributes
         + link: http://www.stackoverflow.com/questions/33267597/ (required, string) - URI
         
 
-+ Response 200 (application/json)
++ Response 200 (application/json; charset=utf-8)
 
         {
            "result": {
@@ -62,31 +92,14 @@ npm run stop //убить процесс
            },
            "created": true
         }
-### Удалить добавленную ссылку [DELETE /bookmarks/addedLinks/{linkId}]
-+ Parameters
-    + linkId: 59b6a17a950f3e4f5632ce91 (optional, string) - MongoDB id
 
+### Получить добавленные ссылки [GET /users/bookmarks/addedLinks/]
 + Request
-
     + Headers
-    
-            Authorization: Bearer token
-+ Response 200
-+ Response 404 
 
-        {
-          "code": "NO_BOOKMARKS_ERR",
-          "type": "API_ERROR",
-          "message": "Bookmarks not found"
-        }
-        
-### Получить добавленные ссылки [GET /bookmarks/addedLinks/]
-+ Request
-
-    + Headers
-    
             Authorization: Bearer token
-+ Response 200 (application/json)
+
++ Response 200 (application/json; charset=utf-8)
 
         {
           "links": [
@@ -138,7 +151,7 @@ npm run stop //убить процесс
                 "rating": 5
               },
               "photo": "http://lorempixel.com/640/480/fashion",
-              "description": "",
+              "description": "Sapiente necessitatibus",
               "favicon": "https://s3.amazonaws.com/uifaces/faces/twitter/samscouto/128.jpg",
               "likes": 71,
               "url": "https://эдуард.org",
@@ -146,28 +159,48 @@ npm run stop //убить процесс
             }
           ]
         }
- 
+        
+### Удалить добавленную ссылку [DELETE /users/bookmarks/addedLinks/{linkId}]
++ Parameters
+    + linkId: 59b6a17a950f3e4f5632ce91 (optional, string) - MongoDB id
+
++ Request
+
+    + Headers
+    
+            Authorization: Bearer token
+
++ Response 200
++ Response 404 (text/plain) 
+
+        {
+          "code": "NO_BOOKMARKS_ERR",
+          "type": "API_ERROR",
+          "message": "Bookmarks not found"
+        }
+    
 
 # Group Коллекции
 
 ## Операции над коллекциями [/collections]
 
-### Добавить коллекции в базу данных [POST]
+### Добавить коллекцию в базу данных [POST]
 
-+ Request (application/json)
++ Request (application/json; charset=utf-8)
 
-            + Headers
-                Authorization: Bearer token
+    + Headers
+    
+            Authorization: Bearer token
 
     + Attributes
         + description: Как начать играть на пианино (optional, string) - Описание
         + name: Хочу научится играть на пианино (required, string) - Название
-        + color: rgb 96, 57, 89 (required, string) - Цвет карточки
+        + color: `rgb(96, 57, 89)` (required, string) - Цвет карточки
         + tags: 59a57bfcc7291c53b91c94ca (required, array) - массив с id тегов
         + closed: true (optional, string) - URI
         + photo: https://help.apiary.io/images/oracleapiarylogo.png (optional, string) - Ссылка на обложку карточки
 
-+ Response 200 (application/json)
++ Response 200 (application/json; charset=utf-8)
 
         {
           "collection": {
@@ -187,8 +220,7 @@ npm run stop //убить процесс
           }
         }
   
-
-### Добавить ссылку в коллекцию [POST /collections/{collectionId}/{linkId}]
+### Добавить ссылку в коллекцию [POST /collections/addLink/{collectionId}/{linkId}]
 
 + Parameters
     + collectionId: 59b56eceeb5c1761674ffc7d (required, string) - MongoDB id
@@ -197,7 +229,7 @@ npm run stop //убить процесс
     
 
 
-+ Request (application/json)
++ Request (application/json; charset=utf-8)
 
     + Headers
     
@@ -208,14 +240,14 @@ npm run stop //убить процесс
 
                 
 + Response 200
-+ Response 404
++ Response 404 (text/plain)
 
         {
           "code": "NO_COLLECTION_ERR",
           "type": "API_ERROR",
           "message": "Collection not found, cannot update this collection"
         }
-+ Response 404
++ Response 404 (text/plain)
 
         {
           "code": "NO_LINK_ERR",
@@ -335,7 +367,7 @@ npm run stop //убить процесс
             "savedTimesCount": 2
           }
         }
-+ Response 404
++ Response 404 (text/plain)
 
         {
           "code": "NO_COLLECTIONS_ERR",
@@ -343,14 +375,13 @@ npm run stop //убить процесс
           "message": "Collection not found, or maybe it is private"
         }
        
-       
-### Получить все созданные коллекции [GET /bookmarks/createdCollections/]
+### Получить все созданные коллекции [GET /users/bookmarks/createdCollections/]
 + Request
 
     + Headers
     
             Authorization: Bearer token
-+ Response 200 (application/json)
++ Response 200 (application/json; charset=utf-8)
 
         {
           "collections": [
@@ -393,7 +424,7 @@ npm run stop //убить процесс
           ]
         }
 
-### Удалить созданную колеекцию [DELETE /bookmarks/createdCollections/{collectionId}]
+### Удалить созданную коллекцию [DELETE /users/bookmarks/createdCollections/{collectionId}]
 + Parameters
     + collectionId: 59b6a17a950f3e4f5632ce91 (optional, string) - MongoDB id
 
@@ -403,7 +434,7 @@ npm run stop //убить процесс
     
             Authorization: Bearer token
 + Response 200
-+ Response 404 
++ Response 404 (text/plain) 
 
         {
           "code": "NO_BOOKMARKS_ERR",
@@ -411,37 +442,6 @@ npm run stop //убить процесс
           "message": "Bookmarks not found"
         }
  
-
-# Group Теги
-
-## Операции над тегами [/tags/{tagName}]
-
-
-+ Parameters
-    + tagName: котики (required, string) - Название тега
-
-    
-
-### Добавить тег [POST]
-
-+ Request
-
-    + Headers
-    
-            Authorization: Bearer token
-                     
-+ Response 200 (application/json)
-
-        {
-          "tag": {
-            "result": {
-              "__v": 0,
-              "name": "котики",
-              "_id": "59b1343fe6525678f784e82d"
-            },
-            "created": true
-          }
-        }
 
 
 # Group Лента и поиск
@@ -461,7 +461,6 @@ npm run stop //убить процесс
             + `tags`
     + count = 2 (optional, number) - Ограничение количества элементов в выдаче
     
-    
 ### Получить коллекции и теги [GET]
 + Request
 
@@ -469,7 +468,7 @@ npm run stop //убить процесс
     
             Authorization: Bearer token
                      
-+ Response 200 (application/json)
++ Response 200 (application/json; charset=utf-8)
 
         {
           "collections": [
@@ -510,7 +509,6 @@ npm run stop //убить процесс
 
 ## Операции над профилем пользователя [/users/]
 
-
 ### Информация о пользователе [GET /users/{userId}]
 + Parameters
     + userId: myapi (optional, string) - Id пользователя
@@ -522,7 +520,7 @@ npm run stop //убить процесс
     
             Authorization: Bearer token
           
-+ Response 200 (application/json)  
++ Response 200 (application/json; charset=utf-8)  
 
         {
           "_id": "59b695118005242eeccb0dc9",
@@ -537,7 +535,7 @@ npm run stop //убить процесс
           "accType": "user"
         }
 
-+ Response 404
++ Response 404 (text/plain)
 
         {
           "code": "NO_USER_ERR",
@@ -548,7 +546,7 @@ npm run stop //убить процесс
 ### Обновить информацию о пользователе [PUT]
 
 
-+ Request (application/json) 
++ Request (application/json; charset=utf-8) 
 
     + Headers
     
@@ -564,7 +562,7 @@ npm run stop //убить процесс
 
              
 + Response 200
-+ Response 404
++ Response 404 (text/plain)
 
         {
           "code": "NO_USER_ERR",
@@ -580,7 +578,7 @@ npm run stop //убить процесс
             Authorization: Bearer token
            
 + Response 200
-+ Response 404
++ Response 404 (text/plain)
 
         {
           "code": "NO_USER_ERR",
@@ -590,8 +588,7 @@ npm run stop //убить процесс
         
 
 
-## Социальные возможности [/users/social/]
-
+## Социальные возможности [/users/social/friends]
 
 ### Получить список друзей из социальных сетей [GET]
 + Request
@@ -600,34 +597,78 @@ npm run stop //убить процесс
     
             Authorization: Bearer token
            
-+ Response 200 (application/json)
++ Response 200 (application/json; charset=utf-8)
 
         {
             "friends": ["vk_1", "vk_2"],
         }
         
-+ Response 404
++ Response 404 (text/plain)
 
         {
           "code": "NO_SOCIAL_TOKEN",
           "type": "API_ERROR",
           "message": "Social token not found in user profile, try to relogin"
         }
+        
+# Group Регистрация
+
+## Полный аккаунт [/register/basic]
+
+### Зарегистрироваться [POST]
++ Request (application/json; charset=utf-8)
+
+    + Headers
+    
+            Authorization: Basic YW5kcm9pZDpTb21lUmFuZG9tQ2hhcnNBbmROdW1iZXJz
+            
+    + Attributes
+        + userId: bronew (required, string) - Id пользователя
+        + firstName: Andrew (optional, string) - Имя
+        + lastName: Bronew (optional, string) - Фамилия
+        + password: 12345password (required, string) - Пароль
+        + photo: https://help.apiary.io/images/oracleapiarylogo.png (optional, string) - Фото
+
++ Response 200 (application/json; charset=utf-8)
+
+        {
+          "access_token": "4413947afd44e9fea5953fe2b277888ca9b1ff24bf31406b5ce16c9894f106a5",
+          "refresh_token": "e5ab220b8bd2e5bbc81a75e7650d0d0e6ce5c7c4e15f57e8c5d26d3a0d89cd48",
+          "expires_in": 86400,
+          "token_type": "Bearer"
+        }
+
+
 
 # Group Закладки пользователя
 
-## Сохраненные ссылки [/bookmarks/savedLinks/{linkId}]
+## Сохраненные ссылки [/users/bookmarks/savedLinks/{linkId}]
 
 + Parameters
     + linkId: 59b6a17a950f3e4f5632ce91 (optional, string) - MongoDB id
 
-### Получить сохраненные ссылки [GET /bookmarks/savedLinks/]
+### Добавить ссылку в сохраненные [PUT]
 + Request
 
     + Headers
     
             Authorization: Bearer token
-+ Response 200 (application/json)
++ Response 200
++ Response 404 (text/plain) 
+
+        {
+          "code": "NO_BOOKMARKS_ERR",
+          "type": "API_ERROR",
+          "message": "Bookmarks not found"
+        }
+   
+### Получить сохраненные ссылки [GET /users/bookmarks/savedLinks/]
++ Request
+
+    + Headers
+    
+            Authorization: Bearer token
++ Response 200 (application/json; charset=utf-8)
 
         {
           "links": [
@@ -639,34 +680,16 @@ npm run stop //убить процесс
                 "firstName": "Эдуард",
                 "lastName": "Устинов",
                 "photo": "https://s3.amazonaws.com/uifaces/faces/twitter/imcoding/128.jpg",
-                "description": "Forward Tactics Architect",
                 "rating": 5
               },
               "photo": "http://lorempixel.com/640/480/people",
-              "description": "",
+              "description": "Sapiente necessitatibus",
               "favicon": "https://s3.amazonaws.com/uifaces/faces/twitter/antjanus/128.jpg",
               "likes": 17,
               "url": "http://дмитрий.info",
               "metrics": null
             }
           ]
-        }
-        
- 
-
-### Добавить ссылку в сохраненные [PUT]
-+ Request
-
-    + Headers
-    
-            Authorization: Bearer token
-+ Response 200
-+ Response 404 
-
-        {
-          "code": "NO_BOOKMARKS_ERR",
-          "type": "API_ERROR",
-          "message": "Bookmarks not found"
         }
         
 ### Удалить ссылку из сохраненных [DELETE]
@@ -676,7 +699,7 @@ npm run stop //убить процесс
     
             Authorization: Bearer token
 + Response 200
-+ Response 404 
++ Response 404 (text/plain) 
 
         {
           "code": "NO_BOOKMARKS_ERR",
@@ -684,21 +707,35 @@ npm run stop //убить процесс
           "message": "Bookmarks not found"
         }
         
-       
 
-## Сохраненные коллекции [/bookmarks/savedCollections/{collectionId}]
+
+## Сохраненные коллекции [/users/bookmarks/savedCollections/{collectionId}]
 
 + Parameters
     + collectionId: 59b6a17a950f3e4f5632ce91 (optional, string) - MongoDB id
 
-        
-### Получить сохраненные коллекции [GET /bookmarks/savedCollections/]
+### Добавить коллекцию в сохраненные [PUT]
 + Request
 
     + Headers
     
             Authorization: Bearer token
-+ Response 200 (application/json)
++ Response 200
++ Response 404 (text/plain) 
+
+        {
+          "code": "NO_BOOKMARKS_ERR",
+          "type": "API_ERROR",
+          "message": "Bookmarks not found"
+        }
+   
+### Получить сохраненные коллекции [GET /users/bookmarks/savedCollections/]
++ Request
+
+    + Headers
+    
+            Authorization: Bearer token
++ Response 200 (application/json; charset=utf-8)
 
         {
           "collections": [
@@ -710,7 +747,6 @@ npm run stop //убить процесс
                 "firstName": "Юрий",
                 "lastName": "Козлова",
                 "photo": "https://s3.amazonaws.com/uifaces/faces/twitter/nateschulte/128.jpg",
-                "description": "Chief Division Producer",
                 "rating": 5
               },
               "photo": "http://lorempixel.com/640/480/business",
@@ -741,21 +777,6 @@ npm run stop //убить процесс
           ]
         }
 
-### Добавить коллекцию в сохраненные [PUT]
-+ Request
-
-    + Headers
-    
-            Authorization: Bearer token
-+ Response 200
-+ Response 404 
-
-        {
-          "code": "NO_BOOKMARKS_ERR",
-          "type": "API_ERROR",
-          "message": "Bookmarks not found"
-        }
-        
 ### Удалить коллекцию из сохраненных [DELETE]
 + Request
 
@@ -763,7 +784,7 @@ npm run stop //убить процесс
     
             Authorization: Bearer token
 + Response 200
-+ Response 404 
++ Response 404 (text/plain) 
 
         {
           "code": "NO_BOOKMARKS_ERR",
@@ -795,7 +816,7 @@ npm run stop //убить процесс
           "type": "API_ERROR",
           "message": "ERROR_MESSAGE"
         }
-+ Response 404
++ Response 404 (text/plain)
 
         {
           "code": "LINK_LIKE_ERR",
@@ -803,8 +824,9 @@ npm run stop //убить процесс
           "message": "Cannot like link that doesnt exist"
         }
         
-
 ### Отметить ссылку открытой [PUT /links/open/{linkId}]
++ Parameters
+    + linkId: 59b56eceeb5c1761674ffc7d (required, string) - MongoDB id
 
 + Request
 
@@ -812,8 +834,8 @@ npm run stop //убить процесс
     
             Authorization: Bearer token
                 
-+ Response 200 (application/json)
-+ Response 404
++ Response 200
++ Response 404 (text/plain)
 
         {
           "code": "METRICS_OPEN_ERR",
@@ -835,7 +857,7 @@ npm run stop //убить процесс
             Authorization: Bearer token
                 
 + Response 200 
-+ Response 404
++ Response 404 (text/plain)
 
         {
           "code": "METRICS_OPEN_ERR",
@@ -843,15 +865,15 @@ npm run stop //убить процесс
           "message": "Cannot mark this collection as opened"
         }
 
-
 ## Метрики тегов [/tags/personal]
 
 ### Добавить персональных тегов [PUT]
 
-+ Request (application/json)
++ Request (application/json; charset=utf-8)
 
-            + Headers
-                Authorization: Bearer token
+    + Headers
+
+            Authorization: Bearer token
 
     + Attributes
         + tags: 59b56eceeb5c1761674ffc7d, 59b56eceeb5c1761674ffc7a  (required, array) - MongoDB tags ids
