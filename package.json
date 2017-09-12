@@ -4,11 +4,12 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
+    "start-test": "PORT=1338 NODE_ENV=test node ./bin/www",
+    "test": "NODE_ENV=test node databaseFake.js && dredd",
     "dev": "pm2 start pm2conf.json --only dev_iseberg && pm2 logs",
     "dev_test": "NODE_ENV=test pm2 start pm2conf.json --only dev_iseberg && pm2 logs",
     "stop": "pm2 delete pm2conf.json",
     "production": "NODE_ENV=production && pm2 start pm2conf.json --only production_iseberg && pm2 monit",
-    "test": "NODE_ENV=test node databaseFake.js && NODE_ENV=test mocha --timeout 1300",
     "fake_test": "NODE_ENV=test node databaseFake.js",
     "fake_mlab": "MONGODB_URI=true node databaseFake.js"
   },
@@ -35,6 +36,7 @@
     "firebase-admin": "^5.2.1",
     "greenlock-express": "^2.0.11",
     "helmet": "^3.8.1",
+    "hooks": "^0.3.2",
     "image-resolver": "^0.5.4",
     "jimp": "^0.2.28",
     "joi": "^10.6.0",
@@ -68,6 +70,7 @@
     "winston": "^2.3.1"
   },
   "devDependencies": {
+    "dredd": "^4.5.0",
     "chai": "^4.1.1",
     "chai-http": "^3.0.0",
     "eslint": "^4.5.0",

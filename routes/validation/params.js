@@ -13,7 +13,6 @@ module.exports = {
       userId: Joi.string().min(3).max(64)
         .invalid(badUsernames)
         .required(),
-      nickName: nicknameJoi,
       firstName: textShortJoi,
       lastName: textShortJoi,
       photo: Joi.string().regex(urlJoi),

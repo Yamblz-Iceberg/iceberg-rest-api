@@ -229,3 +229,4 @@ xirsys.json
 .vscode/
 !bin/
 google-credentials.json
+circle.yml

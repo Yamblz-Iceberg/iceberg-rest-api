@@ -1,0 +1,5 @@
+before_install:
+  - npm install -g dredd@x.x.x
+  
+after_success:
+    - npm test

@@ -39,7 +39,7 @@ router.delete('/', (req, res, next) => {
 
 router.get('/social/friends', status.accountTypeMiddleware, (req, res, next) => {
   social.getFriends(req.user)
-    .then(response => res.json(response))
+    .then(friends => res.json({ friends }))
     .catch(err => next(err));
 });
 
@@ -326,10 +326,10 @@ router.all('/bookmarks/:type/:id?', validation(validationParams.bookmarks), pass
                 if (!deletedContent) {
                   throw new error.NotFound('CONTENT_DELETE_ERR', 'Nothing to delete');
                 }
-                res.json({ result: 'successfully deleted' });
+                res.end();
               });
           }
-          return res.json({ result: 'success' });
+          return res.end();
         });
     })
     .catch(err => next(err));

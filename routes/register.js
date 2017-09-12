@@ -44,7 +44,7 @@ const getStateParams = state => new Promise((resolve, reject) => {
 const redirectOauth = (clientId, clientSecret, username, password) => new Promise((resolve, reject) => {
   const options = {
     method: 'POST',
-    url: `${process.env.URL || `${config.get('base_url')}:${config.get('port')}/`}oauth/token`,
+    url: `${process.env.URL || `${config.get('base_url')}:${process.env.PORT || config.get('port')}/`}oauth/token`,
     headers: {
       'content-type': 'application/x-www-form-urlencoded',
     },
@@ -91,6 +91,18 @@ const checkVKToken = (userId, token) => new Promise((resolve, reject) => {
     }
     resolve(userId === vkRes.user_id);
   });
+});
+
+router.post('/basic', validation(validationParams.register), passport.authenticate(['basic'], { session: false }), (req, res, next) => {
+  getGrants(req.body)
+    .then(user => User.register(user.main, user.password, (err, account) => { // переделать на promise
+      if (err) {
+        return next(err);
+      }
+      return redirectOauth(req.user.clientId, req.user.clientSecret, account.userId, user.password)
+        .then(responce => res.json(responce));
+    }))
+    .catch(_error => next(_error));
 });
 
 
