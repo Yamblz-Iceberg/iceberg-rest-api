@@ -68,6 +68,7 @@
     "winston": "^2.3.1"
   },
   "devDependencies": {
+    "dredd": "^4.5.0",
     "chai": "^4.1.1",
     "chai-http": "^3.0.0",
     "eslint": "^4.5.0",

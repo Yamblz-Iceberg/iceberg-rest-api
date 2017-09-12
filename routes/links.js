@@ -53,7 +53,7 @@ router.put('/open/:linkId', validation(validationParams.readLink), (req, res, ne
   User.findOne({ userId: req.user.userId })
     .then((user) => {
       if (!user) {
-        throw new error.NotFound('METRICS_OPEN_ERR', 'Cannot mark this collection as opened');
+        throw new error.NotFound('METRICS_OPEN_ERR', 'Cannot mark this link as opened');
       }
       const contentId = mongoose.Types.ObjectId(req.params.linkId);
       if (!_.find(user.metrics, ['contentId', contentId])) {
