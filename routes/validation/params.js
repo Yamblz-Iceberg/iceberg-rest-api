@@ -74,6 +74,9 @@ module.exports = {
       tags: Joi.array().max(20).items(Joi.string().regex(idMongoRegex))
         .required(),
     },
+    params: {
+      firstLogin: Joi.boolean(),
+    },
   },
   social: {
     query: {

@@ -32,9 +32,8 @@ router.put('/personal', validation(validationParams.personalTags), (req, res, ne
         }
         const bookmark = _.find(user.bookmarks, ['bookmarkId', mongoose.Types.ObjectId(tag)]);
         if (!bookmark) {
-          user.bookmarks.push({ bookmarkId: mongoose.Types.ObjectId(tag), type: 'personalTags' });
+          user.bookmarks.push({ bookmarkId: mongoose.Types.ObjectId(tag), type: 'personalTags', counter: req.query.firstLogin ? 10 : 1 });
         } else {
-          if (!bookmark.counter) bookmark.counter = 1;
           bookmark.counter += 1;
         }
         return user.save();

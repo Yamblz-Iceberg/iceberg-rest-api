@@ -5,7 +5,7 @@
   "scripts": {
     "start": "node ./bin/www",
     "start-test": "PORT=1338 NODE_ENV=test node ./bin/www",
-    "test": "NODE_ENV=test node databaseFake.js && dredd",
+    "test": "NODE_ENV=test node databaseFake.js && NODE_ENV=test dredd",
     "dev": "pm2 start pm2conf.json --only dev_iseberg && pm2 logs",
     "dev_test": "NODE_ENV=test pm2 start pm2conf.json --only dev_iseberg && pm2 logs",
     "stop": "pm2 delete pm2conf.json",
@@ -23,6 +23,7 @@
     "compression": "^1.7.0",
     "cookie-parser": "~1.4.3",
     "cors": "^2.8.4",
+    "crypto-json": "^2.0.0",
     "debug": "~2.6.3",
     "express": "~4.15.2",
     "express-fileupload": "^0.2.0",

@@ -3,7 +3,7 @@
   "port": 1337,
   "ws_port": 3003,
   "security": {
-    "tokenLife" : 86400
+    "tokenLife" : 1286400
   },
   "mongoose": {
     "uri": "mongodb://localhost/isebergDB",

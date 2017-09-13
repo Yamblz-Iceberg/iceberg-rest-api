@@ -1,0 +1,10 @@
+language: node_js
+
+node_js:
+  - "7"
+
+before_install:
+  - npm install -g dredd@x.x.x
+  - sudo apt-get install libcairo2-dev libjpeg8-dev libpango1.0-dev libgif-dev build-essential g++
+after_success:
+    - npm test
