@@ -123,6 +123,13 @@ router.get('/:collectionId', (req, res, next) => {
           closed: { $first: '$closed' },
         },
       },
+      { $addFields: { links: {
+        $filter: {
+          input: '$links',
+          as: 'link',
+          cond: { $ifNull: ['$$link._id', false] } },
+      } },
+      },
       {
         $addFields: {
           saved: { $cond: { if: { $and: [{ $isArray: '$usersSaved' }, { $in: [req.user.userId, '$usersSaved'] }] }, then: true, else: false } },
@@ -169,14 +176,12 @@ router.get('/:collectionId', (req, res, next) => {
         },
       },
     ])
-      .then((returnedCollection) => { // FIXME: очень некрасивые костыли
-        if (!returnedCollection || !returnedCollection.length || (returnedCollection[0].author.userId !== req.user.userId && returnedCollection[0].closed)) {
+      .then((returnedCollection) => {
+        if (!returnedCollection || !returnedCollection.length ||
+           (returnedCollection[0].author.userId !== req.user.userId && returnedCollection[0].closed)) {
           throw new error.NotFound('NO_COLLECTIONS_ERR', 'Collection not found, or maybe it is private');
         } else {
           const collection = returnedCollection[0];
-          if (!_.find(collection.links, 'userAdded')) {
-            collection.links = [];
-          }
           res.json({ collection });
         }
       })

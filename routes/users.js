@@ -326,6 +326,7 @@ router.all('/bookmarks/:type/:id?', validation(validationParams.bookmarks), pass
                 if (!deletedContent) {
                   throw new error.NotFound('CONTENT_DELETE_ERR', 'Nothing to delete');
                 }
+                // TODO: при удалении ссылок, удлаять из id из коллекции
                 res.end();
               });
           }
