@@ -1,0 +1,10 @@
+language: node_js
+
+before_install:
+  - npm install -g dredd@x.x.x
+
+install:
+  - npm install
+
+after_success:
+    - npm test
