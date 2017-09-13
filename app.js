@@ -39,6 +39,7 @@ require('./libs/auth/yandex');
 
 
 const users = require('./routes/users');
+const index = require('./routes/index');
 const collections = require('./routes/collections');
 const register = require('./routes/register');
 const feed = require('./routes/feed');
@@ -71,6 +72,7 @@ app.use(helmet({
 }));
 // app.use(limiter);
 
+app.use('/', index);
 app.use('/users', users);
 app.use('/register', register);
 app.use('/oauth', oauth);
