@@ -1,4 +1,4 @@
-# API проекта ICEBERG [![Build Status](https://travis-ci.org/Yamblz-Iceberg/iceberg-api.svg?branch=dev)](https://travis-ci.org/Yamblz-Iceberg/iceberg-api) [![Heroku](http://heroku-badge.herokuapp.com/?app=iceberg-project&style=flat&svg=1)]
+# API проекта ICEBERG [![Build Status](https://travis-ci.org/Yamblz-Iceberg/iceberg-api.svg?branch=dev)](https://travis-ci.org/Yamblz-Iceberg/iceberg-api) [![Heroku](http://heroku-badge.herokuapp.com/?app=iceberg-project&style=flat&svg=1)](https://iceberg-project.herokuapp.com)
 
 - Вам необходимо установить **Node.js** и **MongoDB**
 - Все настройки находятся в файле `config.json`
