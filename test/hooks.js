@@ -18,6 +18,30 @@ before('Профиль пользователя > Социальные возм�
   transaction.skip = true;
 });
 
+
+before('Регистрация > OAuth2 > Обмен userId и password на token', (transaction) => {
+  transaction.skip = true;
+});
+before('Регистрация > OAuth2 > Обмен refreshToken на token', (transaction) => {
+  transaction.skip = true;
+});
+before('Регистрация > OAuth2 > Удалить token и refreshToken', (transaction) => {
+  transaction.skip = true;
+});
+before('Регистрация > OAuth2 > Удалить данные для входа для всех устройств', (transaction) => {
+  transaction.skip = true;
+});
+
+before('Регистрация > Вход через OAuth провайдеров > Яндекс', (transaction) => {
+  transaction.skip = true;
+});
+before('Регистрация > Вход через OAuth провайдеров > Вконтакте', (transaction) => {
+  transaction.skip = true;
+});
+before('Регистрация > Вход через OAuth провайдеров > Facebook', (transaction) => {
+  transaction.skip = true;
+});
+
 after('Ссылки > Операции над ссылками > Добавить ссылку в базу данных', (transaction) => {
   responseStash.addedLink = JSON.parse(transaction.real.body).result;
 });
@@ -52,7 +76,7 @@ before('Коллекции > Операции над коллекциями > Д
     });
 });
 
-after('Регистрация > Полный аккаунт > Зарегистрироваться', (transaction, done) => {
+after('Регистрация > Basic > Зарегистрироваться', (transaction, done) => {
   responseStash.token = JSON.parse(transaction.real.body).access_token;
 
   chai.request(`${transaction.host}:${transaction.port}`)

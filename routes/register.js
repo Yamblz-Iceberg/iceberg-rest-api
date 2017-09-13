@@ -118,7 +118,7 @@ router.post('/demo', validation(validationParams.register), passport.authenticat
     .catch(_error => next(_error));
 });
 
-router.get('/vk', validation(validationParams.social), passport.authenticate('basic', { session: false }), (req, res, next) => {
+router.get('/vk', validation(validationParams.social), (req, res, next) => {
   passport.authenticate('vkontakte', {
     display: 'mobile',
     state: `${req.query.clientId},${req.query.clientSecret},${req.query.uniqueId}`,
@@ -126,14 +126,14 @@ router.get('/vk', validation(validationParams.social), passport.authenticate('ba
   })(req, res, next);
 });
 
-router.get('/fb', validation(validationParams.social), passport.authenticate('basic', { session: false }), (req, res, next) => {
+router.get('/fb', validation(validationParams.social), (req, res, next) => {
   passport.authenticate('facebook', {
     state: `${req.query.clientId},${req.query.clientSecret},${req.query.uniqueId}`,
     scope: ['user_friends'],
   })(req, res, next);
 });
 
-router.get('/ya', validation(validationParams.social), passport.authenticate('basic', { session: false }), (req, res, next) => {
+router.get('/ya', validation(validationParams.social), (req, res, next) => {
   passport.authenticate('yandex', {
     state: `${req.query.clientId},${req.query.clientSecret},${req.query.uniqueId}`,
   })(req, res, next);

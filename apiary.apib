@@ -614,7 +614,7 @@ npm run stop //убить процесс
         
 # Group Регистрация
 
-## Полный аккаунт [/register/basic]
+## Basic [/register/basic]
 
 ### Зарегистрироваться [POST]
 + Request (application/json; charset=utf-8)
@@ -639,7 +639,103 @@ npm run stop //убить процесс
           "token_type": "Bearer"
         }
 
+## OAuth2 [/oauth]
 
+### Обмен userId и password на token [POST /oauth/token]
++ Request (application/x-www-form-urlencoded)
+
+        grant_type=password&client_id=android&client_secret=SomeRandomCharsAndNumbers&username=bronew&password=12345password
+
++ Response 200 (application/json; charset=utf-8)
+
+        {
+          "access_token": "4413947afd44e9fea5953fe2b277888ca9b1ff24bf31406b5ce16c9894f106a5",
+          "refresh_token": "e5ab220b8bd2e5bbc81a75e7650d0d0e6ce5c7c4e15f57e8c5d26d3a0d89cd48",
+          "expires_in": 86400,
+          "token_type": "Bearer"
+        }
+
+### Обмен refreshToken на token [POST /oauth/token]
++ Request (application/x-www-form-urlencoded)
+
+        grant_type=refresh_token&client_id=android&client_secret=SomeRandomCharsAndNumbers&refresh_token=13b787d97ae68e2fe728945c88cfd116d8085d76075ffe0baea80c56139e9e52
+
++ Response 200 (application/json; charset=utf-8)
+
+        {
+          "access_token": "4413947afd44e9fea5953fe2b277888ca9b1ff24bf31406b5ce16c9894f106a5",
+          "refresh_token": "e5ab220b8bd2e5bbc81a75e7650d0d0e6ce5c7c4e15f57e8c5d26d3a0d89cd48",
+          "expires_in": 86400,
+          "token_type": "Bearer"
+        }
+### Удалить token и refreshToken [PUT /register/logout]
++ Request (application/json; charset=utf-8)
+
+    + Headers
+    
+            Authorization: Basic YW5kcm9pZDpTb21lUmFuZG9tQ2hhcnNBbmROdW1iZXJz
+            
+    + Attributes
+        + accessToken: 467330a0b99dc20064f3fbd2a687b0a9a82ea3c1ecd016526e1ff2a1974f78c0 (required, string)
+        + refreshToken: 2a8c62e7f2ac17db67d6bb684cacdd48e7ecb69fb0b2fce37219e0f21d7e2041 (optional, string)
+
++ Response 200
+
+### Удалить данные для входа для всех устройств [PUT /register/logoutall]
++ Request
+
+    + Headers
+    
+            Authorization: Bearer 467330a0b99dc20064f3fbd2a687b0a9a82ea3c1ecd016526e1ff2a1974f78c0
+           
++ Response 200
+
+## Вход через OAuth провайдеров [/register/]
+
+
+### Яндекс [GET /register/ya{?clientId,clientSecret,uniqueId}]
++ Parameters
+
+    + clientId = `android` (optional, string)
+    + clientSecret = SomeRandomCharsAndNumbers (optional, string)
+    + uniqueId = 43978157-ee67-490b-90fa-9eda5a28dc1b (optional, string) - уникальный id уже существующего пользователя
+
++ Response 200 (application/json; charset=utf-8)
+
+        {
+          "access_token": "4413947afd44e9fea5953fe2b277888ca9b1ff24bf31406b5ce16c9894f106a5",
+          "refresh_token": "e5ab220b8bd2e5bbc81a75e7650d0d0e6ce5c7c4e15f57e8c5d26d3a0d89cd48",
+          "expires_in": 86400,
+          "token_type": "Bearer"
+        }
+### Вконтакте [GET /register/vk{?clientId,clientSecret,uniqueId}]
++ Parameters
+
+    + clientId = `android` (optional, string)
+    + clientSecret = SomeRandomCharsAndNumbers (optional, string)
+    + uniqueId = 43978157-ee67-490b-90fa-9eda5a28dc1b (optional, string) - уникальный id уже существующего пользователя
++ Response 200 (application/json; charset=utf-8)
+
+        {
+          "access_token": "4413947afd44e9fea5953fe2b277888ca9b1ff24bf31406b5ce16c9894f106a5",
+          "refresh_token": "e5ab220b8bd2e5bbc81a75e7650d0d0e6ce5c7c4e15f57e8c5d26d3a0d89cd48",
+          "expires_in": 86400,
+          "token_type": "Bearer"
+        }
+### Facebook [GET /register/fb{?clientId,clientSecret,uniqueId}]
++ Parameters
+
+    + clientId = `android` (optional, string)
+    + clientSecret = SomeRandomCharsAndNumbers (optional, string)
+    + uniqueId = 43978157-ee67-490b-90fa-9eda5a28dc1b (optional, string) - уникальный id уже существующего пользователя
++ Response 200 (application/json; charset=utf-8)
+
+        {
+          "access_token": "4413947afd44e9fea5953fe2b277888ca9b1ff24bf31406b5ce16c9894f106a5",
+          "refresh_token": "e5ab220b8bd2e5bbc81a75e7650d0d0e6ce5c7c4e15f57e8c5d26d3a0d89cd48",
+          "expires_in": 86400,
+          "token_type": "Bearer"
+        }
 
 # Group Закладки пользователя
 
