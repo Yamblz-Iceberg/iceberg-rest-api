@@ -1,4 +1,4 @@
-# API проекта ICEBERG
+# API проекта ICEBERG [![Build Status](https://travis-ci.org/Yamblz-Iceberg/iceberg-api.svg?branch=dev)](https://travis-ci.org/Yamblz-Iceberg/iceberg-api)
 
 - Вам необходимо установить **Node.js** и **MongoDB**
 - Все настройки находятся в файле `config.json`
