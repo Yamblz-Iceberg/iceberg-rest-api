@@ -5,7 +5,7 @@
   "scripts": {
     "start": "node ./bin/www",
     "start-test": "PORT=1338 NODE_ENV=test node ./bin/www",
-    "test": "NODE_ENV=test node databaseFake.js && dredd",
+    "test": "NODE_ENV=test node databaseFake.js && NODE_ENV=test dredd",
     "dev": "pm2 start pm2conf.json --only dev_iseberg && pm2 logs",
     "dev_test": "NODE_ENV=test pm2 start pm2conf.json --only dev_iseberg && pm2 logs",
     "stop": "pm2 delete pm2conf.json",
