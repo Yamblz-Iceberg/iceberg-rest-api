@@ -8,7 +8,7 @@ const root = process.cwd();
 if (process.env.CONFIG_ENCRYPTION_KEY) {
   const decrypted = cryptoJSON.decrypt(configEncrypted, process.env.CONFIG_ENCRYPTION_KEY, {
     algorithm: 'camellia-128-cbc',
-    encoding: 'hex',
+    encoding: 'base64',
   });
   nconf.add('secret', {
     type: 'literal',

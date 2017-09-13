@@ -5,18 +5,18 @@ const log = require('./log/log')(module);
 
 const root = process.cwd();
 const configFile = require('../config_secret.json');
-const googleCredentials = require('../google-credentials');
+const googleCredentials = require('../google-credentials.json');
 
 const passKey = process.env.CONFIG_ENCRYPTION_KEY || config.get('encryptKey');
 
 const encryptedConfig = cryptoJSON.encrypt(configFile, passKey, {
   algorithm: 'camellia-128-cbc',
-  encoding: 'hex',
+  encoding: 'base64',
 });
 
 const encryptedgoogleCredentials = cryptoJSON.encrypt(googleCredentials, passKey, {
   algorithm: 'camellia-128-cbc',
-  encoding: 'hex',
+  encoding: 'base64',
 });
 log.info('Creating secure configs for deployment, or pushing GitHub');
 
