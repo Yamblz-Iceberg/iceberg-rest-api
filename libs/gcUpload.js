@@ -1,17 +1,24 @@
 const mime = require('mime-types');
 const uuidv4 = require('uuid');
 const error = require('rest-api-errors');
+const KEY_FILE = require('../google-credentials_enc');
 
-const root = process.cwd();
-const KEY_FILENAME = '/google-credentials.json';
 const PROJECT_ID = 'iceberg-cfa80';
 const CLOUD_BUCKET = `${PROJECT_ID}.appspot.com`;
-
+const config = require('./config');
+const cryptoJSON = require('crypto-json');
 const GCS = require('@google-cloud/storage');
+
+
+const passKey = process.env.CONFIG_ENCRYPTION_KEY || config.get('encryptKey');
+const DECRYPTED_KEY_OBJECT = cryptoJSON.decrypt(KEY_FILE, passKey, {
+  algorithm: 'camellia-128-cbc',
+  encoding: 'hex',
+});
 
 const gcs = new GCS({
   projectId: PROJECT_ID,
-  keyFilename: root + KEY_FILENAME,
+  credentials: DECRYPTED_KEY_OBJECT,
 });
 
 const bucket = gcs.bucket(CLOUD_BUCKET);
