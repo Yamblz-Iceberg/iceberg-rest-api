@@ -1,5 +1,13 @@
+language: node_js
+
+node_js:
+  - "7.7.4"
+  
 before_install:
   - npm install -g dredd@x.x.x
-  
+
+ install:
+  - npm install
+
 after_success:
     - npm test

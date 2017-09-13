@@ -230,3 +230,4 @@ xirsys.json
 !bin/
 google-credentials.json
 circle.yml
+dredd.yml

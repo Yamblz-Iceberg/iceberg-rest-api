@@ -86,7 +86,6 @@ before('Закладки пользователя > Сохраненные ко�
       response.should.have.status(200);
       responseStash.addedCollection = response.body.collection;
       transaction.fullPath = transaction.fullPath.replace(/[^/]*$/, responseStash.addedCollection._id);
-      console.log(transaction.fullPath);
       done();
     });
 });
