@@ -13,7 +13,7 @@ const GCS = require('@google-cloud/storage');
 const passKey = process.env.CONFIG_ENCRYPTION_KEY || config.get('encryptKey');
 const DECRYPTED_KEY_OBJECT = cryptoJSON.decrypt(KEY_FILE, passKey, {
   algorithm: 'camellia-128-cbc',
-  encoding: 'hex',
+  encoding: 'base64',
 });
 
 const gcs = new GCS({
