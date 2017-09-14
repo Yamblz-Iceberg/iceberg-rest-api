@@ -55,11 +55,11 @@ router.all('/bookmarks/:type/:id?', validation(validationParams.bookmarks), pass
   const myTypes = [CREATED_COLLECTIONS, ADDED_LINKS];
 
   if (['GET', 'PUT', 'DELETE'].indexOf(req.method) === -1 && types.indexOf(req.params.type) !== -1) {
-    return next(new error.MethodNotAllowed('API_WARN', 'Method not allowed for saved content'));
+    return next(new error.MethodNotAllowed('NOT_ALLOWED_ERR', 'Method not allowed for saved content'));
   } else if (['GET', 'DELETE'].indexOf(req.method) === -1 && myTypes.indexOf(req.params.type) !== -1) {
-    return next(new error.MethodNotAllowed('API_WARN', 'Method not allowed for user created content'));
+    return next(new error.MethodNotAllowed('NOT_ALLOWED_ERR', 'Method not allowed for user created content'));
   } else if ((req.method !== 'GET' && req.query.userId) || (req.params.type !== CREATED_COLLECTIONS && req.query.userId)) { // FIXME: не уврен на счет условия
-    return next(new error.MethodNotAllowed('API_WARN', 'Method not allowed, if userId specified only GET method is allowed'));
+    return next(new error.MethodNotAllowed('NOT_ALLOWED_ERR', 'Method not allowed, if userId specified only GET method is allowed'));
   }
 
   let bookmarksAction = {};

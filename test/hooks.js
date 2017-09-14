@@ -10,6 +10,8 @@ chai.should();
 
 const responseStash = {};
 
+/* eslint no-param-reassign: ["error", {"ignorePropertyModificationsFor": ["transaction"] }] */
+
 before('Профиль пользователя > Операции над профилем пользователя > Удалить профиль', (transaction) => {
   transaction.skip = true;
 });

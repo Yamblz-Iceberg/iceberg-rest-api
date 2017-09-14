@@ -33,7 +33,7 @@ const getStateParams = state => new Promise((resolve, reject) => {
   const stateArray = state.split(',');
 
   if (stateArray.length !== 3) {
-    reject(new error.BadRequest('INVALID_STATE_LENGTH', 'State param must consist of 3 elements separated by single comma'));
+    reject(new error.BadRequest('INVALID_STATE_LENGTH_ERR', 'State param must consist of 3 elements separated by single comma'));
   }
 
   const stateObj = {};
