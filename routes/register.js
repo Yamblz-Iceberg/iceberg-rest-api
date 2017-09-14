@@ -49,13 +49,13 @@ const redirectOauth = (clientId, clientSecret, username, password) => new Promis
       'content-type': 'application/x-www-form-urlencoded',
     },
     form:
-      {
-        grant_type: 'password',
-        client_id: clientId,
-        client_secret: clientSecret,
-        username,
-        password,
-      },
+    {
+      grant_type: 'password',
+      client_id: clientId,
+      client_secret: clientSecret,
+      username,
+      password,
+    },
   };
 
   request(options, (err, response, body) => {

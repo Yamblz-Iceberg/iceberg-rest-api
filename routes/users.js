@@ -112,31 +112,32 @@ router.all('/bookmarks/:type/:id?', validation(validationParams.bookmarks), pass
             if (req.params.type === SAVED_COLLECTIONS || req.params.type === CREATED_COLLECTIONS) {
               return Collection.aggregate([
                 {
-                  $match: { _id: { $in: user.bookmarks.map(bookmarkElem => (bookmarkElem.type === req.params.type ? bookmarkElem.bookmarkId : undefined)).filter(Boolean) } },
+                  $match: { _id: { $in: user.bookmarks.map(bookmarkElem => (bookmarkElem.type === req.params.type ?
+                    bookmarkElem.bookmarkId : undefined)).filter(Boolean) } },
                 },
                 {
                   $unwind: { path: '$author', preserveNullAndEmptyArrays: true },
                 },
                 {
                   $lookup:
-                     {
-                       from: 'users',
-                       localField: 'authorId',
-                       foreignField: 'userId',
-                       as: 'author',
-                     },
+                    {
+                      from: 'users',
+                      localField: 'authorId',
+                      foreignField: 'userId',
+                      as: 'author',
+                    },
                 },
                 {
                   $unwind: { path: '$author', preserveNullAndEmptyArrays: true },
                 },
                 {
                   $lookup:
-                     {
-                       from: 'users',
-                       localField: '_id',
-                       foreignField: 'metrics.contentId',
-                       as: 'metrics',
-                     },
+                    {
+                      from: 'users',
+                      localField: '_id',
+                      foreignField: 'metrics.contentId',
+                      as: 'metrics',
+                    },
                 },
                 {
                   $unwind: { path: '$metrics', preserveNullAndEmptyArrays: true },
@@ -227,7 +228,8 @@ router.all('/bookmarks/:type/:id?', validation(validationParams.bookmarks), pass
             }
             return Link.aggregate([
               {
-                $match: { _id: { $in: user.bookmarks.map(bookmarkElem => (bookmarkElem.type === req.params.type ? bookmarkElem.bookmarkId : undefined)).filter(Boolean) } },
+                $match: { _id: { $in: user.bookmarks.map(bookmarkElem => (bookmarkElem.type === req.params.type ?
+                  bookmarkElem.bookmarkId : undefined)).filter(Boolean) } },
               },
               {
                 $unwind: { path: '$author', preserveNullAndEmptyArrays: true },

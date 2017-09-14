@@ -28,12 +28,12 @@ router.get('/:collectionId', (req, res, next) => {
       },
       {
         $lookup:
-         {
-           from: 'links',
-           localField: 'links',
-           foreignField: '_id',
-           as: 'link',
-         },
+        {
+          from: 'links',
+          localField: 'links',
+          foreignField: '_id',
+          as: 'link',
+        },
       },
       {
         $unwind: { path: '$link', preserveNullAndEmptyArrays: true },
@@ -43,25 +43,24 @@ router.get('/:collectionId', (req, res, next) => {
       },
       {
         $lookup:
-         {
-           from: 'tags',
-           localField: 'tags',
-           foreignField: '_id',
-           as: 'tag',
-         },
+        {
+          from: 'tags',
+          localField: 'tags',
+          foreignField: '_id',
+          as: 'tag',
+        },
       },
-
       {
         $unwind: { path: '$tag', preserveNullAndEmptyArrays: true },
       },
       {
         $lookup:
-         {
-           from: 'users',
-           localField: 'authorId',
-           foreignField: 'userId',
-           as: 'author',
-         },
+        {
+          from: 'users',
+          localField: 'authorId',
+          foreignField: 'userId',
+          as: 'author',
+        },
       },
       {
         $unwind: { path: '$author', preserveNullAndEmptyArrays: true },
@@ -99,12 +98,12 @@ router.get('/:collectionId', (req, res, next) => {
       },
       {
         $lookup:
-         {
-           from: 'users',
-           localField: 'links.userAdded',
-           foreignField: 'userId',
-           as: 'links.userAdded',
-         },
+        {
+          from: 'users',
+          localField: 'links.userAdded',
+          foreignField: 'userId',
+          as: 'links.userAdded',
+        },
       },
       {
         $unwind: { path: '$links.userAdded', preserveNullAndEmptyArrays: true },

@@ -16,7 +16,7 @@ const RateLimit = require('express-rate-limit');
 
 const limiter = new RateLimit({
   windowMs: 10 * 60 * 1000, //  10 minutes 
-  max: 100, 
+  max: 400,
   delayMs: 0,
   statusCode: 429,
   message: 'too fast bro',
@@ -70,7 +70,7 @@ app.use(passport.initialize());
 app.use(helmet({
   frameguard: false,
 }));
-// app.use(limiter);
+app.use(limiter);
 
 app.use('/', index);
 app.use('/users', users);
