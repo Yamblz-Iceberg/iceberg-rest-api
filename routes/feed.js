@@ -26,21 +26,21 @@ router.get('/', validation(validationParams.feed), passport.authenticate('bearer
     },
     {
       $lookup:
-         {
-           from: 'tags',
-           localField: 'tags',
-           foreignField: '_id',
-           as: 'tag',
-         },
+        {
+          from: 'tags',
+          localField: 'tags',
+          foreignField: '_id',
+          as: 'tag',
+        },
     },
     {
       $lookup:
-         {
-           from: 'users',
-           localField: 'authorId',
-           foreignField: 'userId',
-           as: 'author',
-         },
+        {
+          from: 'users',
+          localField: 'authorId',
+          foreignField: 'userId',
+          as: 'author',
+        },
     },
     {
       $unwind: { path: '$tag', preserveNullAndEmptyArrays: true },
@@ -50,12 +50,12 @@ router.get('/', validation(validationParams.feed), passport.authenticate('bearer
     },
     {
       $lookup:
-         {
-           from: 'users',
-           localField: 'tag._id',
-           foreignField: 'bookmarks.bookmarkId',
-           as: 'tagRel',
-         },
+        {
+          from: 'users',
+          localField: 'tag._id',
+          foreignField: 'bookmarks.bookmarkId',
+          as: 'tagRel',
+        },
     },
     {
       $unwind: { path: '$tagRel', preserveNullAndEmptyArrays: true },
@@ -75,34 +75,50 @@ router.get('/', validation(validationParams.feed), passport.authenticate('bearer
         closed: { $first: '$closed' },
       },
     },
-    { $addFields: { tagRel: {
-      $filter: {
-        input: '$tagRel',
-        as: 'tag',
-        cond: { $and: [{ $eq: ['$$tag.userId', req.user.userId] }] },
-      } } },
+    {
+      $addFields: {
+        tagRel: {
+          $filter: {
+            input: '$tagRel',
+            as: 'tag',
+            cond: { $and: [{ $eq: ['$$tag.userId', req.user.userId] }] },
+          },
+        },
+      },
     },
-    { $addFields: { tagRel: '$tagRel.bookmarks' },
+    {
+      $addFields: { tagRel: '$tagRel.bookmarks' },
     },
     {
       $unwind: { path: '$tagRel', preserveNullAndEmptyArrays: true },
     },
     {
-      $addFields: { tagsClear: {
-        $map:
+      $addFields: {
+        tagsClear: {
+          $map:
                {
                  input: '$tags',
                  as: 'tag',
                  in: '$$tag._id',
                },
-      } },
+        },
+      },
     },
-    { $addFields: { tagRel: {
-      $filter: {
-        input: '$tagRel',
-        as: 'tag',
-        cond: { $and: [{ $eq: ['$$tag.type', 'personalTags'] }, { $in: ['$$tag.bookmarkId', '$tagsClear'] }] },
-      } } },
+    {
+      $addFields: {
+        tagRel: {
+          $filter: {
+            input: '$tagRel',
+            as: 'tag',
+            cond: {
+              $and: [
+                { $eq: ['$$tag.type', 'personalTags'] },
+                { $in: ['$$tag.bookmarkId', '$tagsClear'] },
+              ],
+            },
+          },
+        },
+      },
     },
     {
       $addFields: { personalRating: { $sum: '$tagRel.counter' } },
@@ -178,3 +194,4 @@ router.get('/', validation(validationParams.feed), passport.authenticate('bearer
 });
 
 module.exports = router;
+

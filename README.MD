@@ -25,6 +25,50 @@ npm test
 
 - Если все сделано правильно, сервер будет доступен по адресу `http://localhost:1337`
 
+## Ошибки возвращаемые API
+
+|Типы ошибок|Описание|
+|---|---|
+|API_ERROR|общие ошибки api, коды приведены ниже|
+|FB_API_ERROR|ошибка методов facebook api|
+|MONGO_ERROR|ошибка MongoDB|
+|REGISTRATION_ERROR|ошибка при регистрации|
+|VALIDATION_ERROR|ошибка при валидации параметров запроса|
+|VK_API_ERROR|ошибка методов vk api|
+|VK_AUTH_ERROR|ошибка аунтификации vk|
+
+Статусы HTTP:
+
+- BadRequest
+- BandwidthLimitExceeded
+- Forbidden
+- InternalServerError
+- MethodNotAllowed
+- NotFound
+- Unauthorized
+
+|Коды ошибок API|Расшифровка|
+|---|---|
+|AUTH_ERR| ошибка аунтификации|
+|BOOKMARK_ADD_ERR|ошибка при добавлении закладки|
+|BOOKMARKS_ERR| общая ошибка закладок|
+|CONTENT_DELETE_ERR| ошибка при удалении|
+|ERROR_PARSE_ERR|ошибка парсинга|
+|FILE_POST_PROCCES_ERR|ошибка обработки изображения на сервере|
+|GC_UPLOAD_ERR|ошибка загрузки на firebase|
+|INVALID_STATE_LENGTH_ERR|неправильная длина state параметров|
+|INVALID_USER_DATA_ERR|неправильные данные пользователя|
+|LINK_LIKE_ERR|ошибка при добавлении/удалении лайка|
+|METRICS_OPEN_ERR|ошибка при отметке контента открытым|
+|NO_BOOKMARKS_ERR|закладка не найдена|
+|NO_COLLECTIONS_ERR|коллекция не найдена|
+|NO_FILE_ERR|нет файла при обработке|
+|NO_LINK_ERR|ссылка не найдена|
+|NO_ROUTE_ERR|роут не существует|
+|NO_TAGS_ERR|тег не найден|
+|NO_USER_ERR |пользователь не найден|
+|NOT_ALLOWED_ERR|метод не разрешен|
+
 ## Типы запросов к серверу
 
 - После исполнения `databaseFake.js` будет досутпен пользователь `myapi` с токеном `token`, другие стандартные настройки в файле `config.json`
