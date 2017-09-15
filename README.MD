@@ -2,19 +2,19 @@
 
 - Вам необходимо установить **Node.js** и **MongoDB**
 - Секретные настройки в `config_secret.json` и `google-credentials.json` - без них или без переменных среды локально сервер **не запустится**!
-- Чтобы использовать файлы `config_secret_enc.json` и `google-credentials_enc.json` (зашифрованные данные), установите CONFIG_ENCRYPTION_KEY=КЛЮЧ_ШИФРОВАНИЯ
+- Чтобы использовать файлы `config_secret_enc.json` и `google-credentials_enc.json` (зашифрованные данные), установите `CONFIG_ENCRYPTION_KEY=КЛЮЧ_ШИФРОВАНИЯ`
 
 ```bash
 npm install
 node databaseFake.js
-npm run start
+npm start
 ```
 
-- Для livereload используй команду
+- Для livereload через `pm2` используй команду
 
 ```bash
 npm run dev
-npm run stop //убить процесс
+npm run stop
 ```
 
 - Тесты
@@ -25,71 +25,25 @@ npm test
 
 - Если все сделано правильно, сервер будет доступен по адресу `http://localhost:1337`
 
-## Ошибки возвращаемые API
-
-|Типы ошибок|Описание|
-|---|---|
-|API_ERROR|общие ошибки api, коды приведены ниже|
-|FB_API_ERROR|ошибка методов facebook api|
-|MONGO_ERROR|ошибка MongoDB|
-|REGISTRATION_ERROR|ошибка при регистрации|
-|VALIDATION_ERROR|ошибка при валидации параметров запроса|
-|VK_API_ERROR|ошибка методов vk api|
-|VK_AUTH_ERROR|ошибка аунтификации vk|
-
-Статусы HTTP:
-
-- BadRequest
-- BandwidthLimitExceeded
-- Forbidden
-- InternalServerError
-- MethodNotAllowed
-- NotFound
-- Unauthorized
-
-|Коды ошибок API|Расшифровка|
-|---|---|
-|AUTH_ERR| ошибка аунтификации|
-|BOOKMARK_ADD_ERR|ошибка при добавлении закладки|
-|BOOKMARKS_ERR| общая ошибка закладок|
-|CONTENT_DELETE_ERR| ошибка при удалении|
-|ERROR_PARSE_ERR|ошибка парсинга|
-|FILE_POST_PROCCES_ERR|ошибка обработки изображения на сервере|
-|GC_UPLOAD_ERR|ошибка загрузки на firebase|
-|INVALID_STATE_LENGTH_ERR|неправильная длина state параметров|
-|INVALID_USER_DATA_ERR|неправильные данные пользователя|
-|LINK_LIKE_ERR|ошибка при добавлении/удалении лайка|
-|METRICS_OPEN_ERR|ошибка при отметке контента открытым|
-|NO_BOOKMARKS_ERR|закладка не найдена|
-|NO_COLLECTIONS_ERR|коллекция не найдена|
-|NO_FILE_ERR|нет файла при обработке|
-|NO_LINK_ERR|ссылка не найдена|
-|NO_ROUTE_ERR|роут не существует|
-|NO_TAGS_ERR|тег не найден|
-|NO_USER_ERR |пользователь не найден|
-|NOT_ALLOWED_ERR|метод не разрешен|
-
 ## Типы запросов к серверу
 
-- После исполнения `databaseFake.js` будет досутпен пользователь `myapi` с токеном `token`, другие стандартные настройки в файле `config.json`
+- После исполнения `databaseFake.js` будет досутпен пользователь `myapi` с токеном `token`, другие стандартные настройки в файле `config.json` (_прикрепить ссылку на workspace insomnia_)
 - Для тестирования запросов используй [httpie](https://github.com/jkbr/httpie), а лучше [insomnia](https://insomnia.rest/download)
 - Все запросы, для получения данных пользователей в должны сопровождаться **Bearer** токеном, пример для **httpie**: `http GET http://localhost:1337/rate/1/10 Authorization:'Bearer PUT_YOUR_TOKEN_HERE'`
 
 ### Register route
 
-Все запросы авторизируются `'Basic clientId clientSecret'`
+Все запросы авторизируются заголовком `'Basic clientId:clientSecret'`
 
 - **POST** `/register/demo` - регистрация по uniqueId(генерируем на устройстве) и password со статусом demo (по дефолту при старте приложения)
 - **POST** `/register/basic` - регистрация по userId и password со статусом user (для тестирования)
-- **GET** `/register/fb json={"uniqueId": "43e022dfd972b50a37af0a1ad090f2c996431"}` - авторизация через facebook и запись в демо аккаунт(теперь он будет полным)
-- **GET** `/register/vk json={"uniqueId": "43ydsfdd972b50a37wl7af0a1ad090f2c996431"}` - авторизация через vkontakte и запись в демо аккаунт(теперь он будет полным)
-- **GET** `/register/ya json={"uniqueId": "43ydsfdd972b50a37wl7af0a1ad090f2c996431"}` - авторизация через yandex и запись в демо аккаунт(теперь он будет полным)
+- **GET** `/register/:social json={"uniqueId": "43e022dfd972b50a37af0a1ad090f2c996431"}` - авторизация через facebook и запись в демо аккаунт(теперь он будет полным)
 - **PUT** `/register/logout json={"refreshToken": "43ydsfdd972b50a37wl7af0a1ad090f2c996431", "accesToken": "43ydsfdd972b50a37wl7af0a1ad090f2c996431"}` - удаление доступа
 - **PUT** `/register/logoutall` -  деавторизация на всех устройствах
 
 После получения статуса `user`, `userId` будет вида `fb_14000233422`
 
-Получаем ответ в `/register/vk/callback`, `/register/yandex/callback` или `/register/fb/callback`
+Получаем ответ в `/register/:social/callback`
 с содержанием:
 
 ```json
@@ -102,8 +56,6 @@ npm test
 ```
 
 ### Outh route
-
-Для обновления токена `password = fbToken || vkToken`, либо же можно использовать случайный пароль `demo` аккаунта, но он хранится только на устройстве и будет утерян
 
 - **POST** `/oauth/token
  grant_type=password client_id=android client_secret=SomeRandomCharsAndNumbers userId=myapi password=abc1234`- получение токена по логину и паролю
@@ -160,3 +112,46 @@ npm test
   "mainColor": "rgb(4, 107, 235)"
 }
 ```
+## Ошибки возвращаемые API
+
+|Типы ошибок|Описание|
+|---|---|
+|API_ERROR|общие ошибки api, коды приведены ниже|
+|FB_API_ERROR|ошибка методов facebook api|
+|MONGO_ERROR|ошибка MongoDB|
+|REGISTRATION_ERROR|ошибка при регистрации|
+|VALIDATION_ERROR|ошибка при валидации параметров запроса|
+|VK_API_ERROR|ошибка методов vk api|
+|VK_AUTH_ERROR|ошибка аунтификации vk|
+
+Статусы HTTP:
+
+- BadRequest
+- BandwidthLimitExceeded
+- Forbidden
+- InternalServerError
+- MethodNotAllowed
+- NotFound
+- Unauthorized
+
+|Коды ошибок API|Расшифровка|
+|---|---|
+|AUTH_ERR| ошибка аунтификации|
+|BOOKMARK_ADD_ERR|ошибка при добавлении закладки|
+|BOOKMARKS_ERR| общая ошибка закладок|
+|CONTENT_DELETE_ERR| ошибка при удалении|
+|ERROR_PARSE_ERR|ошибка парсинга|
+|FILE_POST_PROCCES_ERR|ошибка обработки изображения на сервере|
+|GC_UPLOAD_ERR|ошибка загрузки на firebase|
+|INVALID_STATE_LENGTH_ERR|неправильная длина state параметров|
+|INVALID_USER_DATA_ERR|неправильные данные пользователя|
+|LINK_LIKE_ERR|ошибка при добавлении/удалении лайка|
+|METRICS_OPEN_ERR|ошибка при отметке контента открытым|
+|NO_BOOKMARKS_ERR|закладка не найдена|
+|NO_COLLECTIONS_ERR|коллекция не найдена|
+|NO_FILE_ERR|нет файла при обработке|
+|NO_LINK_ERR|ссылка не найдена|
+|NO_ROUTE_ERR|роут не существует|
+|NO_TAGS_ERR|тег не найден|
+|NO_USER_ERR |пользователь не найден|
+|NOT_ALLOWED_ERR|метод не разрешен|
