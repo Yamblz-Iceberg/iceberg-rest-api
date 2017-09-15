@@ -19,6 +19,9 @@ before('Профиль пользователя > Социальные возм�
   transaction.skip = true;
 });
 
+before('Загрузка файлов > Изображения > Загрузить и получить средний цвет', (transaction) => {
+  transaction.skip = true;
+});
 
 before('Регистрация > OAuth2 > Обмен userId и password на token', (transaction) => {
   transaction.skip = true;
