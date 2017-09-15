@@ -18,19 +18,14 @@ const User = new Schema({
   },
   accType: {
     type: String,
-    required: false,
     enum: ['user', 'demo'],
     default: 'user',
   },
   firstName: {
     type: String,
-    unique: false,
-    required: false,
   },
   lastName: {
     type: String,
-    unique: false,
-    required: false,
   },
   bookmarks: {
     type: [Bookmark],
@@ -40,7 +35,6 @@ const User = new Schema({
   },
   photo: {
     type: String,
-    required: false,
   },
   sex: {
     type: String,
@@ -50,7 +44,6 @@ const User = new Schema({
   },
   rating: {
     type: Number,
-    required: false,
     default: 5,
   },
   created: {

@@ -7,12 +7,10 @@ const AccessToken = new Schema({
     type: String,
     required: true,
   },
-
   clientId: {
     type: String,
     required: true,
   },
-
   token: {
     type: String,
     unique: true,

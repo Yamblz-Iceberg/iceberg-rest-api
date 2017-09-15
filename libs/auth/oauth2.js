@@ -65,7 +65,7 @@ aserver.exchange(oauth2orize.exchange.password((client, userId, password, scope,
 
 // Exchange refreshToken for access token.
 aserver.exchange(oauth2orize.exchange.refreshToken((client, refreshToken, scope, next) => {
-  RefreshToken.findOneAndRemove({ token: refreshToken, clientId: client.clientId }) // FIXME: not sure about deleting
+  RefreshToken.findOneAndRemove({ token: refreshToken, clientId: client.clientId })
     .then((token) => {
       if (!token) {
         return next(null, false);

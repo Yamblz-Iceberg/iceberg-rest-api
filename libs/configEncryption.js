@@ -8,16 +8,22 @@ const configFile = require('../config_secret.json');
 const googleCredentials = require('../google-credentials.json');
 
 const encryptFile = (inputFile, key, outputFile) => new Promise((resolve, reject) => {
-  if (!inputFile || typeof key !== 'object') {
-    reject(new Error('No input file provided'));
-  }
-  if (!key || typeof key !== 'string') {
-    reject(new Error('No key provided'));
-  }
-  if (!outputFile || typeof key !== 'string') {
-    reject(new Error('No output path provided'));
-  }
   try {
+    const error = new Error();
+    error.name = 'ENCRYPT_JSON_ERR';
+
+    if (!inputFile || typeof inputFile !== 'object') {
+      error.message = 'No input file provided';
+      throw error;
+    }
+    if (!key || typeof key !== 'string') {
+      error.message = 'No key provided';
+      throw error;
+    }
+    if (!outputFile || typeof outputFile !== 'string') {
+      error.message = 'No output path provided';
+      throw error;
+    }
     const encryptedConfig = cryptoJSON.encrypt(inputFile, key, {
       algorithm: 'camellia-128-cbc',
       encoding: 'base64',
