@@ -5,10 +5,8 @@ const VK = require('node-vkapi');
 
 const User = require('./../dataModels/user').User;
 
-const getFriends = (user, fast = false) => new Promise((resolve, reject) => { // убрать fast
-  if (!fast) {
-    resolve();
-  } else if (user.fbToken) {
+const getFriends = user => new Promise((resolve, reject) => {
+  if (user.fbToken) {
     const fb = new FB.Facebook({
       appId: config.get('fb_id'),
       appSecret: config.get('fb_secret'),

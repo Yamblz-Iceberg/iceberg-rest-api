@@ -8,9 +8,11 @@ html(lang='en')
       var data = !{response};
       var str = '';
       for (var key in data) {
-        if (str != '') {
-          str += '&';
-        }
+        if (data.hasOwnProperty(key)){
+          if (str != '') {
+            str += '&';
+          }
           str += key + '=' + encodeURIComponent(data[key]);
+        }
       }
       window.location = app + '://?data=' + str;

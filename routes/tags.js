@@ -18,7 +18,8 @@ const _ = require('lodash');
 router.all('/*', passport.authenticate('bearer', { session: false }));
 
 router.post('/:tagName', validation(validationParams.tag), status.accountTypeMiddleware, (req, res, next) => {
-  Tag.findOrCreate({ name: req.params.tagName.toLowerCase().replace(/[^_a-z0-9а-я]/g, '') })
+  const tagName = req.params.tagName.toLowerCase().replace(/[^_a-z0-9а-я]/g, '');
+  Tag.findOrCreate({ name: tagName })
     .then(tag => res.json({ tag }))
     .catch(err => next(err));
 });

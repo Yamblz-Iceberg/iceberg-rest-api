@@ -12,82 +12,78 @@ const User = require('../../dataModels/user').User;
 const Client = require('../../dataModels/client').Client;
 const AccessToken = require('../../dataModels/accessToken').AccessToken;
 
-passport.use(new BasicStrategy(
-  (username, password, next) => {
-    Client.findOne({ clientId: username })
-      .then((client) => {
-        if (!client) {
-          throw next(new error.Unauthorized('AUTH_ERR', 'Client not found'));
-        }
-        if (client.clientSecret !== password) {
-          throw next(new error.Unauthorized('AUTH_ERR', 'Client secret is wrong'));
-        }
-        return next(null, client);
-      })
-      .catch(err => next(err));
-  }));
+passport.use(new BasicStrategy((username, password, next) => {
+  Client.findOne({ clientId: username })
+    .then((client) => {
+      if (!client) {
+        throw next(new error.Unauthorized('AUTH_ERR', 'Client not found'));
+      }
+      if (client.clientSecret !== password) {
+        throw next(new error.Unauthorized('AUTH_ERR', 'Client secret is wrong'));
+      }
+      return next(null, client);
+    })
+    .catch(err => next(err));
+}));
 
-passport.use(new ClientPasswordStrategy(
-  (clientId, clientSecret, next) => {
-    Client.findOne({ clientId })
-      .then((client) => {
-        if (!client) {
-          throw next(new error.Unauthorized('AUTH_ERR', 'Client not found'));
-        }
-        if (client.clientSecret !== clientSecret) {
-          throw next(new error.Unauthorized('AUTH_ERR', 'Client secret is wrong'));
-        }
-        return next(null, client);
-      })
-      .catch(err => next(err));
-  }));
+passport.use(new ClientPasswordStrategy((clientId, clientSecret, next) => {
+  Client.findOne({ clientId })
+    .then((client) => {
+      if (!client) {
+        throw next(new error.Unauthorized('AUTH_ERR', 'Client not found'));
+      }
+      if (client.clientSecret !== clientSecret) {
+        throw next(new error.Unauthorized('AUTH_ERR', 'Client secret is wrong'));
+      }
+      return next(null, client);
+    })
+    .catch(err => next(err));
+}));
 
-passport.use(new LocalStrategy(
-  (userId, password, next) => {
-    User.findByUsername(userId)
-      .then((user) => {
-        if (!user) {
-          throw next(new error.Unauthorized('AUTH_ERR', 'User not found'));
+passport.use(new LocalStrategy((userId, password, next) => {
+  User.findByUsername(userId)
+    .then((user) => {
+      if (!user) {
+        throw next(new error.Unauthorized('AUTH_ERR', 'User not found'));
+      }
+      user.authenticate(password, (err, thisModel, passwordErr) => {
+        if (err) {
+          throw err;
         }
-        user.authenticate(password, (err, thisModel, passwordErr) => {
-          if (err) {
-            throw err;
-          }
-          if (passwordErr) {
-            throw passwordErr;
-          }
-          status.isBlocked(thisModel, next);
-        });
-      })
-      .catch(err => next(err));
-  }));
+        if (passwordErr) {
+          throw passwordErr;
+        }
+        status.isBlocked(thisModel, next);
+      });
+    })
+    .catch(err => next(err));
+}));
 
-passport.use(new BearerStrategy(
-  (accessToken, next) => {
-    AccessToken.findOne({ token: accessToken })
-      .then((token) => {
-        if (!token) {
-          throw next(new error.Unauthorized('AUTH_ERR', 'Token not found'));
-        }
-        if (Math.round((Date.now() - token.created) / 1000) > config.get('security:tokenLife') &&
+passport.use(new BearerStrategy((accessToken, next) => {
+  AccessToken.findOne({ token: accessToken })
+    .then((token) => {
+      if (!token) {
+        throw next(new error.Unauthorized('AUTH_ERR', 'Token not found'));
+      }
+      if (Math.round((Date.now() - token.created) / 1000) > config.get('security:tokenLife') &&
           token.userId !== config.get('default:user:username')) {
-          return AccessToken.remove({ token: accessToken })
-            .then(() => {
-              throw next(new error.Unauthorized('AUTH_ERR', 'Token expiried'));
-            });
-        }
-        return User.findOne({ userId: token.userId })
-          .then((user) => {
-            if (!user) {
-              throw next(new error.Unauthorized('AUTH_ERR', 'User not found, while proccesing token'));
-            }
-            const info = {
-              scope: '*',
-            };
-            // check for user type and banned
-            status.isBlocked(user, next, info);
+        return AccessToken.remove({ token: accessToken })
+          .then(() => {
+            throw next(new error.Unauthorized('AUTH_ERR', 'Token expiried'));
           });
-      })
-      .catch(err => next(err));
-  }));
+      }
+      return User.findOne({ userId: token.userId })
+        .then((user) => {
+          if (!user) {
+            throw next(new error.Unauthorized('AUTH_ERR', 'User not found, while proccesing token'));
+          }
+          const info = {
+            scope: '*',
+          };
+            // check for user type and banned
+          status.isBlocked(user, next, info);
+        });
+    })
+    .catch(err => next(err));
+}));
 

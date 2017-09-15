@@ -12,7 +12,6 @@ const error = require('rest-api-errors');
 const aserver = oauth2orize.createServer();
 
 
-// Destroys any old tokens and generates a new access and refresh token
 const generateTokens = (data, next) => {
   const dataNew = data;
   const refreshTokenValue = crypto.randomBytes(32).toString('hex');

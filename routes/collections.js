@@ -214,26 +214,27 @@ router.post('/', status.accountTypeMiddleware, validation(validationParams.colle
     .catch(err => next(err));
 });
 
-router.post('/addLink/:collectionId/:linkId', validation(validationParams.description), status.accountTypeMiddleware, (req, res, next) => { // FIXME: проверка по url
-  Collection.findOneAndUpdate({ _id: mongoose.Types.ObjectId(req.params.collectionId), authorId: req.user.userId },
-    { $addToSet: { links: mongoose.Types.ObjectId(req.params.linkId) } })
-    .then((collection) => {
-      if (!collection) {
-        throw new error.NotFound('NO_COLLECTION_ERR', 'Collection not found, cannot update this collection');
-      }
-      if (req.body.description) {
-        return Link.findOneAndUpdate({ _id: mongoose.Types.ObjectId(req.params.linkId) }, { description: req.body.description })
-          .then((link) => {
-            if (!link) {
-              throw new error.NotFound('NO_LINK_ERR', 'Link not found, cannot update this link description');
-            }
-            res.end();
-          });
-      }
-      return res.end();
-    })
-    .catch(err => next(err));
-});
+router.post('/addLink/:collectionId/:linkId', validation(validationParams.description),
+  status.accountTypeMiddleware, (req, res, next) => {
+    Collection.findOneAndUpdate({ _id: mongoose.Types.ObjectId(req.params.collectionId), authorId: req.user.userId },
+      { $addToSet: { links: mongoose.Types.ObjectId(req.params.linkId) } })
+      .then((collection) => {
+        if (!collection) {
+          throw new error.NotFound('NO_COLLECTION_ERR', 'Collection not found, cannot update this collection');
+        }
+        if (req.body.description) {
+          return Link.findOneAndUpdate({ _id: mongoose.Types.ObjectId(req.params.linkId) }, { description: req.body.description })
+            .then((link) => {
+              if (!link) {
+                throw new error.NotFound('NO_LINK_ERR', 'Link not found, cannot update this link description');
+              }
+              res.end();
+            });
+        }
+        return res.end();
+      })
+      .catch(err => next(err));
+  });
 
 router.put('/open/:collectionId', validation(validationParams.readCollection), (req, res, next) => {
   User.findOne({ userId: req.user.userId })

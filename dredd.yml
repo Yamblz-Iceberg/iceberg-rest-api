@@ -1,6 +1,6 @@
 reporter: apiary
 custom:
-  apiaryApiKey: ece8126458bc412f09c587971dda6b03
+  apiaryApiKey: #{process.env.APIARY_API_KEY}
   apiaryApiName: icebergproject
 dry-run: null
 hookfiles: './test/hooks'
