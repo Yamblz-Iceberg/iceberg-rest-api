@@ -4,6 +4,7 @@ const FBError = require('fb').FacebookApiException;
 const VKAPIError = require('node-vkapi/lib/errors/api-error');
 const VKAuthError = require('node-vkapi/lib/errors/auth-error');
 const passportLocalMongooseErr = require('passport-local-mongoose/lib/errors').AuthenticationError;
+const passport = require('passport').Authenticator;
 
 const errorHandler = error => new Promise((resolve, reject) => {
   try {
@@ -30,6 +31,9 @@ const errorHandler = error => new Promise((resolve, reject) => {
       body.message = error.message;
     } else if (error instanceof passportLocalMongooseErr) {
       body.type = 'REGISTRATION_ERROR';
+      body.message = error.message;
+    } else if (error instanceof passport) {
+      body.type = 'AUTH_ERROR';
       body.message = error.message;
     } else if (error.name === 'MongoError') {
       body.type = 'MONGO_ERROR';

@@ -34,7 +34,7 @@ const getAverageColor = image => new Promise((resolve, reject) => {
         Math.round(imageFromBuffer.bitmap.height / 10)))
     .then(imageCropped => getImageBuffer(imageCropped, image.mimetype))
     .then(buffer => resolve(`rgb(${colorThief.getColor(buffer).join(', ')})`))
-    .catch(err => reject(new error.InternalServerError('FILE_POST_PROCCES_ERR', err)));
+    .catch(err => reject(new error.InternalServerError('FILE_POST_PROCCES_ERR', err.message)));
 });
 
 module.exports.resize = resizeImage;

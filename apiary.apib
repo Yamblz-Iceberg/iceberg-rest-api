@@ -1,36 +1,91 @@
 FORMAT: 1A
 HOST: https://iceberg-project.herokuapp.com/
 # API проекта ICEBERG
-Учебный проект Мобилизации Яндекс 2017
+
+## Установка
 
 - Вам необходимо установить **Node.js** и **MongoDB**
-- Все настройки находятся в файле `config.json`
 - Секретные настройки в `config_secret.json` и `google-credentials.json` - без них или без переменных среды локально сервер **не запустится**!
-
+- Чтобы использовать файлы `config_secret_enc.json` и `google-credentials_enc.json` (зашифрованные данные), установите `CONFIG_ENCRYPTION_KEY=КЛЮЧ_ШИФРОВАНИЯ`
 
 ```bash
 npm install
 node databaseFake.js
-npm run start
+npm start
 ```
+## Запуск
 
-- Для livereload используй команду
+- Для livereload через `pm2` используй команду
 
 ```bash
 npm run dev
-npm run stop //убить процесс
+npm run stop
+```
+
+- Тесты
+
+```bash
+npm test
 ```
 
 - Если все сделано правильно, сервер будет доступен по адресу `http://localhost:1337`
 
 ## Типы запросов к серверу
 
-- После исполнения `databaseFake.js` будет досутпен пользователь `myapi` с токеном `token`
+- После исполнения `databaseFake.js` будет досутпен пользователь `myapi` с токеном `token`, другие стандартные настройки в файле `config.json` (_прикрепить ссылку на workspace insomnia_)
 - Для тестирования запросов используй [httpie](https://github.com/jkbr/httpie), а лучше [insomnia](https://insomnia.rest/download)
-- Все запросы, для получения данных пользователей в должны сопровождаться **Bearer** токеном
+- Все запросы, для получения данных пользователей в должны сопровождаться **Bearer** токеном, пример для **httpie**: `http GET http://localhost:1337/rate/1/10 Authorization:'Bearer PUT_YOUR_TOKEN_HERE'`
+
+## Ошибки возвращаемые API
+
+### Типы ошибок
+
+|Тип|Описание|
+|---|---|
+|**API_ERROR**|общие ошибки api, коды приведены ниже|
+|**FB_API_ERROR**|ошибка методов facebook api|
+|**MONGO_ERROR**|ошибка MongoDB|
+|**REGISTRATION_ERROR**|ошибка при регистрации|
+|**VALIDATION_ERROR**|ошибка при валидации параметров запроса|
+|**VK_API_ERROR**|ошибка методов vk api|
+|**VK_AUTH_ERROR**|ошибка аунтификации vk|
+
+### Статусы **HTTP**
+
+- BadRequest
+- BandwidthLimitExceeded
+- Forbidden
+- InternalServerError
+- MethodNotAllowed
+- NotFound
+- Unauthorized
+
+### Коды ошибок **API_ERROR**
+
+|Код|Расшифровка|
+|---|---|
+|**AUTH_ERR**| ошибка аунтификации|
+|**BOOKMARK_ADD_ERR**|ошибка при добавлении закладки|
+|**BOOKMARKS_ERR**| общая ошибка закладок|
+|**CONTENT_DELETE_ERR**| ошибка при удалении|
+|**ERROR_PARSE_ERR**|ошибка парсинга|
+|**FILE_POST_PROCCES_ERR**|ошибка обработки изображения на сервере|
+|**GC_UPLOAD_ERR**|ошибка загрузки на firebase|
+|**INVALID_STATE_LENGTH_ERR**|неправильная длина state параметров|
+|**INVALID_USER_DATA_ERR**|неправильные данные пользователя|
+|**LINK_LIKE_ERR**|ошибка при добавлении/удалении лайка|
+|**METRICS_OPEN_ERR**|ошибка при отметке контента открытым|
+|**NO_BOOKMARKS_ERR**|закладка не найдена|
+|**NO_COLLECTIONS_ERR**|коллекция не найдена|
+|**NO_FILE_ERR**|нет файла при обработке|
+|**NO_LINK_ERR**|ссылка не найдена|
+|**NO_ROUTE_ERR**|роут не существует|
+|**NO_TAGS_ERR**|тег не найден|
+|**NO_USER_ERR**|пользователь не найден|
+|**NOT_ALLOWED_ERR**|метод не разрешен|
 
 # Group Теги
-
+Теги используются как категории коллекций, а также как дополнительный якорь для поиска и ранжирования персональной ленты пользователя
 ## Операции над тегами [/tags/{tagName}]
 
 
@@ -62,7 +117,7 @@ npm run stop //убить процесс
 # Group Ссылки
 
 ## Операции над ссылками [/links]
-
+При добавлении ссылки в базу данных, из HTML кода страницы извлекаются ссылка на главную картинку, заголовок и favicon
 ### Добавить ссылку в базу данных [POST]
 
 + Request (application/json; charset=utf-8)
@@ -182,7 +237,7 @@ npm run stop //убить процесс
     
 
 # Group Коллекции
-
+Коллекции содержат в себе ссылки и теги, а также такие метрику о пользователях сохранивших себе коллекцию
 ## Операции над коллекциями [/collections]
 
 ### Добавить коллекцию в базу данных [POST]
@@ -446,7 +501,7 @@ npm run stop //убить процесс
 
 
 # Group Лента и поиск
-
+Роут используется для выдачи ленты и поиска
 ## Коллекции и теги [/feed{?sort,search,only,count}]
 
 + Parameters
@@ -588,7 +643,6 @@ npm run stop //убить процесс
         }
         
 
-
 ## Социальные возможности [/users/social/friends]
 
 ### Получить список друзей из социальных сетей [GET]
@@ -613,7 +667,7 @@ npm run stop //убить процесс
         }
         
 # Group Регистрация
-
+При регистрации упрощен метод получения токена api, до одного запроса, т.е. после успешной регистрации сразу возвращаются данные для использования api
 ## Basic [/register/basic]
 
 ### Зарегистрироваться [POST]
@@ -693,41 +747,17 @@ npm run stop //убить процесс
 ## Вход через OAuth провайдеров [/register/]
 
 
-### Яндекс [GET /register/ya{?clientId,clientSecret,uniqueId}]
+### Яндекс/Вконтакте/Facebook [GET /register/{social}{?clientId,clientSecret,uniqueId}]
 + Parameters
-
+    + social = ya (required, string) - провайдер
+      + Values
+          + `ya`
+          + `fb`
+          + `vk`
     + clientId = `android` (optional, string)
     + clientSecret = SomeRandomCharsAndNumbers (optional, string)
     + uniqueId = 43978157-ee67-490b-90fa-9eda5a28dc1b (optional, string) - уникальный id уже существующего пользователя
 
-+ Response 200 (application/json; charset=utf-8)
-
-        {
-          "access_token": "4413947afd44e9fea5953fe2b277888ca9b1ff24bf31406b5ce16c9894f106a5",
-          "refresh_token": "e5ab220b8bd2e5bbc81a75e7650d0d0e6ce5c7c4e15f57e8c5d26d3a0d89cd48",
-          "expires_in": 86400,
-          "token_type": "Bearer"
-        }
-### Вконтакте [GET /register/vk{?clientId,clientSecret,uniqueId}]
-+ Parameters
-
-    + clientId = `android` (optional, string)
-    + clientSecret = SomeRandomCharsAndNumbers (optional, string)
-    + uniqueId = 43978157-ee67-490b-90fa-9eda5a28dc1b (optional, string) - уникальный id уже существующего пользователя
-+ Response 200 (application/json; charset=utf-8)
-
-        {
-          "access_token": "4413947afd44e9fea5953fe2b277888ca9b1ff24bf31406b5ce16c9894f106a5",
-          "refresh_token": "e5ab220b8bd2e5bbc81a75e7650d0d0e6ce5c7c4e15f57e8c5d26d3a0d89cd48",
-          "expires_in": 86400,
-          "token_type": "Bearer"
-        }
-### Facebook [GET /register/fb{?clientId,clientSecret,uniqueId}]
-+ Parameters
-
-    + clientId = `android` (optional, string)
-    + clientSecret = SomeRandomCharsAndNumbers (optional, string)
-    + uniqueId = 43978157-ee67-490b-90fa-9eda5a28dc1b (optional, string) - уникальный id уже существующего пользователя
 + Response 200 (application/json; charset=utf-8)
 
         {
@@ -962,7 +992,12 @@ npm run stop //убить процесс
           "message": "Cannot mark this collection as opened"
         }
 
-## Метрики тегов [/tags/personal]
+## Метрики тегов [/tags/personal{?firstLogin}]
+
+Используются для выдачи персональной ленты, при первом входе вес тегов равен **10**, при следующих запросах **1**
+
++ Parameters
+    + firstLogin: true (optional, string) - первый вход
 
 ### Добавить персональных тегов [PUT]
 
@@ -984,3 +1019,35 @@ npm run stop //убить процесс
           "type": "API_ERROR",
           "message": "Cannot add personal tags for user that doesnt exist"
         }
+
+# Group Загрузка файлов
+
+## Изображения [/upload]
+
+### Загрузить и получить средний цвет [POST]
+
++ Request (multipart/form-data; boundary=---BOUNDARY)
+
+        -----BOUNDARY
+        Content-Disposition: form-data; name="photo"; filename="image.jpg"
+        Content-Type: image/jpeg
+        Content-Transfer-Encoding: base64
+        
+        /9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0a
+        HBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIy
+        MjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCAABAAEDASIA
+        AhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAf/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFAEB
+        AAAAAAAAAAAAAAAAAAAAAP/EABQRAQAAAAAAAAAAAAAAAAAAAAD/2gAMAwEAAhEDEQA/AL+AD//Z
+        -----BOUNDARY
+
+
++ Response 200 (application/json; charset=utf-8)
+
+        {
+          "fileName": "https://storage.googleapis.com/iceberg-cfa80.appspot.com/images/c6dbc8e2-f2ad-4b0f-8e7d-af20cb7153bb.jpeg",
+          "fileNameislands100": "https://storage.googleapis.com/iceberg-cfa80.appspot.com/images/f262c8da-6732-480c-aadb-cefb9289c5b1_islands100.jpeg",
+          "mainColor": "rgb(88, 107, 41)"
+        }
+
+
+

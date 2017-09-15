@@ -33,7 +33,7 @@ const getStateParams = state => new Promise((resolve, reject) => {
   const stateArray = state.split(',');
 
   if (stateArray.length !== 3) {
-    reject(new error.BadRequest('INVALID_STATE_LENGTH', 'State param must consist of 3 elements separated by single comma'));
+    reject(new error.BadRequest('INVALID_STATE_LENGTH_ERR', 'State param must consist of 3 elements separated by single comma'));
   }
 
   const stateObj = {};
@@ -49,13 +49,13 @@ const redirectOauth = (clientId, clientSecret, username, password) => new Promis
       'content-type': 'application/x-www-form-urlencoded',
     },
     form:
-      {
-        grant_type: 'password',
-        client_id: clientId,
-        client_secret: clientSecret,
-        username,
-        password,
-      },
+    {
+      grant_type: 'password',
+      client_id: clientId,
+      client_secret: clientSecret,
+      username,
+      password,
+    },
   };
 
   request(options, (err, response, body) => {
@@ -118,46 +118,49 @@ router.post('/demo', validation(validationParams.register), passport.authenticat
     .catch(_error => next(_error));
 });
 
-router.get('/vk', validation(validationParams.social), (req, res, next) => {
-  passport.authenticate('vkontakte', {
-    display: 'mobile',
+router.get('/:social', validation(validationParams.social), (req, res, next) => {
+  let strategy;
+  let scope;
+  let display;
+  switch (req.params.social) {
+  case 'vk': strategy = 'vkontakte'; display = 'mobile'; scope = ['friends'];
+    break;
+  case 'fb': strategy = 'facebook'; display = 'touch'; scope = ['user_friends'];
+    break;
+  case 'ya': strategy = 'yandex';
+    break;
+  default: strategy = req.params.social;
+  }
+  passport.authenticate(strategy, {
+    display,
     state: `${req.query.clientId},${req.query.clientSecret},${req.query.uniqueId}`,
-    scope: ['friends'],
+    scope,
   })(req, res, next);
 });
 
-router.get('/fb', validation(validationParams.social), (req, res, next) => {
-  passport.authenticate('facebook', {
-    state: `${req.query.clientId},${req.query.clientSecret},${req.query.uniqueId}`,
-    scope: ['user_friends'],
-  })(req, res, next);
-});
-
-router.get('/ya', validation(validationParams.social), (req, res, next) => {
-  passport.authenticate('yandex', {
-    state: `${req.query.clientId},${req.query.clientSecret},${req.query.uniqueId}`,
-  })(req, res, next);
-});
-
-router.get('/vk/callback', passport.authenticate('vkontakte', { session: false }), (req, res, next) => {
-  getStateParams(req.query.state)
-    .then(state => redirectOauth(state.clientId, state.clientSecret, req.user.userId, req.user.vkToken))
-    .then(response => res.render('callback', { response: JSON.stringify(response) }))
-    .catch(err => next(err));
-});
-
-router.get('/fb/callback', passport.authenticate('facebook', { session: false }), (req, res, next) => {
-  getStateParams(req.query.state)
-    .then(state => redirectOauth(state.clientId, state.clientSecret, req.user.userId, req.user.fbToken))
-    .then(response => res.render('callback', { response: JSON.stringify(response) }))
-    .catch(err => next(err));
-});
-
-router.get('/yandex/callback', passport.authenticate('yandex', { session: false }), (req, res, next) => {
-  getStateParams(req.query.state)
-    .then(state => redirectOauth(state.clientId, state.clientSecret, req.user.userId, req.user.yaToken))
-    .then(response => res.render('callback', { response: JSON.stringify(response) }))
-    .catch(err => next(err));
+router.get('/:social/callback', (req, res, next) => {
+  let strategy;
+  switch (req.params.social) {
+  case 'vk': strategy = 'vkontakte';
+    break;
+  case 'fb': strategy = 'facebook';
+    break;
+  default: strategy = req.params.social;
+  }
+  passport.authenticate(strategy, { session: false })(req, res, () => {
+    let token;
+    switch (req.params.social) {
+    case 'vk': token = req.user.vkToken;
+      break;
+    case 'fb': token = req.user.fbToken;
+      break;
+    default: token = req.user.yaToken;
+    }
+    getStateParams(req.query.state)
+      .then(state => redirectOauth(state.clientId, state.clientSecret, req.user.userId, token))
+      .then(response => res.render('callback', { response: JSON.stringify(response) }))
+      .catch(err => next(err));
+  });
 });
 
 router.put('/logout', validation(validationParams.logout), passport.authenticate('basic', { session: false }), (req, res, next) => {

@@ -17,7 +17,7 @@ const getInfo = url => new Promise((resolve, reject) => {
       }
       const $ = cheerio.load(body);
       resolver.resolve(url, (result) => {
-        let photo = null;
+        let photo;
         if (result && result.image) {
           photo = result.image;
         }

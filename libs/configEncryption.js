@@ -7,27 +7,47 @@ const root = process.cwd();
 const configFile = require('../config_secret.json');
 const googleCredentials = require('../google-credentials.json');
 
+const encryptFile = (inputFile, key, outputFile) => new Promise((resolve, reject) => {
+  try {
+    const error = new Error();
+    error.name = 'ENCRYPT_JSON_ERR';
+
+    if (!inputFile || typeof inputFile !== 'object') {
+      error.message = 'No input file provided';
+      throw error;
+    }
+    if (!key || typeof key !== 'string') {
+      error.message = 'No key provided';
+      throw error;
+    }
+    if (!outputFile || typeof outputFile !== 'string') {
+      error.message = 'No output path provided';
+      throw error;
+    }
+    const encryptedConfig = cryptoJSON.encrypt(inputFile, key, {
+      algorithm: 'camellia-128-cbc',
+      encoding: 'base64',
+    });
+    const outputFilePath = `${root}/${outputFile}`;
+    fs.writeFile(outputFilePath, JSON.stringify(encryptedConfig, null, 2), 'utf-8', (err) => {
+      if (err) {
+        reject(err);
+      }
+      resolve(`File was encrypted and saved at: ${outputFilePath}`);
+    });
+  } catch (err) {
+    reject(err);
+  }
+});
+
 const passKey = process.env.CONFIG_ENCRYPTION_KEY || config.get('encryptKey');
 
-const encryptedConfig = cryptoJSON.encrypt(configFile, passKey, {
-  algorithm: 'camellia-128-cbc',
-  encoding: 'base64',
-});
-
-const encryptedgoogleCredentials = cryptoJSON.encrypt(googleCredentials, passKey, {
-  algorithm: 'camellia-128-cbc',
-  encoding: 'base64',
-});
 log.info('Creating secure configs for deployment, or pushing GitHub');
 
-fs.writeFile(`${root}/config_secret_enc.json`, JSON.stringify(encryptedConfig, null, 2), 'utf-8', (err0) => {
-  if (err0) {
-    return log.err(err0);
-  }
-  return fs.writeFile(`${root}/google-credentials_enc.json`, JSON.stringify(encryptedgoogleCredentials, null, 2), 'utf-8', (err1) => {
-    if (err1) {
-      return log.err(err1);
-    }
-    return log.info('files created');
-  });
-});
+encryptFile(configFile, passKey, 'config_secret_enc.json')
+  .then(message => log.info(message))
+  .then(() => encryptFile(googleCredentials, passKey, 'google-credentials_enc.json'))
+  .then(message => log.info(message))
+  .catch(err => log.error(err));
+
+module.exports.encryptFile = encryptFile;

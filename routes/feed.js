@@ -26,21 +26,21 @@ router.get('/', validation(validationParams.feed), passport.authenticate('bearer
     },
     {
       $lookup:
-         {
-           from: 'tags',
-           localField: 'tags',
-           foreignField: '_id',
-           as: 'tag',
-         },
+        {
+          from: 'tags',
+          localField: 'tags',
+          foreignField: '_id',
+          as: 'tag',
+        },
     },
     {
       $lookup:
-         {
-           from: 'users',
-           localField: 'authorId',
-           foreignField: 'userId',
-           as: 'author',
-         },
+        {
+          from: 'users',
+          localField: 'authorId',
+          foreignField: 'userId',
+          as: 'author',
+        },
     },
     {
       $unwind: { path: '$tag', preserveNullAndEmptyArrays: true },
@@ -50,12 +50,12 @@ router.get('/', validation(validationParams.feed), passport.authenticate('bearer
     },
     {
       $lookup:
-         {
-           from: 'users',
-           localField: 'tag._id',
-           foreignField: 'bookmarks.bookmarkId',
-           as: 'tagRel',
-         },
+        {
+          from: 'users',
+          localField: 'tag._id',
+          foreignField: 'bookmarks.bookmarkId',
+          as: 'tagRel',
+        },
     },
     {
       $unwind: { path: '$tagRel', preserveNullAndEmptyArrays: true },
@@ -75,34 +75,50 @@ router.get('/', validation(validationParams.feed), passport.authenticate('bearer
         closed: { $first: '$closed' },
       },
     },
-    { $addFields: { tagRel: {
-      $filter: {
-        input: '$tagRel',
-        as: 'tag',
-        cond: { $and: [{ $eq: ['$$tag.userId', req.user.userId ] }] },
-      } } },
+    {
+      $addFields: {
+        tagRel: {
+          $filter: {
+            input: '$tagRel',
+            as: 'tag',
+            cond: { $and: [{ $eq: ['$$tag.userId', req.user.userId] }] },
+          },
+        },
+      },
     },
-    { $addFields: { tagRel: '$tagRel.bookmarks' },
+    {
+      $addFields: { tagRel: '$tagRel.bookmarks' },
     },
     {
       $unwind: { path: '$tagRel', preserveNullAndEmptyArrays: true },
     },
     {
-      $addFields: { tagsClear: {
-        $map:
+      $addFields: {
+        tagsClear: {
+          $map:
                {
                  input: '$tags',
                  as: 'tag',
                  in: '$$tag._id',
                },
-      } },
+        },
+      },
     },
-    { $addFields: { tagRel: {
-      $filter: {
-        input: '$tagRel',
-        as: 'tag',
-        cond: { $and: [{ $eq: ['$$tag.type', 'personalTags'] }, { $in: ['$$tag.bookmarkId', '$tagsClear'] }] },
-      } } },
+    {
+      $addFields: {
+        tagRel: {
+          $filter: {
+            input: '$tagRel',
+            as: 'tag',
+            cond: {
+              $and: [
+                { $eq: ['$$tag.type', 'personalTags'] },
+                { $in: ['$$tag.bookmarkId', '$tagsClear'] },
+              ],
+            },
+          },
+        },
+      },
     },
     {
       $addFields: { personalRating: { $sum: '$tagRel.counter' } },
@@ -119,27 +135,32 @@ router.get('/', validation(validationParams.feed), passport.authenticate('bearer
       },
     },
     {
-      $project: { 'author.salt': 0,
+      $project: {
         usersSaved: 0,
         tagRel: 0,
         tagsClear: 0,
-        'author._id': 0,
-        'author.hash': 0,
-        'author.vkToken': 0,
-        'author.fbToken': 0,
-        'author.yaToken': 0,
-        'author.socialLink': 0,
-        'author.sex': 0,
-        'author.banned': 0,
-        'author.created': 0,
-        'author.accType': 0,
-        'author.bookmarks': 0,
-        'author.metrics': 0,
-        'author.__v': 0,
+        author: {
+          salt: 0,
+          _id: 0,
+          hash: 0,
+          vkToken: 0,
+          fbToken: 0,
+          yaToken: 0,
+          socialLink: 0,
+          sex: 0,
+          banned: 0,
+          created: 0,
+          accType: 0,
+          bookmarks: 0,
+          metrics: 0,
+          __v: 0,
+        },
         links: 0,
-        'tags.__v': 0,
-        'tags.textColor': 0,
-        'tags.color': 0,
+        tags: {
+          textColor: 0,
+          color: 0,
+          __v: 0,
+        },
       },
     },
     {
@@ -173,3 +194,4 @@ router.get('/', validation(validationParams.feed), passport.authenticate('bearer
 });
 
 module.exports = router;
+

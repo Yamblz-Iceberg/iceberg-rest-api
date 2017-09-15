@@ -3,12 +3,13 @@ const after = require('hooks').after;
 
 const chai = require('chai');
 const chaiHttp = require('chai-http');
-const server = require('../app');
 
 chai.use(chaiHttp);
 chai.should();
 
 const responseStash = {};
+
+/* eslint no-param-reassign: ["error", {"ignorePropertyModificationsFor": ["transaction"] }] */
 
 before('Профиль пользователя > Операции над профилем пользователя > Удалить профиль', (transaction) => {
   transaction.skip = true;
@@ -18,6 +19,9 @@ before('Профиль пользователя > Социальные возм�
   transaction.skip = true;
 });
 
+before('Загрузка файлов > Изображения > Загрузить и получить средний цвет', (transaction) => {
+  transaction.skip = true;
+});
 
 before('Регистрация > OAuth2 > Обмен userId и password на token', (transaction) => {
   transaction.skip = true;
@@ -32,13 +36,7 @@ before('Регистрация > OAuth2 > Удалить данные для в�
   transaction.skip = true;
 });
 
-before('Регистрация > Вход через OAuth провайдеров > Яндекс', (transaction) => {
-  transaction.skip = true;
-});
-before('Регистрация > Вход через OAuth провайдеров > Вконтакте', (transaction) => {
-  transaction.skip = true;
-});
-before('Регистрация > Вход через OAuth провайдеров > Facebook', (transaction) => {
+before('Регистрация > Вход через OAuth провайдеров > Яндекс/Вконтакте/Facebook', (transaction) => {
   transaction.skip = true;
 });
 

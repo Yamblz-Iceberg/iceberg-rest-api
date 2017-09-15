@@ -55,11 +55,11 @@ router.all('/bookmarks/:type/:id?', validation(validationParams.bookmarks), pass
   const myTypes = [CREATED_COLLECTIONS, ADDED_LINKS];
 
   if (['GET', 'PUT', 'DELETE'].indexOf(req.method) === -1 && types.indexOf(req.params.type) !== -1) {
-    return next(new error.MethodNotAllowed('API_WARN', 'Method not allowed for saved content'));
+    return next(new error.MethodNotAllowed('NOT_ALLOWED_ERR', 'Method not allowed for saved content'));
   } else if (['GET', 'DELETE'].indexOf(req.method) === -1 && myTypes.indexOf(req.params.type) !== -1) {
-    return next(new error.MethodNotAllowed('API_WARN', 'Method not allowed for user created content'));
-  } else if ((req.method !== 'GET' && req.query.userId) || (req.params.type !== CREATED_COLLECTIONS && req.query.userId)) { // FIXME: не уврен на счет условия
-    return next(new error.MethodNotAllowed('API_WARN', 'Method not allowed, if userId specified only GET method is allowed'));
+    return next(new error.MethodNotAllowed('NOT_ALLOWED_ERR', 'Method not allowed for user created content'));
+  } else if ((req.method !== 'GET' && req.query.userId) || (req.params.type !== CREATED_COLLECTIONS && req.query.userId)) {
+    return next(new error.MethodNotAllowed('NOT_ALLOWED_ERR', 'Method not allowed, if userId specified only GET method is allowed'));
   }
 
   let bookmarksAction = {};
@@ -112,31 +112,32 @@ router.all('/bookmarks/:type/:id?', validation(validationParams.bookmarks), pass
             if (req.params.type === SAVED_COLLECTIONS || req.params.type === CREATED_COLLECTIONS) {
               return Collection.aggregate([
                 {
-                  $match: { _id: { $in: user.bookmarks.map(bookmarkElem => (bookmarkElem.type === req.params.type ? bookmarkElem.bookmarkId : undefined)).filter(Boolean) } },
+                  $match: { _id: { $in: user.bookmarks.map(bookmarkElem => (bookmarkElem.type === req.params.type ?
+                    bookmarkElem.bookmarkId : undefined)).filter(Boolean) } },
                 },
                 {
                   $unwind: { path: '$author', preserveNullAndEmptyArrays: true },
                 },
                 {
                   $lookup:
-                     {
-                       from: 'users',
-                       localField: 'authorId',
-                       foreignField: 'userId',
-                       as: 'author',
-                     },
+                    {
+                      from: 'users',
+                      localField: 'authorId',
+                      foreignField: 'userId',
+                      as: 'author',
+                    },
                 },
                 {
                   $unwind: { path: '$author', preserveNullAndEmptyArrays: true },
                 },
                 {
                   $lookup:
-                     {
-                       from: 'users',
-                       localField: '_id',
-                       foreignField: 'metrics.contentId',
-                       as: 'metrics',
-                     },
+                    {
+                      from: 'users',
+                      localField: '_id',
+                      foreignField: 'metrics.contentId',
+                      as: 'metrics',
+                    },
                 },
                 {
                   $unwind: { path: '$metrics', preserveNullAndEmptyArrays: true },
@@ -179,29 +180,36 @@ router.all('/bookmarks/:type/:id?', validation(validationParams.bookmarks), pass
                   },
                 },
                 {
-                  $project: { 'author.salt': 0,
+                  $project: {
                     usersSaved: 0,
-                    'metrics._id': 0,
-                    'metrics.type': 0,
-                    'metrics.counter': 0,
-                    'metrics.contentId': 0,
-                    'author._id': 0,
-                    'author.hash': 0,
-                    'author.banned': 0,
-                    'author.created': 0,
-                    'author.accType': 0,
-                    'author.bookmarks': 0,
-                    'author.metrics': 0,
-                    'author.vkToken': 0,
-                    'author.fbToken': 0,
-                    'author.yaToken': 0,
-                    'author.socialLink': 0,
-                    'author.sex': 0,
-                    'author.__v': 0,
-                    links: 0,
-                    'tags.__v': 0,
-                    'tags.textColor': 0,
-                    'tags.color': 0,
+                    metrics: {
+                      _id: 0,
+                      type: 0,
+                      counter: 0,
+                      contentId: 0,
+                    },
+                    author: {
+                      salt: 0,
+                      _id: 0,
+                      hash: 0,
+                      banned: 0,
+                      created: 0,
+                      accType: 0,
+                      bookmarks: 0,
+                      metrics: 0,
+                      vkToken: 0,
+                      fbToken: 0,
+                      yaToken: 0,
+                      socialLink: 0,
+                      sex: 0,
+                      links: 0,
+                      __v: 0,
+                    },
+                    tags: {
+                      __v: 0,
+                      textColor: 0,
+                      color: 0,
+                    },
                   },
                 },
                 {
@@ -220,7 +228,8 @@ router.all('/bookmarks/:type/:id?', validation(validationParams.bookmarks), pass
             }
             return Link.aggregate([
               {
-                $match: { _id: { $in: user.bookmarks.map(bookmarkElem => (bookmarkElem.type === req.params.type ? bookmarkElem.bookmarkId : undefined)).filter(Boolean) } },
+                $match: { _id: { $in: user.bookmarks.map(bookmarkElem => (bookmarkElem.type === req.params.type ?
+                  bookmarkElem.bookmarkId : undefined)).filter(Boolean) } },
               },
               {
                 $unwind: { path: '$author', preserveNullAndEmptyArrays: true },
@@ -282,27 +291,32 @@ router.all('/bookmarks/:type/:id?', validation(validationParams.bookmarks), pass
                 $unwind: { path: '$metrics', preserveNullAndEmptyArrays: true },
               },
               {
-                $project: { __v: 0,
+                $project: {
                   usersSaved: 0,
-                  'userAdded.salt': 0,
-                  'userAdded.bookmarks': 0,
-                  'userAdded.vkToken': 0,
-                  'userAdded.fbToken': 0,
-                  'userAdded.yaToken': 0,
-                  'userAdded.socialLink': 0,
-                  'userAdded.sex': 0,
-                  'metrics._id': 0,
-                  'metrics.contentId': 0,
-                  'metrics.type': 0,
-                  'metrics.bookmarkId': 0,
-                  'metrics.counter': 0,
-                  'userAdded._id': 0,
-                  'userAdded.hash': 0,
-                  'userAdded.banned': 0,
-                  'userAdded.created': 0,
-                  'userAdded.accType': 0,
-                  'userAdded.metrics': 0,
-                  'userAdded.__v': 0,
+                  userAdded: {
+                    salt: 0,
+                    bookmarks: 0,
+                    vkToken: 0,
+                    fbToken: 0,
+                    yaToken: 0,
+                    socialLink: 0,
+                    sex: 0,
+                    _id: 0,
+                    hash: 0,
+                    banned: 0,
+                    created: 0,
+                    accType: 0,
+                    metrics: 0,
+                    __v: 0,
+                  },
+                  metrics: {
+                    _id: 0,
+                    contentId: 0,
+                    type: 0,
+                    bookmarkId: 0,
+                    counter: 0,
+                    __v: 0,
+                  },
                 },
               },
               {

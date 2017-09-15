@@ -27,7 +27,6 @@ const Collection = new Schema({
   },
   color: {
     type: String,
-    required: false,
     default: '#0476fc',
   },
   usersSaved: {
@@ -35,7 +34,6 @@ const Collection = new Schema({
   },
   textColor: {
     type: String,
-    required: false,
   },
   created: {
     type: Date,

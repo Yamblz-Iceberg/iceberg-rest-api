@@ -79,6 +79,9 @@ module.exports = {
     },
   },
   social: {
+    params: {
+      social: Joi.string().valid(['vk', 'ya', 'fb']).required(),
+    },
     query: {
       uniqueId: Joi.string().guid().required(),
       clientId: Joi.string().required(),

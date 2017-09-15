@@ -1,0 +1,1030 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes'?>
+<!DOCTYPE html>
+<html lang='en' xmlns='http://www.w3.org/1999/xhtml' >
+<head>
+<title>Default Layout</title>
+<meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+<!--<script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>-->
+<!--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>-->
+<link rel="shortcut icon" href="http://www.dbschema.com/images/favicon.ico">
+<style type='text/css'>
+body {
+    font-family: 'Segoe UI', 'Lucida sans', Dialog;
+    font-size: 13px;
+    background-color:#f5f5f5;
+    margin: 10px;
+}
+</style>
+</head>
+
+<body>
+<div class='svg-container'>
+<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' text-rendering='optimizeLegibility'   width='615' height='905' viewbox='0 0 615 905' >
+  <script type='text/ecmascript'>
+  <![CDATA[
+  function hghl(el) { for ( var i in el ){ var elem = document.getElementById(el[i]); if ( elem != null ) elem.setAttribute('class','highlight');  }  }
+  function uhghl(el) { for ( var i in el ){ var elem = document.getElementById(el[i]); if ( elem != null ) elem.setAttribute('class','scene'); }  } 
+  ]]>
+  </script> 
+
+<style type='text/css'>
+  text                { fill:#000000; font-family: Trebuchet MS, 'Trebuchet MS', Dialog; font-size:11px; }
+  a text:hover        { fill:#94025f; text-shadow: 0px 0px 6px #d0ce00; font-size:13px; }
+  text.highlight      { fill:#94025f; text-shadow: 0px 0px 4px #eac533; font-size:13px; }
+  text.colType        { fill:#b3b3b3; }
+  text.relName        { fill:#b09c7c; }
+  path                { stroke:#5c554f; stroke-width:1.15; fill:none; }
+  path                { stroke:#5c554f; stroke-width:1.15; fill:none;}
+  path.virtual        { stroke:#b7642d; }
+  path.logo           { fill:#fbeac0;fill-opacity:1;stroke-width:0.3;stroke:#222222; }
+  path.dotted         { stroke-dasharray:4,2; }
+  path.scene          { stroke-width:10; opacity:0;}
+  path.highlight      { stroke-width:5; stroke:#c1a662; opacity:0.6;}
+  rect.entity         { fill:#ffffff; stroke:#aaa; stroke-width:1;shape-rendering:crispEdges;filter:url(#shadow); }
+  line.delim          { stroke-width:1; shape-rendering:crispEdges; }
+  text.callout        { fill:#000000; font-family: Trebuchet MS, 'Trebuchet MS', Dialog; font-size:12px; }
+  rect.callout        { fill:url(#calloutGradient); stroke:#bebdbd; stroke-width:0.5; filter: url(#shadow);}
+  rect.grp            { stroke:#b1b1b1; stroke-width:1.7; opacity:0.8; }
+  path.st0            { fill:#ececec;fill-opacity:1;stroke-width:0.6;stroke:#aaaaaa; }
+</style>
+<defs>
+  <pattern id='layoutBgA' patternUnits='userSpaceOnUse'  width='10' height='20' x='0' y='0' viewBox='0 0 5 10'>  
+     <line x1='-2' y1='1' x2='7' y2='10' stroke='#f3f3f3' stroke-width='.5'/>  
+     <line x1='-2' y1='6' x2='7' y2='15' stroke='#f3f3f3' stroke-width='.5'/>  
+     <line x1='-2' y1='-4' x2='7' y2='5' stroke='#f3f3f3' stroke-width='.5'/>  
+  </pattern>  
+  <radialGradient id='layoutBgB' gradientUnits='userSpaceOnUse' cx='50%' cy='50%' r='75%' fx='46%' fy='22%'>
+     <stop offset='0%' stop-opacity='.2' stop-color='#f5f5f5' />  
+     <stop offset='100%' stop-color='#efefef' />  
+  </radialGradient>
+  <pattern id='layoutBgTr' patternUnits='userSpaceOnUse'  width='300' height='300' x='0' y='0' viewBox='0 0 300 300'>  
+  <path class='st0' d='m 62.011835,91.267143 c 3.536475,3.175214 2.262669,8.705999 -1.637711,11.015197 -3.594697,5.8423 -6.34682,-2.892623 -9.715478,-4.653898 -5.609222,-2.838926 2.050802,-6.680123 4.77004,-8.319046 2.334696,-0.724067 4.935143,0.312302 6.583149,1.957747 z m -2.720492,2.538595 c -2.698397,-3.517732 -9.282815,1.269287 -3.69635,3.568637 2.765331,5.605665 7.052809,-0.56184 3.69635,-3.568637 z' />
+  <path class='st0' d='m 72.25864,84.624638 c 4.108046,3.143003 -0.737059,6.895259 -1.994918,8.323564 -3.586718,5.561143 -6.495079,-4.197379 -10.07759,-5.582178 -4.443422,-1.088878 1.349298,-7.249213 2.503526,-2.503449 2.464639,4.517161 2.304019,-3.70697 6.291113,-1.995914 1.280083,0.137865 2.410691,0.864819 3.277869,1.757977 z m -2.646109,2.323242 c -4.797162,-3.078383 -2.810517,6.305507 0.515161,1.990646 0.296432,-0.688582 0.01209,-1.493412 -0.515161,-1.990646 z' />
+  <path class='st0' d='m 78.230641,79.436735 c 4.142121,3.027466 -2.020102,10.435276 -3.450543,5.477315 3.306312,-5.248112 -9.186019,-2.220094 -5.805994,-8.77679 -0.544141,-3.93011 6.797826,-2.102227 3.386015,0.245477 -0.181085,2.915838 4.637371,1.019311 5.870522,3.053982 z' />
+  <path class='st0' d='m 82.744502,72.597397 c -4.901605,1.926521 1.146497,6.285555 2.559694,2.225783 6.21817,3.539297 -6.640186,8.416664 -7.590325,1.997457 -2.24365,-2.914883 4.026676,-10.148618 5.030631,-4.22324 z' />
+  <path class='st0' d='m 90.727458,64.259158 c 1.583987,1.690029 3.321317,3.2696 4.81267,5.026353 -2.535706,6.849794 -6.445583,-5.918773 -8.388458,-0.167017 0.782768,2.03426 5.877405,3.752079 2.670979,5.711199 -3.315119,1.519161 -5.782422,-5.157931 -8.858893,-6.780537 -4.229842,-1.139816 1.510134,-7.074128 2.586227,-2.385939 3.141198,5.495193 1.840537,-5.598295 7.177489,-1.404062 z' />
+  <path class='st0' d='m 99.622027,58.374253 c 1.493293,1.9548 -6.281936,7.024659 -0.885258,4.740447 0.386238,-4.434477 6.131941,-1.133173 2.175851,1.618005 -4.421491,6.12739 -13.666659,-3.151506 -7.058299,-7.136537 1.785129,-1.119329 4.348209,-0.743179 5.767706,0.778085 z m -2.900824,1.89746 c -3.608188,-2.208543 -2.280489,5.00803 -0.12563,0.329531 z' />
+  <path class='st0' d='m 115.18023,50.570441 c -1.61703,5.201678 -4.6204,-0.364502 -7.01598,-1.749619 -4.40977,2.122562 4.89641,4.913939 1.89606,7.018157 -2.48061,3.877635 -4.11404,-4.060614 -7.01192,-2.6391 -1.76318,3.107252 7.28394,6.252304 0.87346,7.876177 -1.74515,-2.956649 -9.055498,-5.610518 -3.950378,-8.66062 1.696478,1.897023 1.770418,-5.43503 5.347308,-3.072411 -0.44014,-5.474701 6.11995,-4.950882 7.7846,-0.815355 0.69076,0.682329 1.39587,1.351469 2.07685,2.042771 z' />
+  <path class='st0' d='m 120.54891,39.417125 c 2.50681,1.334124 4.80466,4.941837 0.75044,5.297362 -0.46414,1.89865 -5.25369,5.602652 -8.01742,1.815475 -3.87345,-2.809139 -0.0676,-7.603869 2.3036,-8.133924 1.6795,-3.853018 3.16703,-1.199465 4.96338,1.021087 z m -2.2464,2.175828 c -4.8049,-2.992167 -3.08987,6.380358 0.42374,2.036159 0.33052,-0.677508 0.12099,-1.525836 -0.42374,-2.036159 z' />
+  <path class='st0' d='m 128.50836,24.06821 c -5.10403,3.035506 3.20535,6.383175 5.05938,9.450276 -0.91853,2.95886 -4.06493,3.650723 -5.34691,0.265618 -2.25715,-2.089033 -4.65672,-6.948595 -7.07024,-2.584686 -4.71758,-3.764394 3.81217,-5.812054 5.12382,-9.226328 0.75738,0.677487 1.38637,1.498638 2.23389,2.095175 z' />
+  <path class='st0' d='m 137.14366,22.299812 c -3.09615,2.259885 0.71537,4.412454 1.99042,6.435866 -3.08975,5.080354 -5.91384,-2.98648 -8.92144,-4.094939 1.44369,-3.219573 3.3497,-1.335928 4.27156,-4.41058 0.97822,-0.894325 1.75044,1.871047 2.65946,2.069653 z' />
+  <path class='st0' d='m 136.85093,14.890174 c 2.31562,5.283511 -7.17975,1.771993 -1.29675,-0.475107 l 0.7108,0.08973 z m 4.867,5.317354 c 2.56912,1.439678 4.26517,4.725219 0.30678,5.233637 -1.56592,-3.098864 -9.51683,-5.749448 -3.64502,-8.633714 1.17746,0.325095 2.15375,2.591149 3.33824,3.400077 z' />
+  <path class='st0' d='m 149.95578,11.976423 c 2.50679,1.334142 4.80455,4.94192 0.75041,5.297394 -0.4641,1.898604 -5.25368,5.602645 -8.0174,1.81545 -3.87347,-2.80918 -0.0676,-7.603844 2.30366,-8.133968 1.67949,-3.8530525 3.16695,-1.1993573 4.96333,1.021124 z m -2.24641,2.175828 c -4.80489,-2.992177 -3.08986,6.380343 0.42374,2.036167 0.33055,-0.677518 0.121,-1.52585 -0.42374,-2.036167 z' />
+  <path class='st0' d='m 153.26135,7.538431 c 2.60497,1.5799548 6.03999,5.944272 1.08117,6.050232 -2.53319,-3.231828 -7.20316,-6.4304525 -8.84748,-9.4582682 1.89121,-2.8664883 3.78452,-2.247699 5.38514,0.8929426 0.78017,0.8503859 1.57195,1.6911437 2.38118,2.5150667 z' />
+  </pattern>  
+  <linearGradient id='groupUnderTitleLine' x1='0%' y1='0%' x2='100%' y2='0%' >
+          <stop offset='0%' stop-color='#999999' stop-opacity='0.7'/> 
+          <stop offset='100%' stop-color='#999999' stop-opacity='0' /> 
+   </linearGradient>
+  <radialGradient id='calloutGradient' cx='25%' cy='20%' r='80%' fx='10%' fy='10%'>
+	   <stop offset='0%' stop-color='#ffffff' />
+    <stop offset='100%' stop-color='#f8f6d1' />
+  </radialGradient>
+  <filter id='shadow' width='120%' height='120%'> 
+      <feOffset result='offOut' in='SourceGraphic' dx='1' dy='1' /> 
+      <feColorMatrix result='matrixOut' in='offOut' type='matrix' 
+      values='0.1 0 0 0 0 0 0.4 0 0 0 0 0 0.6 0 0 0 0 0 0.3 0' /> 
+      <feGaussianBlur result='blurOut' in='matrixOut' stdDeviation='3' /> 
+      <feBlend in='SourceGraphic' in2='blurOut' mode='normal' /> 
+    </filter> 
+  <filter id='fkShadow' height='130%'> 
+    <feGaussianBlur in='SourceAlpha' stdDeviation='1.5'/> <!-- stdDeviation is how much to blur -->
+    <feOffset dx='1.2' dy='1.2' result='offsetblur'/> <!-- how much to offset -->
+    <feMerge>
+    <feMergeNode/> <!-- this contains the offset blurred image -->
+    <feMergeNode in='SourceGraphic'/> <!-- this contains the element that the filter is applied to -->
+    </feMerge>
+  </filter>
+  <radialGradient id='legendGradient' fx='5%' fy='5%' r='75%' spreadMethod='pad'>
+          <stop offset='0%' stop-color='#eefbf2' stop-opacity='1'/> 
+          <stop offset='100%' stop-color='#cff9cb' stop-opacity='1' /> 
+   </radialGradient>
+  <symbol id='calloutArrowDown' overflow='visible' >
+      <path d='M 0,0 L 7,11 L 15,0 z' style='fill:#f8f6d1;stroke:none; filter: url(#shadow);' />
+      <path d='M 0,0 L 7,11 L 15,0' style='stroke:#bebdbd; stroke-width:0.5;' />
+  </symbol>
+  <symbol id='calloutArrowUp' overflow='visible' >
+      <path d='M 0,15 L 7,3 L 15,15 z' style='fill:#ffffff; stroke:none; filter: url(#shadow);' />
+      <path d='M 0,15 L 7,3 L 15,15' style='stroke:#bebdbd; stroke-width:0.5;' />
+  </symbol>
+  <symbol id='pk' overflow='visible' >
+    <g transform='scale(0.99)'>
+     <path style='fill:#fffa7d;stroke:#765f03;stroke-width:0.6;stroke-linecap:round;stroke-linejoin:round;'
+        d='M 9.3678877,3.5695485 C 9.1030218,3.2729386 9.0796382,2.7628519 9.3396185,2.4517097 9.5449651,2.1956495 9.9040386,2.0980533 10.199638,2.2169415 10.533525,2.3415459 10.775153,2.706942 10.750675,3.0842709 10.737029,3.3980003 10.541153,3.699122 10.258248,3.8066067 9.966649,3.9250429 9.6169668,3.8418805 9.4008073,3.6062324 9.3894892,3.5943518 9.3785264,3.582104 9.3678886,3.5695487 z M 11.226617,6.9916004 C 11.888137,6.3548946 12.293488,5.4172188 12.311087,4.442353 12.378144,2.7379364 11.248678,1.0541269 9.7322318,0.44767357 8.3887112,-0.1280313 6.7865012,0.26822889 5.8918395,1.4007929 5.080823,2.3839145 4.9336815,3.8452096 5.3635544,5.101615 L 4.3670905,5.315913 C 4.0664984,5.3682645 4.0967703,5.6316724 4.2574957,5.8208829 L 4.9124,6.5655244 4.1543436,7.2512357 3.2136002,7.2163506 3.1674775,8.5586827 2.0406832,8.5086512 1.5965306,8.9299953 1.5471661,10.179833 0.75616674,10.195223 0.2112857,10.758575 0.15354288,11.735988 0.07199052,12.765553 c 0.36440953,0.238225 0.79006967,0.195492 1.44938278,-0.02675 L 6.3033562,8.1282037 6.8217102,8.6765688 C 6.9985465,8.8799427 7.3003699,8.7497574 7.358381,8.5016252 L 7.4938877,7.5084164 c 0.8537488,0.3985387 1.8303125,0.4711541 2.6851793,0.1427713 0.393927,-0.1407258 0.746858,-0.3701772 1.04755,-0.6595873 z'/>
+     <path d='M 6.8014948,6.3102123 0.15369063,13.024481 0.21560535,12.141962 6.0062342,6.2683782 z'
+        style='fill:#ffe5a5;fill-opacity:1;stroke:#854e31;stroke-width:0.06912433;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:3.00300009'/>
+    </g>
+  </symbol>
+  <symbol id='dist' overflow='visible' >
+    <g transform='scale(0.99)'>
+      <path style='fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;' d='M 0.177,11.431 12.28,11.449'/>
+      <path style='fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;' d='m 6.124,3.954 0.066,7.154 v 0'/>
+      <rect width='11.78' height='3.40' x='0.40' y='0.44' style='fill:#fffa7d;stroke:#765f03;stroke-width:0.6;' ry='0.83'/>
+      <rect width='11.78' height='3.40' x='0.40' y='5.609' style='fill:#fffa7d;stroke:#765f03;stroke-width:0.6;' ry='0.832'/>
+    </g>
+  </symbol>
+  <symbol id='unq' overflow='visible' >
+    <g transform='scale(0.99)'>
+      <rect style='fill:#fbea8e;stroke:#7e4d31;stroke-width:0.71934468;stroke-linecap:round;stroke-linejoin:round;'
+         width='2.29' height='8.43' x='7.48' y='-0.76' ry='1.14' transform='matrix(0.701,0.713,-0.727,0.685,0,0)' />
+      <path style='fill:white;stroke:#858585;stroke-width:1.2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;'
+         d='m 26.04,8.64 a 4.13,4.13 0 1 1 -8.26,0 4.13,4.13 0 1 1 8.26,0 z'
+         transform='matrix(1.025,0,0,0.987,-14.690,-3.862)' />
+      <text x='5.8' y='7.4' style='font-size:7px;fill:#8a8a8a;'>1</text>
+    </g>
+  </symbol>
+  <symbol id='idx' overflow='visible' >
+    <g transform='scale(0.99)'>
+      <rect style='fill:#fbea8e;stroke:#7e4d31;stroke-width:0.71934468;stroke-linecap:round;stroke-linejoin:round;'
+         width='2.29' height='8.43' x='7.48' y='-0.76' ry='1.14' transform='matrix(0.701,0.713,-0.727,0.685,0,0)' />
+      <path style='fill:white;stroke:#858585;stroke-width:1.2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;'
+         d='m 26.04,8.64 a 4.13,4.13 0 1 1 -8.26,0 4.13,4.13 0 1 1 8.26,0 z'
+         transform='matrix(1.025,0,0,0.987,-14.690,-3.862)' />
+    </g>
+  </symbol>
+  <symbol id='fk' overflow='visible' >
+    <g transform='scale(0.87)'>
+      <path style='fill:#f3e1b7;stroke:#7e471f;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;'
+      d='M 12.48,0.33 7.07,0.89 9.067,2.974 0.329,11.731 1.073,12.597 9.811,3.841 11.77,5.78 z' />
+    </g>
+  </symbol>
+  <symbol id='ref' overflow='visible' >
+    <g transform='scale(0.87)'>
+      <path style='fill:#f3e1b7;stroke:#7e471f;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;'
+          d='M 0.10,12.70 5.31,12.15 3.40,10.06 11.82,1.32 11.11,0.45 2.68,9.19 0.80,7.24 z'/>
+    </g>
+  </symbol>
+  <symbol id='flag0' overflow='visible' >
+    <g transform='scale(0.92)'>
+      <path style='fill:#b7d0f6;stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;'
+          d='M 0.12,12.67 0.16,7.22 C 2.59,7.22 4.13,8.78 9.22,4.22 5.68,4.98 2.53,4.50 0.09,1.80 z'/>
+    </g>
+  </symbol>
+  <symbol id='flag1' overflow='visible' >
+    <g transform='scale(0.92)'>
+      <path style='fill:#f4a393;stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;'
+          d='M 0.12,12.67 0.16,7.22 C 2.59,7.22 4.13,8.78 9.22,4.22 5.68,4.98 2.53,4.50 0.09,1.80 z'/>
+    </g>
+  </symbol>
+  <symbol id='flag2' overflow='visible' >
+    <g transform='scale(0.92)'>
+      <path style='fill:#77ec8b;stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;'
+          d='M 0.12,12.67 0.16,7.22 C 2.59,7.22 4.13,8.78 9.22,4.22 5.68,4.98 2.53,4.50 0.09,1.80 z'/>
+    </g>
+  </symbol>
+  <symbol id='nn' overflow='visible' >
+  <path style='stroke:#9b3e50;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;'
+          d='M 0,0 3,3 M 0,3 3,0 z'/>
+  </symbol>
+  <symbol id='view' overflow='visible' >
+    <g transform='scale(0.99)'>
+     <line x1='12' y1='6' x2='19' y2='0' stroke='black' stroke-width='0.5' />
+     <line x1='0' y1='6' x2='7' y2='0' stroke='black' stroke-width='0.5' />
+     <circle cx='3' cy='6' r='3' fill='#f9ebbc' stroke='black' stroke-width='0.5'/>
+     <circle cx='10' cy='6' r='3' fill='#f9ebbc' stroke='black' stroke-width='0.5'/>
+    </g>
+  </symbol>
+  <marker id='arrow01' viewBox='0 0 15.00 7.50' refX='7.50' refY='3.75' markerUnits='strokeWidth' markerWidth='15.00' markerHeight='7.50' orient='auto'>
+    <path d='M 0.00,3.75 L 15.00,3.75 z' />
+  </marker>
+  <marker id='arrow1' viewBox='0 0 15.00 7.50' refX='7.50' refY='3.75' markerUnits='strokeWidth' markerWidth='15.00' markerHeight='7.50' orient='auto'>
+    <path d='M 0.00,3.75 L 15.00,3.75 z' />
+  </marker>
+  <marker id='foot01' viewBox='0 0 15.00 7.50' refX='7.50' refY='3.75' markerUnits='strokeWidth' markerWidth='15.00' markerHeight='7.50' orient='auto'>
+    <path d='M 1.50,3.75 L 3.00,3.75 L 4.50,3.75 L 6.00,3.75 z' />
+  </marker>
+  <marker id='foot0p' viewBox='0 0 15.00 7.50' refX='7.50' refY='3.75' markerUnits='strokeWidth' markerWidth='15.00' markerHeight='7.50' orient='auto'>
+    <path d='M 1.50,3.75 L 3.00,3.75 L 4.50,3.75 L 6.00,3.75 z' />
+    <path d='M 0.00,0.00 L 7.50,3.75 L 0.00,7.50' />
+  </marker>
+  <marker id='foot1' viewBox='0 0 15.00 7.50' refX='7.50' refY='3.75' markerUnits='strokeWidth' markerWidth='15.00' markerHeight='7.50' orient='auto'>
+    <path d='M 0.00,3.75 L 15.00,3.75 z' />
+  </marker>
+  <marker id='foot1p' viewBox='0 0 15.00 7.50' refX='7.50' refY='3.75' markerUnits='strokeWidth' markerWidth='15.00' markerHeight='7.50' orient='auto'>
+    <path d='M 0.00,3.75 L 15.00,3.75 z' />
+    <path d='M 0.00,0.00 L 7.50,3.75 L 0.00,7.50' />
+  </marker>
+  <linearGradient id='tbg_3366ff' x1='0%' y1='0%' x2='0%' y2='100%' >
+     <stop offset='0%' stop-color='#e0e6f8' /> 
+     <stop offset='100%' stop-color='#c1ccee' /> 
+  </linearGradient>
+</defs>
+
+
+<!-- ============= Legend ============= -->
+<g transform='translate(10,10)'>
+  <rect x='10' y='10' width='330' height='56' rx='6' ry='6' style='fill:url(#legendGradient);filter:url(#shadow);'/> 
+  <text x='20' y='43'>Default Layout</text> 
+  <text x='20' y='57' style='fill:#aaaaaa; font-size:11px;'><tspan>Read table &amp; column comments as mouse-over tooltips.</tspan></text> 
+<a xlink:href='http://www.dbschema.com'> <path class='logo' d='m 32.309685,20.963194 c 0.411708,4.732616 -4.298055,7.925636 -8.723583,6.970196 -6.616967,1.8448 -2.656457,-6.434594 -3.911969,-10.01566 -2.15469,-5.89407 6.06247,-3.508505 9.167655,-2.863689 2.199228,1.054873 3.389343,3.582089 3.467897,5.909153 z m -3.720955,0.01451 c 0.434195,-4.414565 -7.644142,-5.37533 -5.137307,0.107342 -1.812268,5.992146 5.532698,4.379388 5.137307,-0.107342 z' /> <path class='logo' d='m 44.329732,23.050637 c 0.850982,5.097305 -5.250434,4.558924 -7.144836,4.752415 -6.418993,1.64391 -1.872992,-7.49274 -3.541914,-10.942842 -2.499646,-3.817859 5.939283,-4.402698 3.538545,-0.13612 -1.287874,4.989123 4.215411,-1.154796 5.956717,2.809584 0.840273,0.970849 1.168829,2.272413 1.191488,3.516963 z m -3.519477,-0.09299 c -1.398216,-5.518069 -6.361061,2.717467 -0.984368,1.810718 0.686994,-0.30388 1.029454,-1.087638 0.984368,-1.810718 z' /> <path class='logo' d='m 52.234961,23.301163 c 0.954818,5.035675 -8.606408,6.284861 -6.262292,1.674914 6.000358,-1.604717 -5.188764,-7.870044 1.75972,-10.384908 2.288682,-3.253567 6.399287,3.075831 2.304111,2.48058 -2.124941,2.016587 2.688777,3.89858 2.198472,6.229403 z' /> <path class='logo' d='m 60.204336,21.349224 c -4.894917,-1.916474 -3.458707,5.391212 0.347494,3.37231 2.120589,6.821713 -10.599623,1.664746 -6.906229,-3.691132 0.354172,-3.663246 9.875349,-4.711252 6.558735,0.318822 z' /> <path class='logo' d='m 71.730617,20.654299 c 0.0013,2.316285 0.190131,4.655698 0.07825,6.958009 -6.532419,3.303565 -0.660423,-8.722256 -6.009639,-5.821653 -0.818815,2.024533 1.726403,6.746337 -1.95327,6.005484 -3.458346,-1.137537 -0.696275,-7.713407 -1.833252,-10.994208 -2.308916,-3.710131 5.93704,-4.164951 3.518609,0.0063 -1.462376,6.166445 5.169629,-2.857523 6.19931,3.846079 z' /> <path class='logo' d='m 82.245738,22.378957 c -0.24581,2.448954 -9.386766,0.8867 -3.885979,2.877055 3.312576,-2.99157 5.250902,3.334514 0.482647,2.665545 -7.415384,1.492275 -7.823196,-11.597641 -0.275476,-10.032117 2.068161,0.391458 3.682204,2.408824 3.678808,4.489517 z m -3.414436,-0.578473 c -1.124703,-4.072004 -5.087405,2.125488 -0.316922,0.156453 z' /> <path class='logo' d='m 98.936899,27.222794 c -4.73541,2.718339 -3.1239,-3.406557 -3.92611,-6.050494 -4.66985,-1.438471 0.21621,6.932413 -3.41219,6.438039 -4.46096,1.160054 -0.22824,-5.774711 -3.31526,-6.700429 -3.410722,1.082173 1.04451,9.536575 -4.745091,6.372895 0.746632,-3.355214 -2.776394,-10.269232 3.034971,-9.038963 -0.058,2.544602 5.00686,-2.785359 6.00342,1.37844 3.42021,-4.316316 7.851251,0.524966 6.24018,4.690538 0.0379,0.969988 0.0954,1.940046 0.12008,2.909974 z' /> <path class='logo' d='m 110.47859,22.686058 c 0.91826,2.682088 0.13016,6.890551 -3.0725,4.397004 -1.63641,1.077877 -7.664291,0.541832 -7.09365,-4.114836 -0.907891,-4.692933 5.14729,-5.625578 7.24058,-4.40354 3.85932,-1.686263 3.13176,1.271515 2.92557,4.121372 z m -3.12695,0.0704 c -1.46278,-5.460062 -6.61615,2.5826 -1.08221,1.782003 0.70431,-0.272594 1.13111,-1.037444 1.08221,-1.782003 z' /> </a>
+</g>
+
+<g transform='translate(0,110)'>
+<!-- ============= Fk 'accesstokens_fk_accesstokens' ============= -->
+<path id='accesstokens_fk_accesstokens'  onmouseover="hghl(['accesstokens_fk_accesstokens','isebergDB.accesstokens.clientId','isebergDB.clients.clientId'])" onmouseout="uhghl(['accesstokens_fk_accesstokens','isebergDB.accesstokens.clientId','isebergDB.clients.clientId'])" transform='translate(7,0)' class='scene' d='M 450 465 L 450,457 Q 450,450 457,450 L 487,450 Q 495,450 495,457 L 495,465' >
+	<title>Fk fk_accesstokens
+accesstokens ref clients ( clientId )</title>
+</path>
+<path transform='translate(7,0)' marker-start='url(#foot1p)' marker-end='url(#arrow1)'  class='virtual'  d='M 450 465 L 450,457 Q 450,450 457,450 L 487,450 Q 495,450 495,457 L 495,465' ></path>
+<text x='452' y='460' transform='rotate(270 452,460)' title='Fk fk_accesstokens
+accesstokens ref clients ( clientId )' class='relName' style='fill:#7da774'>clientId</text>
+<!-- ============= Fk 'accesstokens_fk_accesstokens_0' ============= -->
+<path id='accesstokens_fk_accesstokens_0'  onmouseover="hghl(['accesstokens_fk_accesstokens_0','isebergDB.accesstokens.userId','isebergDB.users.userId'])" onmouseout="uhghl(['accesstokens_fk_accesstokens_0','isebergDB.accesstokens.userId','isebergDB.users.userId'])" transform='translate(7,0)' class='scene' d='M 405 615 L 405,622 Q 405,630 397,630 L 375,630' >
+	<title>Fk fk_accesstokens_0
+accesstokens ref users ( userId )</title>
+</path>
+<path transform='translate(7,0)' marker-start='url(#foot1p)' marker-end='url(#arrow1)'  class='virtual'  d='M 405 615 L 405,622 Q 405,630 397,630 L 375,630' ></path>
+<text x='418' y='615' transform='rotate(90 418,615)' title='Fk fk_accesstokens_0
+accesstokens ref users ( userId )' class='relName' style='fill:#7da774'>userId</text>
+<!-- ============= Fk 'links_fk_links' ============= -->
+<path id='links_fk_links'  onmouseover="hghl(['links_fk_links','isebergDB.links.userAdded','isebergDB.users.userId'])" onmouseout="uhghl(['links_fk_links','isebergDB.links.userAdded','isebergDB.users.userId'])" transform='translate(7,0)' class='scene' d='M 255 270 L 255,472 Q 255,480 262,480 L 270,480' >
+	<title>Fk fk_links
+links ref users ( userAdded -&gt; userId )</title>
+</path>
+<path transform='translate(7,0)' marker-start='url(#foot1p)' marker-end='url(#arrow1)'  class='virtual'  d='M 255 270 L 255,472 Q 255,480 262,480 L 270,480' ></path>
+<text x='268' y='270' transform='rotate(90 268,270)' title='Fk fk_links
+links ref users ( userAdded -&gt; userId )' class='relName' style='fill:#7da774'>userAdded</text>
+<!-- ============= Fk 'links_fk_links_1' ============= -->
+<path id='links_fk_links_1'  onmouseover="hghl(['links_fk_links_1','isebergDB.links.usersSaved','isebergDB.users.userId'])" onmouseout="uhghl(['links_fk_links_1','isebergDB.links.usersSaved','isebergDB.users.userId'])" transform='translate(7,0)' class='scene' d='M 330 240 L 352,240 Q 360,240 360,247 L 360,465' >
+	<title>Fk fk_links_1
+links ref users ( usersSaved -&gt; userId )</title>
+</path>
+<path transform='translate(7,0)' marker-start='url(#foot1p)' marker-end='url(#arrow1)'  class='virtual'  d='M 330 240 L 352,240 Q 360,240 360,247 L 360,465' ></path>
+<text x='337' y='235' transform='rotate(0 337,235)' title='Fk fk_links_1
+links ref users ( usersSaved -&gt; userId )' class='relName' style='fill:#7da774'>usersSaved</text>
+<!-- ============= Fk 'links_fk_links_3' ============= -->
+<path id='links_fk_links_3'  onmouseover="hghl(['links_fk_links_3','isebergDB.links.usersLiked','isebergDB.users.userId'])" onmouseout="uhghl(['links_fk_links_3','isebergDB.links.usersLiked','isebergDB.users.userId'])" transform='translate(7,0)' class='scene' d='M 315 270 L 315,412 Q 315,420 322,420 L 322,420 Q 330,420 330,427 L 330,465' >
+	<title>Fk fk_links_3
+links ref users ( usersLiked -&gt; userId )</title>
+</path>
+<path transform='translate(7,0)' marker-start='url(#foot1p)' marker-end='url(#arrow1)'  class='virtual'  d='M 315 270 L 315,412 Q 315,420 322,420 L 322,420 Q 330,420 330,427 L 330,465' ></path>
+<text x='328' y='270' transform='rotate(90 328,270)' title='Fk fk_links_3
+links ref users ( usersLiked -&gt; userId )' class='relName' style='fill:#7da774'>usersLiked</text>
+<!-- ============= Fk 'bookmarks_JSon' ============= -->
+<path id='bookmarks_JSon'  onmouseover="hghl(['bookmarks_JSon','isebergDB.users.bookmarks'])" onmouseout="uhghl(['bookmarks_JSon','isebergDB.users.bookmarks'])" transform='translate(7,0)' class='scene' d='M 225 495 L 270,495' >
+	<title>Fk JSon
+bookmarks ref users (  )</title>
+</path>
+<path transform='translate(7,0)' marker-start='url(#foot1p)' marker-end='url(#arrow1)'    d='M 225 495 L 270,495' ></path>
+<text x='232' y='490' transform='rotate(0 232,490)' title='Fk JSon
+bookmarks ref users (  )' class='relName' style='fill:#7488a7'></text>
+<!-- ============= Fk 'users_Ref' ============= -->
+<path id='users_Ref'  onmouseover="hghl(['users_Ref','isebergDB.users.bookmarkId','isebergDB.collections._id'])" onmouseout="uhghl(['users_Ref','isebergDB.users.bookmarkId','isebergDB.collections._id'])" transform='translate(7,0)' class='scene' d='M 150 465 L 150,285' >
+	<title>Fk Ref
+users ref collections ( bookmarks.bookmarkId -&gt; _id )</title>
+</path>
+<path transform='translate(7,0)' marker-start='url(#foot1p)' marker-end='url(#arrow1)'  class='virtual'  d='M 150 465 L 150,285' ></path>
+<text x='152' y='460' transform='rotate(270 152,460)' title='Fk Ref
+users ref collections ( bookmarks.bookmarkId -&gt; _id )' class='relName' style='fill:#7488a7'>bookmarkId</text>
+<!-- ============= Fk 'users_fk_users_0' ============= -->
+<path id='users_fk_users_0'  onmouseover="hghl(['users_fk_users_0','isebergDB.users.bookmarkId','isebergDB.links._id'])" onmouseout="uhghl(['users_fk_users_0','isebergDB.users.bookmarkId','isebergDB.links._id'])" transform='translate(7,0)' class='scene' d='M 225 510 L 232,510 Q 240,510 240,502 L 240,292 Q 240,285 247,285 L 262,285 Q 270,285 270,277 L 270,270' >
+	<title>Fk fk_users_0
+users ref links ( bookmarks.bookmarkId -&gt; _id )</title>
+</path>
+<path transform='translate(7,0)' marker-start='url(#foot1p)' marker-end='url(#arrow1)'  class='virtual'  d='M 225 510 L 232,510 Q 240,510 240,502 L 240,292 Q 240,285 247,285 L 262,285 Q 270,285 270,277 L 270,270' ></path>
+<text x='232' y='505' transform='rotate(0 232,505)' title='Fk fk_users_0
+users ref links ( bookmarks.bookmarkId -&gt; _id )' class='relName' style='fill:#7488a7'>bookmarkId</text>
+<!-- ============= Fk 'collections_fk_collections' ============= -->
+<path id='collections_fk_collections'  onmouseover="hghl(['collections_fk_collections','isebergDB.collections.links','isebergDB.links._id'])" onmouseout="uhghl(['collections_fk_collections','isebergDB.collections.links','isebergDB.links._id'])" transform='translate(7,0)' class='scene' d='M 210 30 L 210,22 Q 210,15 217,15 L 247,15 Q 255,15 255,22 L 255,30' >
+	<title>Fk fk_collections
+collections ref links ( links -&gt; _id )</title>
+</path>
+<path transform='translate(7,0)' marker-start='url(#foot1p)' marker-end='url(#arrow1)'  class='virtual'  d='M 210 30 L 210,22 Q 210,15 217,15 L 247,15 Q 255,15 255,22 L 255,30' ></path>
+<text x='212' y='25' transform='rotate(270 212,25)' title='Fk fk_collections
+collections ref links ( links -&gt; _id )' class='relName' style='fill:#7488a7'>links</text>
+<!-- ============= Fk 'collections_fk_collections_0' ============= -->
+<path id='collections_fk_collections_0'  onmouseover="hghl(['collections_fk_collections_0','isebergDB.collections.tags','isebergDB.tags._id'])" onmouseout="uhghl(['collections_fk_collections_0','isebergDB.collections.tags','isebergDB.tags._id'])" transform='translate(7,0)' class='scene' d='M 120 60 L 105,60' >
+	<title>Fk fk_collections_0
+collections ref tags ( tags -&gt; _id )</title>
+</path>
+<path transform='translate(7,0)' marker-start='url(#foot1p)' marker-end='url(#arrow1)'  class='virtual'  d='M 120 60 L 105,60' ></path>
+<text x='107' y='55' transform='rotate(0 107,55)' title='Fk fk_collections_0
+collections ref tags ( tags -&gt; _id )' class='relName' style='fill:#7488a7'>tags</text>
+<!-- ============= Fk 'collections_fk_collections_1' ============= -->
+<path id='collections_fk_collections_1'  onmouseover="hghl(['collections_fk_collections_1','isebergDB.collections.usersSaved','isebergDB.users.userId'])" onmouseout="uhghl(['collections_fk_collections_1','isebergDB.collections.usersSaved','isebergDB.users.userId'])" transform='translate(7,0)' class='scene' d='M 210 285 L 210,442 Q 210,450 217,450 L 292,450 Q 300,450 300,457 L 300,465' >
+	<title>Fk fk_collections_1
+collections ref users ( usersSaved -&gt; userId )</title>
+</path>
+<path transform='translate(7,0)' marker-start='url(#foot1p)' marker-end='url(#arrow1)'  class='virtual'  d='M 210 285 L 210,442 Q 210,450 217,450 L 292,450 Q 300,450 300,457 L 300,465' ></path>
+<text x='223' y='285' transform='rotate(90 223,285)' title='Fk fk_collections_1
+collections ref users ( usersSaved -&gt; userId )' class='relName' style='fill:#7488a7'>usersSaved</text>
+<!-- ============= Fk 'collections_fk_collections_2' ============= -->
+<path id='collections_fk_collections_2'  onmouseover="hghl(['collections_fk_collections_2','isebergDB.collections.authorId','isebergDB.users.userId'])" onmouseout="uhghl(['collections_fk_collections_2','isebergDB.collections.authorId','isebergDB.users.userId'])" transform='translate(7,0)' class='scene' d='M 195 285 L 195,427 Q 195,435 202,435 L 307,435 Q 315,435 315,442 L 315,465' >
+	<title>Fk fk_collections_2
+collections ref users ( authorId -&gt; userId )</title>
+</path>
+<path transform='translate(7,0)' marker-start='url(#foot1p)' marker-end='url(#arrow1)'  class='virtual'  d='M 195 285 L 195,427 Q 195,435 202,435 L 307,435 Q 315,435 315,442 L 315,465' ></path>
+<text x='208' y='285' transform='rotate(90 208,285)' title='Fk fk_collections_2
+collections ref users ( authorId -&gt; userId )' class='relName' style='fill:#7488a7'>authorId</text>
+<!-- ============= Table 'accesstokens' ============= -->
+<rect class='entity' x='390' y='473' width='75' height='135' rx='7' ry='7' style='stroke:none'/>
+<path d='M 390.00 499.00 L 390.00 480.00 Q 390.00 473.00 397.00 473.00 L 458.00 473.00 Q 465.00 473.00 465.00 480.00 L 465.00 499.00 L390.00 499.00 ' style='fill:url(#tbg_3366ff);stroke:1;stroke-opacity:0.1;' />
+<rect class='entity' x='390' y='473' width='75' height='135' rx='7' ry='7' style='fill:none;stroke:#aeb2bf'/>
+<line class='delim' x1='390.000000' y1='499.000000' x2='465.000000' y2='499.000000' style='stroke:#aeb2bf'/>
+<line class='delim' x1='405.000000' y1='499.000000' x2='405.000000' y2='608.000000' style='stroke:#aeb2bf'/>
+<line class='delim' x1='454.000000' y1='499.000000' x2='454.000000' y2='608.000000' style='stroke:#aeb2bf'/>
+<a xlink:href='#accesstokens'><text x='393' y='491'>accesstokens</text><title>Collection isebergDB.accesstokens</title></a>
+  <use id='nn' x='392' y='507' xlink:href='#nn'/><a xlink:href='#accesstokens._id'><use id='pk' x='392' y='506' xlink:href='#pk'/><title>Pk _id_ ( _id ) </title></a>
+<a xlink:href='#accesstokens._id'><text id='isebergDB.accesstokens._id' x='408' y='516'>_id</text><title>_id
+* oid</title></a>
+  <use id='nn' x='392' y='522' xlink:href='#nn'/><a xlink:href='#accesstokens.userId'><text id='isebergDB.accesstokens.userId' x='408' y='531' onmouseover="hghl(['accesstokens_fk_accesstokens_0','isebergDB.users.userId'])" onmouseout="uhghl(['accesstokens_fk_accesstokens_0','isebergDB.users.userId'])">userId</text><title>userId
+* string</title></a>
+<a xlink:href='#accesstokens.userId'><use id='fk' x='454' y='521' xlink:href='#fk'/><title>References users ( userId ) </title></a>
+  <use id='nn' x='392' y='537' xlink:href='#nn'/><a xlink:href='#accesstokens.clientId'><text id='isebergDB.accesstokens.clientId' x='408' y='546' onmouseover="hghl(['accesstokens_fk_accesstokens','isebergDB.clients.clientId'])" onmouseout="uhghl(['accesstokens_fk_accesstokens','isebergDB.clients.clientId'])">clientId</text><title>clientId
+* string</title></a>
+<a xlink:href='#accesstokens.clientId'><use id='fk' x='454' y='536' xlink:href='#fk'/><title>References clients ( clientId ) </title></a>
+  <use id='nn' x='392' y='552' xlink:href='#nn'/><a xlink:href='#accesstokens.token'><use id='unq' x='392' y='551' xlink:href='#unq'/><title>Unq token_1 ( token ) </title></a>
+<a xlink:href='#accesstokens.token'><text id='isebergDB.accesstokens.token' x='408' y='561'>token</text><title>token
+* string</title></a>
+<text x='462' y='558' text-anchor='end' class='colType'>t</text>  <use id='nn' x='392' y='567' xlink:href='#nn'/><a xlink:href='#accesstokens.created'><text id='isebergDB.accesstokens.created' x='408' y='576'>created</text><title>created
+* date</title></a>
+<text x='462' y='573' text-anchor='end' class='colType'>d</text>  <use id='nn' x='392' y='582' xlink:href='#nn'/><a xlink:href='#accesstokens.__v'><text id='isebergDB.accesstokens.__v' x='408' y='591'>__v</text><title>__v
+* integer</title></a>
+<text x='462' y='588' text-anchor='end' class='colType'>#</text>
+<!-- ============= Table 'links' ============= -->
+<rect class='entity' x='240' y='38' width='90' height='225' rx='7' ry='7' style='stroke:none'/>
+<path d='M 240.00 64.00 L 240.00 45.00 Q 240.00 38.00 247.00 38.00 L 323.00 38.00 Q 330.00 38.00 330.00 45.00 L 330.00 64.00 L240.00 64.00 ' style='fill:url(#tbg_3366ff);stroke:1;stroke-opacity:0.1;' />
+<rect class='entity' x='240' y='38' width='90' height='225' rx='7' ry='7' style='fill:none;stroke:#aeb2bf'/>
+<line class='delim' x1='240.000000' y1='64.000000' x2='330.000000' y2='64.000000' style='stroke:#aeb2bf'/>
+<line class='delim' x1='255.000000' y1='64.000000' x2='255.000000' y2='263.000000' style='stroke:#aeb2bf'/>
+<line class='delim' x1='319.000000' y1='64.000000' x2='319.000000' y2='263.000000' style='stroke:#aeb2bf'/>
+<a xlink:href='#links'><text x='271' y='56'>links</text><title>Collection isebergDB.links</title></a>
+  <use id='nn' x='242' y='72' xlink:href='#nn'/><a xlink:href='#links._id'><use id='pk' x='242' y='71' xlink:href='#pk'/><title>Pk _id_ ( _id ) </title></a>
+<a xlink:href='#links._id'><text id='isebergDB.links._id' x='258' y='81' onmouseover="hghl(['collections_fk_collections','isebergDB.collections.links','users_fk_users_0','isebergDB.users.bookmarkId'])" onmouseout="uhghl(['collections_fk_collections','isebergDB.collections.links','users_fk_users_0','isebergDB.users.bookmarkId'])">_id</text><title>_id
+* oid</title></a>
+<a xlink:href='#links._id'><use id='ref' x='319' y='71' xlink:href='#ref'/><title>Referred by collections ( links -&gt; _id ) 
+Referred by users ( bookmarks.bookmarkId -&gt; _id ) </title></a>
+  <use id='nn' x='242' y='87' xlink:href='#nn'/><a xlink:href='#links.name'><text id='isebergDB.links.name' x='258' y='96'>name</text><title>name
+* string</title></a>
+<text x='327' y='93' text-anchor='end' class='colType'>t</text>  <use id='nn' x='242' y='102' xlink:href='#nn'/><a xlink:href='#links.userAdded'><text id='isebergDB.links.userAdded' x='258' y='111' onmouseover="hghl(['links_fk_links','isebergDB.users.userId'])" onmouseout="uhghl(['links_fk_links','isebergDB.users.userId'])">userAdded</text><title>userAdded
+* string</title></a>
+<a xlink:href='#links.userAdded'><use id='fk' x='319' y='101' xlink:href='#fk'/><title>References users ( userAdded -&gt; userId ) </title></a>
+  <use id='nn' x='242' y='117' xlink:href='#nn'/><a xlink:href='#links.description'><text id='isebergDB.links.description' x='258' y='126'>description</text><title>description
+* string</title></a>
+<text x='327' y='123' text-anchor='end' class='colType'>t</text>  <use id='nn' x='242' y='132' xlink:href='#nn'/><a xlink:href='#links.favicon'><text id='isebergDB.links.favicon' x='258' y='141'>favicon</text><title>favicon
+* string</title></a>
+<text x='327' y='138' text-anchor='end' class='colType'>t</text>  <use id='nn' x='242' y='147' xlink:href='#nn'/><a xlink:href='#links.photo'><text id='isebergDB.links.photo' x='258' y='156'>photo</text><title>photo
+* string</title></a>
+<text x='327' y='153' text-anchor='end' class='colType'>t</text>  <use id='nn' x='242' y='162' xlink:href='#nn'/><a xlink:href='#links.url'><text id='isebergDB.links.url' x='258' y='171'>url</text><title>url
+* string</title></a>
+<text x='327' y='168' text-anchor='end' class='colType'>t</text>  <use id='nn' x='242' y='177' xlink:href='#nn'/><a xlink:href='#links.usersLiked'><text id='isebergDB.links.usersLiked' x='258' y='186' onmouseover="hghl(['links_fk_links_3','isebergDB.users.userId','usersLiked_JSon'])" onmouseout="uhghl(['links_fk_links_3','isebergDB.users.userId','usersLiked_JSon'])">usersLiked</text><title>usersLiked
+* array</title></a>
+<a xlink:href='#links.usersLiked'><use id='fk' x='319' y='176' xlink:href='#fk'/><title>References users ( usersLiked -&gt; userId ) 
+Referred by usersLiked (  ) </title></a>
+  <use id='nn' x='242' y='192' xlink:href='#nn'/><a xlink:href='#links.usersSaved'><text id='isebergDB.links.usersSaved' x='258' y='201' onmouseover="hghl(['links_fk_links_1','isebergDB.users.userId'])" onmouseout="uhghl(['links_fk_links_1','isebergDB.users.userId'])">usersSaved</text><title>usersSaved
+* array</title></a>
+<a xlink:href='#links.usersSaved'><use id='fk' x='319' y='191' xlink:href='#fk'/><title>References users ( usersSaved -&gt; userId ) </title></a>
+  <use id='nn' x='242' y='207' xlink:href='#nn'/><a xlink:href='#links.added'><text id='isebergDB.links.added' x='258' y='216'>added</text><title>added
+* date</title></a>
+<text x='327' y='213' text-anchor='end' class='colType'>d</text>  <use id='nn' x='242' y='222' xlink:href='#nn'/><a xlink:href='#links.likes'><text id='isebergDB.links.likes' x='258' y='231'>likes</text><title>likes
+* integer</title></a>
+<text x='327' y='228' text-anchor='end' class='colType'>#</text>  <use id='nn' x='242' y='237' xlink:href='#nn'/><a xlink:href='#links.__v'><text id='isebergDB.links.__v' x='258' y='246'>__v</text><title>__v
+* integer</title></a>
+<text x='327' y='243' text-anchor='end' class='colType'>#</text>
+<!-- ============= Table 'bookmarks' ============= -->
+<rect class='entity' x='135' y='473' width='90' height='105' rx='7' ry='7' style='stroke:none'/>
+<path d='M 135.00 499.00 L 135.00 480.00 Q 135.00 473.00 142.00 473.00 L 218.00 473.00 Q 225.00 473.00 225.00 480.00 L 225.00 499.00 L135.00 499.00 ' style='fill:url(#tbg_3366ff);stroke:1;stroke-opacity:0.1;' />
+<rect class='entity' x='135' y='473' width='90' height='105' rx='7' ry='7' style='fill:none;stroke:#aeb2bf'/>
+<line class='delim' x1='135.000000' y1='499.000000' x2='225.000000' y2='499.000000' style='stroke:#aeb2bf'/>
+<line class='delim' x1='150.000000' y1='499.000000' x2='150.000000' y2='578.000000' style='stroke:#aeb2bf'/>
+<line class='delim' x1='214.000000' y1='499.000000' x2='214.000000' y2='578.000000' style='stroke:#aeb2bf'/>
+<a xlink:href='#bookmarks'><text x='150' y='491'>bookmarks</text><title>Sub-document bookmarks</title></a>
+  <use id='nn' x='137' y='507' xlink:href='#nn'/><a xlink:href='#bookmarks.bookmarkId'><text id='bookmarks.bookmarkId' x='153' y='516' onmouseover="hghl(['users_Ref','isebergDB.collections._id','users_fk_users_0','isebergDB.links._id'])" onmouseout="uhghl(['users_Ref','isebergDB.collections._id','users_fk_users_0','isebergDB.links._id'])">bookmarkId</text><title>bookmarkId
+* oid</title></a>
+<a xlink:href='#bookmarks.bookmarkId'><use id='fk' x='214' y='506' xlink:href='#fk'/><title>References collections ( bookmarks.bookmarkId -&gt; _id ) 
+References links ( bookmarks.bookmarkId -&gt; _id ) </title></a>
+  <use id='nn' x='137' y='522' xlink:href='#nn'/><a xlink:href='#bookmarks.type'><text id='bookmarks.type' x='153' y='531'>type</text><title>type
+* string</title></a>
+<text x='222' y='528' text-anchor='end' class='colType'>t</text>  <use id='nn' x='137' y='537' xlink:href='#nn'/><a xlink:href='#bookmarks._id'><text id='bookmarks._id' x='153' y='546'>_id</text><title>_id
+* oid</title></a>
+  <use id='nn' x='137' y='552' xlink:href='#nn'/><a xlink:href='#bookmarks.addTime'><text id='bookmarks.addTime' x='153' y='561'>addTime</text><title>addTime
+* date</title></a>
+<text x='222' y='558' text-anchor='end' class='colType'>d</text>
+<!-- ============= Table 'users' ============= -->
+<rect class='entity' x='285' y='473' width='90' height='270' rx='7' ry='7' style='stroke:none'/>
+<path d='M 285.00 499.00 L 285.00 480.00 Q 285.00 473.00 292.00 473.00 L 368.00 473.00 Q 375.00 473.00 375.00 480.00 L 375.00 499.00 L285.00 499.00 ' style='fill:url(#tbg_3366ff);stroke:1;stroke-opacity:0.1;' />
+<rect class='entity' x='285' y='473' width='90' height='270' rx='7' ry='7' style='fill:none;stroke:#aeb2bf'/>
+<line class='delim' x1='285.000000' y1='499.000000' x2='375.000000' y2='499.000000' style='stroke:#aeb2bf'/>
+<line class='delim' x1='300.000000' y1='499.000000' x2='300.000000' y2='743.000000' style='stroke:#aeb2bf'/>
+<line class='delim' x1='364.000000' y1='499.000000' x2='364.000000' y2='743.000000' style='stroke:#aeb2bf'/>
+<a xlink:href='#users'><text x='315' y='491'>users</text><title>Collection isebergDB.users</title></a>
+  <use id='nn' x='287' y='507' xlink:href='#nn'/><a xlink:href='#users._id'><use id='pk' x='287' y='506' xlink:href='#pk'/><title>Pk _id_ ( _id ) </title></a>
+<a xlink:href='#users._id'><text id='isebergDB.users._id' x='303' y='516'>_id</text><title>_id
+* oid</title></a>
+  <use id='nn' x='287' y='522' xlink:href='#nn'/><a xlink:href='#users.salt'><text id='isebergDB.users.salt' x='303' y='531'>salt</text><title>salt
+* string</title></a>
+<text x='372' y='528' text-anchor='end' class='colType'>t</text>  <use id='nn' x='287' y='537' xlink:href='#nn'/><a xlink:href='#users.hash'><text id='isebergDB.users.hash' x='303' y='546'>hash</text><title>hash
+* string</title></a>
+<text x='372' y='543' text-anchor='end' class='colType'>t</text>  <use id='nn' x='287' y='552' xlink:href='#nn'/><a xlink:href='#users.userId'><use id='unq' x='287' y='551' xlink:href='#unq'/><title>Unq userId_1 ( userId ) </title></a>
+<a xlink:href='#users.userId'><text id='isebergDB.users.userId' x='303' y='561' onmouseover="hghl(['links_fk_links','isebergDB.links.userAdded','links_fk_links_1','isebergDB.links.usersSaved','accesstokens_fk_accesstokens_0','isebergDB.accesstokens.userId','links_fk_links_3','isebergDB.links.usersLiked','collections_fk_collections_1','isebergDB.collections.usersSaved','collections_fk_collections_2','isebergDB.collections.authorId'])" onmouseout="uhghl(['links_fk_links','isebergDB.links.userAdded','links_fk_links_1','isebergDB.links.usersSaved','accesstokens_fk_accesstokens_0','isebergDB.accesstokens.userId','links_fk_links_3','isebergDB.links.usersLiked','collections_fk_collections_1','isebergDB.collections.usersSaved','collections_fk_collections_2','isebergDB.collections.authorId'])">userId</text><title>userId
+* string</title></a>
+<a xlink:href='#users.userId'><use id='ref' x='364' y='551' xlink:href='#ref'/><title>Referred by links ( userAdded -&gt; userId ) 
+Referred by links ( usersSaved -&gt; userId ) 
+Referred by accesstokens ( userId ) 
+Referred by links ( usersLiked -&gt; userId ) 
+Referred by collections ( usersSaved -&gt; userId ) 
+Referred by collections ( authorId -&gt; userId ) </title></a>
+  <use id='nn' x='287' y='567' xlink:href='#nn'/><a xlink:href='#users.firstName'><text id='isebergDB.users.firstName' x='303' y='576'>firstName</text><title>firstName
+* string</title></a>
+<text x='372' y='573' text-anchor='end' class='colType'>t</text>  <use id='nn' x='287' y='582' xlink:href='#nn'/><a xlink:href='#users.lastName'><text id='isebergDB.users.lastName' x='303' y='591'>lastName</text><title>lastName
+* string</title></a>
+<text x='372' y='588' text-anchor='end' class='colType'>t</text>  <use id='nn' x='287' y='597' xlink:href='#nn'/><a xlink:href='#users.photo'><text id='isebergDB.users.photo' x='303' y='606'>photo</text><title>photo
+* string</title></a>
+<text x='372' y='603' text-anchor='end' class='colType'>t</text>  <use id='nn' x='287' y='612' xlink:href='#nn'/><a xlink:href='#users.description'><text id='isebergDB.users.description' x='303' y='621'>description</text><title>description
+* string</title></a>
+<text x='372' y='618' text-anchor='end' class='colType'>t</text>  <use id='nn' x='287' y='627' xlink:href='#nn'/><a xlink:href='#users.banned'><text id='isebergDB.users.banned' x='303' y='636'>banned</text><title>banned
+* boolean</title></a>
+<text x='372' y='633' text-anchor='end' class='colType'>b</text>  <use id='nn' x='287' y='642' xlink:href='#nn'/><a xlink:href='#users.created'><text id='isebergDB.users.created' x='303' y='651'>created</text><title>created
+* date</title></a>
+<text x='372' y='648' text-anchor='end' class='colType'>d</text>  <use id='nn' x='287' y='657' xlink:href='#nn'/><a xlink:href='#users.rating'><text id='isebergDB.users.rating' x='303' y='666'>rating</text><title>rating
+* integer</title></a>
+<text x='372' y='663' text-anchor='end' class='colType'>#</text>  <use id='nn' x='287' y='672' xlink:href='#nn'/><a xlink:href='#users.metrics'><use id='idx' x='287' y='671' xlink:href='#idx'/><title>Idx_metrics ( metrics ) </title></a>
+<a xlink:href='#users.metrics'><text id='isebergDB.users.metrics' x='303' y='681' onmouseover="hghl(['metrics_JSon'])" onmouseout="uhghl(['metrics_JSon'])">metrics</text><title>metrics
+* list</title></a>
+  <use id='nn' x='287' y='687' xlink:href='#nn'/><a xlink:href='#users.bookmarks'><text id='isebergDB.users.bookmarks' x='303' y='696' onmouseover="hghl(['bookmarks_JSon'])" onmouseout="uhghl(['bookmarks_JSon'])">bookmarks</text><title>bookmarks
+* list</title></a>
+  <a xlink:href='#users.accType'><text id='isebergDB.users.accType' x='303' y='711'>accType</text><title>accType
+string</title></a>
+<text x='372' y='708' text-anchor='end' class='colType'>t</text>  <a xlink:href='#users.__v'><text id='isebergDB.users.__v' x='303' y='726'>__v</text><title>__v
+integer</title></a>
+<text x='372' y='723' text-anchor='end' class='colType'>#</text>
+<!-- ============= Table 'collections' ============= -->
+<rect class='entity' x='135' y='38' width='90' height='240' rx='7' ry='7' style='stroke:none'/>
+<path d='M 135.00 64.00 L 135.00 45.00 Q 135.00 38.00 142.00 38.00 L 218.00 38.00 Q 225.00 38.00 225.00 45.00 L 225.00 64.00 L135.00 64.00 ' style='fill:url(#tbg_3366ff);stroke:1;stroke-opacity:0.1;' />
+<rect class='entity' x='135' y='38' width='90' height='240' rx='7' ry='7' style='fill:none;stroke:#aeb2bf'/>
+<line class='delim' x1='135.000000' y1='64.000000' x2='225.000000' y2='64.000000' style='stroke:#aeb2bf'/>
+<line class='delim' x1='150.000000' y1='64.000000' x2='150.000000' y2='278.000000' style='stroke:#aeb2bf'/>
+<line class='delim' x1='214.000000' y1='64.000000' x2='214.000000' y2='278.000000' style='stroke:#aeb2bf'/>
+<a xlink:href='#collections'><text x='151' y='56'>collections</text><title>Collection isebergDB.collections</title></a>
+  <use id='nn' x='137' y='72' xlink:href='#nn'/><a xlink:href='#collections._id'><use id='pk' x='137' y='71' xlink:href='#pk'/><title>Pk _id_ ( _id ) </title></a>
+<a xlink:href='#collections._id'><text id='isebergDB.collections._id' x='153' y='81' onmouseover="hghl(['users_Ref','isebergDB.users.bookmarkId'])" onmouseout="uhghl(['users_Ref','isebergDB.users.bookmarkId'])">_id</text><title>_id
+* oid</title></a>
+<a xlink:href='#collections._id'><use id='ref' x='214' y='71' xlink:href='#ref'/><title>Referred by users ( bookmarks.bookmarkId -&gt; _id ) </title></a>
+  <use id='nn' x='137' y='87' xlink:href='#nn'/><a xlink:href='#collections.name'><text id='isebergDB.collections.name' x='153' y='96'>name</text><title>name
+* string</title></a>
+<text x='222' y='93' text-anchor='end' class='colType'>t</text>  <use id='nn' x='137' y='102' xlink:href='#nn'/><a xlink:href='#collections.authorId'><text id='isebergDB.collections.authorId' x='153' y='111' onmouseover="hghl(['collections_fk_collections_2','isebergDB.users.userId'])" onmouseout="uhghl(['collections_fk_collections_2','isebergDB.users.userId'])">authorId</text><title>authorId
+* string</title></a>
+<a xlink:href='#collections.authorId'><use id='fk' x='214' y='101' xlink:href='#fk'/><title>References users ( authorId -&gt; userId ) </title></a>
+  <use id='nn' x='137' y='117' xlink:href='#nn'/><a xlink:href='#collections.photo'><text id='isebergDB.collections.photo' x='153' y='126'>photo</text><title>photo
+* string</title></a>
+<text x='222' y='123' text-anchor='end' class='colType'>t</text>  <use id='nn' x='137' y='132' xlink:href='#nn'/><a xlink:href='#collections.textColor'><text id='isebergDB.collections.textColor' x='153' y='141'>textColor</text><title>textColor
+* string</title></a>
+<text x='222' y='138' text-anchor='end' class='colType'>t</text>  <use id='nn' x='137' y='147' xlink:href='#nn'/><a xlink:href='#collections.closed'><text id='isebergDB.collections.closed' x='153' y='156'>closed</text><title>closed
+* boolean</title></a>
+<text x='222' y='153' text-anchor='end' class='colType'>b</text>  <use id='nn' x='137' y='162' xlink:href='#nn'/><a xlink:href='#collections.created'><text id='isebergDB.collections.created' x='153' y='171'>created</text><title>created
+* date</title></a>
+<text x='222' y='168' text-anchor='end' class='colType'>d</text>  <use id='nn' x='137' y='177' xlink:href='#nn'/><a xlink:href='#collections.usersSaved'><text id='isebergDB.collections.usersSaved' x='153' y='186' onmouseover="hghl(['collections_fk_collections_1','isebergDB.users.userId'])" onmouseout="uhghl(['collections_fk_collections_1','isebergDB.users.userId'])">usersSaved</text><title>usersSaved
+* array</title></a>
+<a xlink:href='#collections.usersSaved'><use id='fk' x='214' y='176' xlink:href='#fk'/><title>References users ( usersSaved -&gt; userId ) </title></a>
+  <use id='nn' x='137' y='192' xlink:href='#nn'/><a xlink:href='#collections.color'><text id='isebergDB.collections.color' x='153' y='201'>color</text><title>color
+* string</title></a>
+<text x='222' y='198' text-anchor='end' class='colType'>t</text>  <use id='nn' x='137' y='207' xlink:href='#nn'/><a xlink:href='#collections.links'><text id='isebergDB.collections.links' x='153' y='216' onmouseover="hghl(['collections_fk_collections','isebergDB.links._id'])" onmouseout="uhghl(['collections_fk_collections','isebergDB.links._id'])">links</text><title>links
+* array</title></a>
+<a xlink:href='#collections.links'><use id='fk' x='214' y='206' xlink:href='#fk'/><title>References links ( links -&gt; _id ) </title></a>
+  <use id='nn' x='137' y='222' xlink:href='#nn'/><a xlink:href='#collections.description'><text id='isebergDB.collections.description' x='153' y='231'>description</text><title>description
+* string</title></a>
+<text x='222' y='228' text-anchor='end' class='colType'>t</text>  <use id='nn' x='137' y='237' xlink:href='#nn'/><a xlink:href='#collections.tags'><text id='isebergDB.collections.tags' x='153' y='246' onmouseover="hghl(['collections_fk_collections_0','isebergDB.tags._id'])" onmouseout="uhghl(['collections_fk_collections_0','isebergDB.tags._id'])">tags</text><title>tags
+* array</title></a>
+<a xlink:href='#collections.tags'><use id='fk' x='214' y='236' xlink:href='#fk'/><title>References tags ( tags -&gt; _id ) </title></a>
+  <use id='nn' x='137' y='252' xlink:href='#nn'/><a xlink:href='#collections.__v'><text id='isebergDB.collections.__v' x='153' y='261'>__v</text><title>__v
+* integer</title></a>
+<text x='222' y='258' text-anchor='end' class='colType'>#</text>
+<!-- ============= Table 'tags' ============= -->
+<rect class='entity' x='45' y='38' width='60' height='90' rx='7' ry='7' style='stroke:none'/>
+<path d='M 45.00 64.00 L 45.00 45.00 Q 45.00 38.00 52.00 38.00 L 98.00 38.00 Q 105.00 38.00 105.00 45.00 L 105.00 64.00 L45.00 64.00 ' style='fill:url(#tbg_3366ff);stroke:1;stroke-opacity:0.1;' />
+<rect class='entity' x='45' y='38' width='60' height='90' rx='7' ry='7' style='fill:none;stroke:#aeb2bf'/>
+<line class='delim' x1='45.000000' y1='64.000000' x2='105.000000' y2='64.000000' style='stroke:#aeb2bf'/>
+<line class='delim' x1='60.000000' y1='64.000000' x2='60.000000' y2='128.000000' style='stroke:#aeb2bf'/>
+<line class='delim' x1='94.000000' y1='64.000000' x2='94.000000' y2='128.000000' style='stroke:#aeb2bf'/>
+<a xlink:href='#tags'><text x='62' y='56'>tags</text><title>Collection isebergDB.tags</title></a>
+  <use id='nn' x='47' y='72' xlink:href='#nn'/><a xlink:href='#tags._id'><use id='pk' x='47' y='71' xlink:href='#pk'/><title>Pk _id_ ( _id ) </title></a>
+<a xlink:href='#tags._id'><text id='isebergDB.tags._id' x='63' y='81' onmouseover="hghl(['collections_fk_collections_0','isebergDB.collections.tags'])" onmouseout="uhghl(['collections_fk_collections_0','isebergDB.collections.tags'])">_id</text><title>_id
+* oid</title></a>
+<a xlink:href='#tags._id'><use id='ref' x='94' y='71' xlink:href='#ref'/><title>Referred by collections ( tags -&gt; _id ) </title></a>
+  <use id='nn' x='47' y='87' xlink:href='#nn'/><a xlink:href='#tags.name'><use id='unq' x='47' y='86' xlink:href='#unq'/><title>Unq name_1 ( name ) </title></a>
+<a xlink:href='#tags.name'><text id='isebergDB.tags.name' x='63' y='96'>name</text><title>name
+* string</title></a>
+<text x='102' y='93' text-anchor='end' class='colType'>t</text>  <use id='nn' x='47' y='102' xlink:href='#nn'/><a xlink:href='#tags.__v'><text id='isebergDB.tags.__v' x='63' y='111'>__v</text><title>__v
+* integer</title></a>
+<text x='102' y='108' text-anchor='end' class='colType'>#</text>
+<!-- ============= Table 'clients' ============= -->
+<rect class='entity' x='480' y='473' width='90' height='120' rx='7' ry='7' style='stroke:none'/>
+<path d='M 480.00 499.00 L 480.00 480.00 Q 480.00 473.00 487.00 473.00 L 563.00 473.00 Q 570.00 473.00 570.00 480.00 L 570.00 499.00 L480.00 499.00 ' style='fill:url(#tbg_3366ff);stroke:1;stroke-opacity:0.1;' />
+<rect class='entity' x='480' y='473' width='90' height='120' rx='7' ry='7' style='fill:none;stroke:#aeb2bf'/>
+<line class='delim' x1='480.000000' y1='499.000000' x2='570.000000' y2='499.000000' style='stroke:#aeb2bf'/>
+<line class='delim' x1='495.000000' y1='499.000000' x2='495.000000' y2='593.000000' style='stroke:#aeb2bf'/>
+<line class='delim' x1='559.000000' y1='499.000000' x2='559.000000' y2='593.000000' style='stroke:#aeb2bf'/>
+<a xlink:href='#clients'><text x='506' y='491'>clients</text><title>Collection isebergDB.clients</title></a>
+  <use id='nn' x='482' y='507' xlink:href='#nn'/><a xlink:href='#clients._id'><use id='pk' x='482' y='506' xlink:href='#pk'/><title>Pk _id_ ( _id ) </title></a>
+<a xlink:href='#clients._id'><text id='isebergDB.clients._id' x='498' y='516'>_id</text><title>_id
+* oid</title></a>
+  <use id='nn' x='482' y='522' xlink:href='#nn'/><a xlink:href='#clients.name'><use id='unq' x='482' y='521' xlink:href='#unq'/><title>Unq name_1 ( name ) </title></a>
+<a xlink:href='#clients.name'><text id='isebergDB.clients.name' x='498' y='531'>name</text><title>name
+* string</title></a>
+<text x='567' y='528' text-anchor='end' class='colType'>t</text>  <use id='nn' x='482' y='537' xlink:href='#nn'/><a xlink:href='#clients.clientId'><use id='unq' x='482' y='536' xlink:href='#unq'/><title>Unq clientId_1 ( clientId ) </title></a>
+<a xlink:href='#clients.clientId'><text id='isebergDB.clients.clientId' x='498' y='546' onmouseover="hghl(['accesstokens_fk_accesstokens','isebergDB.accesstokens.clientId'])" onmouseout="uhghl(['accesstokens_fk_accesstokens','isebergDB.accesstokens.clientId'])">clientId</text><title>clientId
+* string</title></a>
+<a xlink:href='#clients.clientId'><use id='ref' x='559' y='536' xlink:href='#ref'/><title>Referred by accesstokens ( clientId ) </title></a>
+  <use id='nn' x='482' y='552' xlink:href='#nn'/><a xlink:href='#clients.clientSecret'><text id='isebergDB.clients.clientSecret' x='498' y='561'>clientSecret</text><title>clientSecret
+* string</title></a>
+<text x='567' y='558' text-anchor='end' class='colType'>t</text>  <use id='nn' x='482' y='567' xlink:href='#nn'/><a xlink:href='#clients.__v'><text id='isebergDB.clients.__v' x='498' y='576'>__v</text><title>__v
+* integer</title></a>
+<text x='567' y='573' text-anchor='end' class='colType'>#</text>
+</g></svg></div>
+
+
+<br/><br/>
+<div class='card'><div class='card-block'><a name='accesstokens' onclick='window.scrollTo(190, 480);return false;' style='cursor:pointer;'><h4 class='card-title'>Collection accesstokens</h4></a>
+<table class='table-sm table-bordered'>
+<thead>
+<tr><th>Indexes</th><th>Field Name</th><th>Data Type</th><th>Description</th></tr></thead>
+<tbody>
+	<tr>
+		<td>*<svg width='14' height='14'><use xlink:href='#pk'/></svg></td>
+		<td><a name='accesstokens._id'>&#95;id</a></td>
+		<td> oid  AUTOINCREMENT  </td>
+		<td>  </td>
+	</tr>
+	<tr>
+		<td>*<svg width='14' height='14'><use xlink:href='#fk'/></svg></td>
+		<td><a name='accesstokens.userId'>userId</a></td>
+		<td> string   </td>
+		<td>  </td>
+	</tr>
+	<tr>
+		<td>*<svg width='14' height='14'><use xlink:href='#fk'/></svg></td>
+		<td><a name='accesstokens.clientId'>clientId</a></td>
+		<td> string   </td>
+		<td>  </td>
+	</tr>
+	<tr>
+		<td>*<svg width='14' height='14'><use xlink:href='#unq'/></svg></td>
+		<td><a name='accesstokens.token'>token</a></td>
+		<td> string   </td>
+		<td>  </td>
+	</tr>
+	<tr>
+		<td>*</td>
+		<td><a name='accesstokens.created'>created</a></td>
+		<td> date   </td>
+		<td>  </td>
+	</tr>
+	<tr>
+		<td>*</td>
+		<td><a name='accesstokens.__v'>&#95;&#95;v</a></td>
+		<td> integer   </td>
+		<td>  </td>
+	</tr>
+<tr><th colspan='4'>Indexes</th></tr>
+	<tr>		<td><svg width='14' height='14'><use xlink:href='#pk'/></svg></td><td>&#95;id&#95;</td>
+		<td> ON &#95;id</td>
+		<td>  </td>
+	</tr>
+	<tr>		<td><svg width='14' height='14'><use xlink:href='#unq'/></svg></td><td>token&#95;1</td>
+		<td> ON token</td>
+		<td>  </td>
+	</tr>
+<tr><th colspan='4'>Virtual Relations</th></tr>
+	<tr>
+		<td><svg width='14' height='14'><use xlink:href='#fk'/></svg></td><td>fk_accesstokens</td>
+		<td > ( clientId ) ref <a href='#clients'>clients</a> (clientId) </td>
+		<td>  </td>
+	</tr>
+	<tr>
+		<td><svg width='14' height='14'><use xlink:href='#fk'/></svg></td><td>fk_accesstokens_0</td>
+		<td > ( userId ) ref <a href='#users'>users</a> (userId) </td>
+		<td>  </td>
+	</tr>
+</tbody>
+</table></div></div>
+
+<br/><br/>
+<div class='card'><div class='card-block'><a name='clients' onclick='window.scrollTo(280, 480);return false;' style='cursor:pointer;'><h4 class='card-title'>Collection clients</h4></a>
+<table class='table-sm table-bordered'>
+<thead>
+<tr><th>Indexes</th><th>Field Name</th><th>Data Type</th><th>Description</th></tr></thead>
+<tbody>
+	<tr>
+		<td>*<svg width='14' height='14'><use xlink:href='#pk'/></svg></td>
+		<td><a name='clients._id'>&#95;id</a></td>
+		<td> oid  AUTOINCREMENT  </td>
+		<td>  </td>
+	</tr>
+	<tr>
+		<td>*<svg width='14' height='14'><use xlink:href='#unq'/></svg></td>
+		<td><a name='clients.name'>name</a></td>
+		<td> string   </td>
+		<td>  </td>
+	</tr>
+	<tr>
+		<td>*<svg width='14' height='14'><use xlink:href='#unq'/></svg><svg width='14' height='14'><use xlink:href='#ref'/></svg></td>
+		<td><a name='clients.clientId'>clientId</a></td>
+		<td> string   </td>
+		<td>  </td>
+	</tr>
+	<tr>
+		<td>*</td>
+		<td><a name='clients.clientSecret'>clientSecret</a></td>
+		<td> string   </td>
+		<td>  </td>
+	</tr>
+	<tr>
+		<td>*</td>
+		<td><a name='clients.__v'>&#95;&#95;v</a></td>
+		<td> integer   </td>
+		<td>  </td>
+	</tr>
+<tr><th colspan='4'>Indexes</th></tr>
+	<tr>		<td><svg width='14' height='14'><use xlink:href='#pk'/></svg></td><td>&#95;id&#95;</td>
+		<td> ON &#95;id</td>
+		<td>  </td>
+	</tr>
+	<tr>		<td><svg width='14' height='14'><use xlink:href='#unq'/></svg></td><td>name&#95;1</td>
+		<td> ON name</td>
+		<td>  </td>
+	</tr>
+	<tr>		<td><svg width='14' height='14'><use xlink:href='#unq'/></svg></td><td>clientId&#95;1</td>
+		<td> ON clientId</td>
+		<td>  </td>
+	</tr>
+</tbody>
+</table></div></div>
+
+<br/><br/>
+<div class='card'><div class='card-block'><a name='collections' onclick='window.scrollTo(60, 45);return false;' style='cursor:pointer;'><h4 class='card-title'>Collection collections</h4></a>
+<table class='table-sm table-bordered'>
+<thead>
+<tr><th>Indexes</th><th>Field Name</th><th>Data Type</th><th>Description</th></tr></thead>
+<tbody>
+	<tr>
+		<td>*<svg width='14' height='14'><use xlink:href='#pk'/></svg><svg width='14' height='14'><use xlink:href='#ref'/></svg></td>
+		<td><a name='collections._id'>&#95;id</a></td>
+		<td> oid  AUTOINCREMENT  </td>
+		<td>  </td>
+	</tr>
+	<tr>
+		<td>*</td>
+		<td><a name='collections.name'>name</a></td>
+		<td> string   </td>
+		<td>  </td>
+	</tr>
+	<tr>
+		<td>*<svg width='14' height='14'><use xlink:href='#fk'/></svg></td>
+		<td><a name='collections.authorId'>authorId</a></td>
+		<td> string   </td>
+		<td>  </td>
+	</tr>
+	<tr>
+		<td>*</td>
+		<td><a name='collections.photo'>photo</a></td>
+		<td> string   </td>
+		<td>  </td>
+	</tr>
+	<tr>
+		<td>*</td>
+		<td><a name='collections.textColor'>textColor</a></td>
+		<td> string   </td>
+		<td>  </td>
+	</tr>
+	<tr>
+		<td>*</td>
+		<td><a name='collections.closed'>closed</a></td>
+		<td> boolean   </td>
+		<td>  </td>
+	</tr>
+	<tr>
+		<td>*</td>
+		<td><a name='collections.created'>created</a></td>
+		<td> date   </td>
+		<td>  </td>
+	</tr>
+	<tr>
+		<td>*<svg width='14' height='14'><use xlink:href='#fk'/></svg></td>
+		<td><a name='collections.usersSaved'>usersSaved</a></td>
+		<td> array   </td>
+		<td>  </td>
+	</tr>
+	<tr>
+		<td>*</td>
+		<td><a name='collections.color'>color</a></td>
+		<td> string   </td>
+		<td>  </td>
+	</tr>
+	<tr>
+		<td>*<svg width='14' height='14'><use xlink:href='#fk'/></svg></td>
+		<td><a name='collections.links'>links</a></td>
+		<td> array   </td>
+		<td>  </td>
+	</tr>
+	<tr>
+		<td>*</td>
+		<td><a name='collections.description'>description</a></td>
+		<td> string   </td>
+		<td>  </td>
+	</tr>
+	<tr>
+		<td>*<svg width='14' height='14'><use xlink:href='#fk'/></svg></td>
+		<td><a name='collections.tags'>tags</a></td>
+		<td> array   </td>
+		<td>  </td>
+	</tr>
+	<tr>
+		<td>*</td>
+		<td><a name='collections.__v'>&#95;&#95;v</a></td>
+		<td> integer   </td>
+		<td>  </td>
+	</tr>
+<tr><th colspan='4'>Indexes</th></tr>
+	<tr>		<td><svg width='14' height='14'><use xlink:href='#pk'/></svg></td><td>&#95;id&#95;</td>
+		<td> ON &#95;id</td>
+		<td>  </td>
+	</tr>
+<tr><th colspan='4'>Virtual Relations</th></tr>
+	<tr>
+		<td><svg width='14' height='14'><use xlink:href='#fk'/></svg></td><td>fk_collections</td>
+		<td > ( links ) ref <a href='#links'>links</a> (&#95;id) </td>
+		<td>  </td>
+	</tr>
+	<tr>
+		<td><svg width='14' height='14'><use xlink:href='#fk'/></svg></td><td>fk_collections_0</td>
+		<td > ( tags ) ref <a href='#tags'>tags</a> (&#95;id) </td>
+		<td>  </td>
+	</tr>
+	<tr>
+		<td><svg width='14' height='14'><use xlink:href='#fk'/></svg></td><td>fk_collections_1</td>
+		<td > ( usersSaved ) ref <a href='#users'>users</a> (userId) </td>
+		<td>  </td>
+	</tr>
+	<tr>
+		<td><svg width='14' height='14'><use xlink:href='#fk'/></svg></td><td>fk_collections_2</td>
+		<td > ( authorId ) ref <a href='#users'>users</a> (userId) </td>
+		<td>  </td>
+	</tr>
+</tbody>
+</table></div></div>
+
+<br/><br/>
+<div class='card'><div class='card-block'><a name='links' onclick='window.scrollTo(60, 45);return false;' style='cursor:pointer;'><h4 class='card-title'>Collection links</h4></a>
+<table class='table-sm table-bordered'>
+<thead>
+<tr><th>Indexes</th><th>Field Name</th><th>Data Type</th><th>Description</th></tr></thead>
+<tbody>
+	<tr>
+		<td>*<svg width='14' height='14'><use xlink:href='#pk'/></svg><svg width='14' height='14'><use xlink:href='#ref'/></svg></td>
+		<td><a name='links._id'>&#95;id</a></td>
+		<td> oid  AUTOINCREMENT  </td>
+		<td>  </td>
+	</tr>
+	<tr>
+		<td>*</td>
+		<td><a name='links.name'>name</a></td>
+		<td> string   </td>
+		<td>  </td>
+	</tr>
+	<tr>
+		<td>*<svg width='14' height='14'><use xlink:href='#fk'/></svg></td>
+		<td><a name='links.userAdded'>userAdded</a></td>
+		<td> string   </td>
+		<td>  </td>
+	</tr>
+	<tr>
+		<td>*</td>
+		<td><a name='links.description'>description</a></td>
+		<td> string   </td>
+		<td>  </td>
+	</tr>
+	<tr>
+		<td>*</td>
+		<td><a name='links.favicon'>favicon</a></td>
+		<td> string   </td>
+		<td>  </td>
+	</tr>
+	<tr>
+		<td>*</td>
+		<td><a name='links.photo'>photo</a></td>
+		<td> string   </td>
+		<td>  </td>
+	</tr>
+	<tr>
+		<td>*</td>
+		<td><a name='links.url'>url</a></td>
+		<td> string   </td>
+		<td>  </td>
+	</tr>
+	<tr>
+		<td>*<svg width='14' height='14'><use xlink:href='#fk'/></svg></td>
+		<td><a name='links.usersLiked'>usersLiked</a></td>
+		<td> array   </td>
+		<td>  </td>
+	</tr>
+	<tr>
+		<td>*<svg width='14' height='14'><use xlink:href='#fk'/></svg></td>
+		<td><a name='links.usersSaved'>usersSaved</a></td>
+		<td> array   </td>
+		<td>  </td>
+	</tr>
+	<tr>
+		<td>*</td>
+		<td><a name='links.added'>added</a></td>
+		<td> date   </td>
+		<td>  </td>
+	</tr>
+	<tr>
+		<td>*</td>
+		<td><a name='links.likes'>likes</a></td>
+		<td> integer   </td>
+		<td>  </td>
+	</tr>
+	<tr>
+		<td>*</td>
+		<td><a name='links.__v'>&#95;&#95;v</a></td>
+		<td> integer   </td>
+		<td>  </td>
+	</tr>
+<tr><th colspan='4'>Indexes</th></tr>
+	<tr>		<td><svg width='14' height='14'><use xlink:href='#pk'/></svg></td><td>&#95;id&#95;</td>
+		<td> ON &#95;id</td>
+		<td>  </td>
+	</tr>
+<tr><th colspan='4'>Virtual Relations</th></tr>
+	<tr>
+		<td><svg width='14' height='14'><use xlink:href='#fk'/></svg></td><td>fk_links</td>
+		<td > ( userAdded ) ref <a href='#users'>users</a> (userId) </td>
+		<td>  </td>
+	</tr>
+	<tr>
+		<td><svg width='14' height='14'><use xlink:href='#fk'/></svg></td><td>fk_links_1</td>
+		<td > ( usersSaved ) ref <a href='#users'>users</a> (userId) </td>
+		<td>  </td>
+	</tr>
+	<tr>
+		<td><svg width='14' height='14'><use xlink:href='#fk'/></svg></td><td>fk_links_3</td>
+		<td > ( usersLiked ) ref <a href='#users'>users</a> (userId) </td>
+		<td>  </td>
+	</tr>
+</tbody>
+</table></div></div>
+
+<br/><br/>
+<div class='card'><div class='card-block'><a name='tags' onclick='window.scrollTo(60, 45);return false;' style='cursor:pointer;'><h4 class='card-title'>Collection tags</h4></a>
+<table class='table-sm table-bordered'>
+<thead>
+<tr><th>Indexes</th><th>Field Name</th><th>Data Type</th><th>Description</th></tr></thead>
+<tbody>
+	<tr>
+		<td>*<svg width='14' height='14'><use xlink:href='#pk'/></svg><svg width='14' height='14'><use xlink:href='#ref'/></svg></td>
+		<td><a name='tags._id'>&#95;id</a></td>
+		<td> oid  AUTOINCREMENT  </td>
+		<td>  </td>
+	</tr>
+	<tr>
+		<td>*<svg width='14' height='14'><use xlink:href='#unq'/></svg></td>
+		<td><a name='tags.name'>name</a></td>
+		<td> string   </td>
+		<td>  </td>
+	</tr>
+	<tr>
+		<td>*</td>
+		<td><a name='tags.__v'>&#95;&#95;v</a></td>
+		<td> integer   </td>
+		<td>  </td>
+	</tr>
+<tr><th colspan='4'>Indexes</th></tr>
+	<tr>		<td><svg width='14' height='14'><use xlink:href='#pk'/></svg></td><td>&#95;id&#95;</td>
+		<td> ON &#95;id</td>
+		<td>  </td>
+	</tr>
+	<tr>		<td><svg width='14' height='14'><use xlink:href='#unq'/></svg></td><td>name&#95;1</td>
+		<td> ON name</td>
+		<td>  </td>
+	</tr>
+</tbody>
+</table></div></div>
+
+<br/><br/>
+<div class='card'><div class='card-block'><a name='users' onclick='window.scrollTo(85, 480);return false;' style='cursor:pointer;'><h4 class='card-title'>Collection users</h4></a>
+<table class='table-sm table-bordered'>
+<thead>
+<tr><th>Indexes</th><th>Field Name</th><th>Data Type</th><th>Description</th></tr></thead>
+<tbody>
+	<tr>
+		<td>*<svg width='14' height='14'><use xlink:href='#pk'/></svg></td>
+		<td><a name='users._id'>&#95;id</a></td>
+		<td> oid  AUTOINCREMENT  </td>
+		<td>  </td>
+	</tr>
+	<tr>
+		<td>*</td>
+		<td><a name='users.salt'>salt</a></td>
+		<td> string   </td>
+		<td>  </td>
+	</tr>
+	<tr>
+		<td>*</td>
+		<td><a name='users.hash'>hash</a></td>
+		<td> string   </td>
+		<td>  </td>
+	</tr>
+	<tr>
+		<td>*<svg width='14' height='14'><use xlink:href='#unq'/></svg><svg width='14' height='14'><use xlink:href='#ref'/></svg></td>
+		<td><a name='users.userId'>userId</a></td>
+		<td> string   </td>
+		<td>  </td>
+	</tr>
+	<tr>
+		<td>*</td>
+		<td><a name='users.firstName'>firstName</a></td>
+		<td> string   </td>
+		<td>  </td>
+	</tr>
+	<tr>
+		<td>*</td>
+		<td><a name='users.lastName'>lastName</a></td>
+		<td> string   </td>
+		<td>  </td>
+	</tr>
+	<tr>
+		<td>*</td>
+		<td><a name='users.photo'>photo</a></td>
+		<td> string   </td>
+		<td>  </td>
+	</tr>
+	<tr>
+		<td>*</td>
+		<td><a name='users.description'>description</a></td>
+		<td> string   </td>
+		<td>  </td>
+	</tr>
+	<tr>
+		<td>*</td>
+		<td><a name='users.banned'>banned</a></td>
+		<td> boolean   </td>
+		<td>  </td>
+	</tr>
+	<tr>
+		<td>*</td>
+		<td><a name='users.created'>created</a></td>
+		<td> date   </td>
+		<td>  </td>
+	</tr>
+	<tr>
+		<td>*</td>
+		<td><a name='users.rating'>rating</a></td>
+		<td> integer   </td>
+		<td>  </td>
+	</tr>
+	<tr>
+		<td>*<svg width='14' height='14'><use xlink:href='#idx'/></svg></td>
+		<td><a name='users.metrics'>metrics</a></td>
+		<td> list   </td>
+		<td>  </td>
+	</tr>
+	<tr>
+		<td>*</td>
+		<td><a name='users.bookmarks'>bookmarks</a></td>
+		<td> list   </td>
+		<td>  </td>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+		<td><a name='users.accType'>accType</a></td>
+		<td> string   </td>
+		<td>  </td>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+		<td><a name='users.__v'>&#95;&#95;v</a></td>
+		<td> integer   </td>
+		<td>  </td>
+	</tr>
+<tr><th colspan='4'>Indexes</th></tr>
+	<tr>		<td><svg width='14' height='14'><use xlink:href='#pk'/></svg></td><td>&#95;id&#95;</td>
+		<td> ON &#95;id</td>
+		<td>  </td>
+	</tr>
+	<tr>		<td><svg width='14' height='14'><use xlink:href='#unq'/></svg></td><td>userId&#95;1</td>
+		<td> ON userId</td>
+		<td>  </td>
+	</tr>
+	<tr>		<td><svg width='14' height='14'><use xlink:href='#idx'/></svg></td><td>Idx&#95;metrics</td>
+		<td> ON metrics</td>
+		<td>  </td>
+	</tr>
+<tr><th colspan='4'>Virtual Relations</th></tr>
+	<tr>
+		<td><svg width='14' height='14'><use xlink:href='#fk'/></svg></td><td>Ref</td>
+		<td > ( bookmarks&#46;bookmarkId ) ref <a href='#collections'>collections</a> (&#95;id) </td>
+		<td>  </td>
+	</tr>
+	<tr>
+		<td><svg width='14' height='14'><use xlink:href='#fk'/></svg></td><td>fk_users_0</td>
+		<td > ( bookmarks&#46;bookmarkId ) ref <a href='#links'>links</a> (&#95;id) </td>
+		<td>  </td>
+	</tr>
+</tbody>
+</table></div></div>
+
+<p align='right'><a href='http://www.dbschema.com' style='color:#aaa'>Powered by DbSchema</a></p></body></html>
