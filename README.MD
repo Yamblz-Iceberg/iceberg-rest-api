@@ -1,4 +1,4 @@
-# API проекта **ICEBERG** [![Build Status](https://travis-ci.org/Yamblz-Iceberg/iceberg-api.svg?branch=dev)](https://travis-ci.org/Yamblz-Iceberg/iceberg-api) [![Heroku](http://heroku-badge.herokuapp.com/?app=iceberg-project&style=flat&svg=1)](https://iceberg-project.herokuapp.com)
+# API проекта **ICEBERG** [![Build Status](https://travis-ci.org/Yamblz-Iceberg/iceberg-api.svg?branch=dev)](https://travis-ci.org/Yamblz-Iceberg/iceberg-api) [![Heroku](http://heroku-badge.herokuapp.com/?app=iceberg-project&style=flat&svg=1)](https://iceberg-project.herokuapp.com) [![Release](http://github-release-version.herokuapp.com/github/Yamblz-Iceberg/iceberg-api/release.svg?style=flat)](https://github.com/Yamblz-Iceberg/iceberg-api/releases/latest) [![Dependencies](https://david-dm.org/Yamblz-Iceberg/iceberg-api.svg)](https://david-dm.org/Yamblz-Iceberg/iceberg-api.svg)
 
 - Вам необходимо установить **Node.js** и **MongoDB**
 - Секретные настройки в `config_secret.json` и `google-credentials.json` - без них или без переменных среды локально сервер **не запустится**!
