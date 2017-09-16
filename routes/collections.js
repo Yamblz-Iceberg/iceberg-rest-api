@@ -236,6 +236,9 @@ router.post('/addLink/:collectionId/:linkId', validation(validationParams.descri
       .catch(err => next(err));
   });
 
+router.delete('/deleteLink/:collectionId/:linkId', validation(validationParams.description),
+  status.accountTypeMiddleware, (req, res, next) => {
+
 router.put('/open/:collectionId', validation(validationParams.readCollection), (req, res, next) => {
   User.findOne({ userId: req.user.userId })
     .then((user) => {
