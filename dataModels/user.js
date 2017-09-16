@@ -1,7 +1,8 @@
 const mongoose = require('../libs/db/mongoose');
-// const crypto = require('crypto');
-const findOrCreate = require('mongoose-find-or-create');
+const findOrCreate = require('findorcreate-promise');
 const passportLocalMongoose = require('passport-local-mongoose');
+const Bookmark = require('./bookmark');
+const Metric = require('./metrics');
 
 const Schema = mongoose.Schema;
 
@@ -10,33 +11,30 @@ const User = new Schema({
     type: String,
     unique: true,
     required: true,
-  },
-  nickName: {
-    type: String,
-    required: false,
+    lowercase: true,
   },
   description: {
     type: String,
   },
   accType: {
     type: String,
-    required: false,
     enum: ['user', 'demo'],
     default: 'user',
   },
   firstName: {
     type: String,
-    unique: false,
-    required: false,
   },
   lastName: {
     type: String,
-    unique: false,
-    required: false,
+  },
+  bookmarks: {
+    type: [Bookmark],
+  },
+  metrics: {
+    type: [Metric],
   },
   photo: {
     type: String,
-    required: false,
   },
   sex: {
     type: String,
@@ -46,7 +44,6 @@ const User = new Schema({
   },
   rating: {
     type: Number,
-    required: false,
     default: 5,
   },
   created: {
@@ -59,13 +56,16 @@ const User = new Schema({
   fbToken: {
     type: String,
   },
+  yaToken: {
+    type: String,
+  },
   banned: {
     type: Boolean,
     required: true,
     default: false,
   },
 });
-// TODO: переделать userId на id монго
+
 User.plugin(findOrCreate);
 User.plugin(passportLocalMongoose, {
   usernameField: 'userId',

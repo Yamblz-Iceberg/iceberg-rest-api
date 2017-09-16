@@ -4,61 +4,61 @@ const router = express.Router();
 
 const passport = require('passport');
 
-const User = require('.././dataModels/user').User;
 const Collection = require('.././dataModels/collection').Collection;
 const Tag = require('.././dataModels/tag').Tag;
-const uuidv4 = require('uuid/v4');
-const mongoose = require('mongoose');
 
 const validation = require('./validation/validator');
 const validationParams = require('./validation/params');
 const error = require('rest-api-errors');
 
-const _ = require('lodash');
 
-router.get('/', (req, res, next) => {
+router.get('/', validation(validationParams.feed), passport.authenticate('bearer', { session: false }), (req, res, next) => {
   Collection.aggregate([
     {
-      $unwind: '$links',
+      $match: req.query.search && !/^#/.test(req.query.search) ?
+        { name: { $regex: new RegExp(req.query.search, 'i') } } : { _id: { $exists: true } },
     },
     {
-      $unwind: '$tags',
+      $unwind: { path: '$links', preserveNullAndEmptyArrays: true },
     },
-    // {
-    //   $lookup:
-    //      {
-    //        from: 'links',
-    //        localField: 'links',
-    //        foreignField: '_id',
-    //        as: 'link',
-    //      },
-    // },
     {
-      $lookup:
-         {
-           from: 'tags',
-           localField: 'tags',
-           foreignField: '_id',
-           as: 'tag',
-         },
+      $unwind: { path: '$tags', preserveNullAndEmptyArrays: true },
     },
     {
       $lookup:
-         {
-           from: 'users',
-           localField: 'authorId',
-           foreignField: 'userId',
-           as: 'author',
-         },
-    },
-    // {
-    //   $unwind: '$link',
-    // },
-    {
-      $unwind: '$tag',
+        {
+          from: 'tags',
+          localField: 'tags',
+          foreignField: '_id',
+          as: 'tag',
+        },
     },
     {
-      $unwind: '$author',
+      $lookup:
+        {
+          from: 'users',
+          localField: 'authorId',
+          foreignField: 'userId',
+          as: 'author',
+        },
+    },
+    {
+      $unwind: { path: '$tag', preserveNullAndEmptyArrays: true },
+    },
+    {
+      $unwind: { path: '$author', preserveNullAndEmptyArrays: true },
+    },
+    {
+      $lookup:
+        {
+          from: 'users',
+          localField: 'tag._id',
+          foreignField: 'bookmarks.bookmarkId',
+          as: 'tagRel',
+        },
+    },
+    {
+      $unwind: { path: '$tagRel', preserveNullAndEmptyArrays: true },
     },
     {
       $group: {
@@ -67,39 +67,126 @@ router.get('/', (req, res, next) => {
         author: { $first: '$author' },
         photo: { $first: '$photo' },
         color: { $first: '$color' },
-        // links: { $addToSet: '$link' },
+        created: { $first: '$created' },
+        links: { $addToSet: '$links' },
         tags: { $addToSet: '$tag' },
+        tagRel: { $addToSet: '$tagRel' },
+        usersSaved: { $first: '$usersSaved' },
+        closed: { $first: '$closed' },
       },
     },
     {
       $addFields: {
-        tags: { $slice: ['$tags', 2] },
+        tagRel: {
+          $filter: {
+            input: '$tagRel',
+            as: 'tag',
+            cond: { $and: [{ $eq: ['$$tag.userId', req.user.userId] }] },
+          },
+        },
       },
     },
     {
-      $project: { 'author.salt': 0,
-        'author._id': 0,
-        'author.hash': 0,
-        'author.banned': 0,
-        'author.created': 0,
-        'author.rating': 0,
-        'author.accType': 0,
-        'author.__v': 0,
-        'links.__v': 0,
-        'tags.__v': 0,
+      $addFields: { tagRel: '$tagRel.bookmarks' },
+    },
+    {
+      $unwind: { path: '$tagRel', preserveNullAndEmptyArrays: true },
+    },
+    {
+      $addFields: {
+        tagsClear: {
+          $map:
+               {
+                 input: '$tags',
+                 as: 'tag',
+                 in: '$$tag._id',
+               },
+        },
       },
     },
+    {
+      $addFields: {
+        tagRel: {
+          $filter: {
+            input: '$tagRel',
+            as: 'tag',
+            cond: {
+              $and: [
+                { $eq: ['$$tag.type', 'personalTags'] },
+                { $in: ['$$tag.bookmarkId', '$tagsClear'] },
+              ],
+            },
+          },
+        },
+      },
+    },
+    {
+      $addFields: { personalRating: { $sum: '$tagRel.counter' } },
+    },
+    {
+      $match: req.query.search && /^#/.test(req.query.search) ?
+        { 'tags.name': { $regex: new RegExp(req.query.search.replace('#', ''), 'i') } } : { _id: { $exists: true } },
+    },
+    {
+      $addFields: {
+        linksCount: { $size: '$links' },
+        savedTimesCount: { $size: '$usersSaved' },
+        saved: { $cond: { if: { $and: [{ $isArray: '$usersSaved' }, { $in: [req.user.userId, '$usersSaved'] }] }, then: true, else: false } },
+      },
+    },
+    {
+      $project: {
+        usersSaved: 0,
+        tagRel: 0,
+        tagsClear: 0,
+        author: {
+          salt: 0,
+          _id: 0,
+          hash: 0,
+          vkToken: 0,
+          fbToken: 0,
+          yaToken: 0,
+          socialLink: 0,
+          sex: 0,
+          banned: 0,
+          created: 0,
+          accType: 0,
+          bookmarks: 0,
+          metrics: 0,
+          __v: 0,
+        },
+        links: 0,
+        tags: {
+          textColor: 0,
+          color: 0,
+          __v: 0,
+        },
+      },
+    },
+    {
+      $match: { $or: [{ closed: false }, { closed: null }] },
+    },
+    {
+      $match: { linksCount: { $gt: 0 } },
+    },
+    {
+      $sort: req.query.sort === 'time' ? { created: -1 } : { personalRating: -1 },
+    },
   ])
-    .then((collection) => {
-      if (!collection) {
-        throw new error.NotFound('NO_COLLECTIONS', 'Collections cannot be found');
+    .then((collections) => {
+      if (!collections) {
+        throw new error.NotFound('NO_COLLECTIONS_ERR', 'Collections cannot be found');
       } else {
-        return Tag.find({}, { __v: 0 })
+        if (req.query.only === 'collections') {
+          return res.json({ collections: collections.slice(0, req.query.count ? req.query.count : collections.length) });
+        }
+        return Tag.find(req.query.search ? { name: { $regex: new RegExp(req.query.search.replace('#', ''), 'i') } } : {}, { __v: 0 })
           .then((tags) => {
             if (!tags) {
-              throw new error.NotFound('NO_TAGS', 'Tags cannot be found');
+              throw new error.NotFound('NO_TAGS_ERR', 'Tags not found');
             }
-            res.json({ cards: collection, tags });
+            res.json({ collections: !req.query.only ? collections.slice(0, req.query.count ? req.query.count : collections.length) : undefined,
+              tags: req.query.only === 'tags' || !req.query.only ? tags.slice(0, req.query.count ? req.query.count : tags.length) : undefined });
           });
       }
     })
@@ -107,3 +194,4 @@ router.get('/', (req, res, next) => {
 });
 
 module.exports = router;
+

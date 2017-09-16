@@ -19,7 +19,12 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>Title</title>
+  <title>Tests</title>
+<form ref='uploadForm' action='/upload' method='post' encType="multipart/form-data">
+  <input type="file" name="photo" accept="image/*" capture="camera" />
+  <input type='submit' value='Upload!' />
+</form>
+
 </head>
 
 <body>

@@ -1,5 +1,5 @@
 const mongoose = require('../libs/db/mongoose');
-const findOrCreate = require('mongoose-find-or-create');
+const findOrCreate = require('findorcreate-promise');
 
 const Schema = mongoose.Schema;
 
@@ -13,24 +13,40 @@ const Collection = new Schema({
     required: true,
   },
   tags: {
-    type: Array,
+    type: [Schema.Types.ObjectId],
+  },
+  description: {
+    type: String,
+    default: '',
   },
   photo: {
     type: String,
   },
   links: {
-    type: Array,
+    type: [Schema.Types.ObjectId],
   },
   color: {
     type: String,
-    required: true,
+    default: '#0476fc',
+  },
+  usersSaved: {
+    type: Array,
   },
   textColor: {
     type: String,
-    required: true,
+  },
+  created: {
+    type: Date,
+    default: Date.now,
+  },
+  closed: {
+    type: Boolean,
+    default: false,
   },
 });
 
 Collection.plugin(findOrCreate);
+
+Collection.index({ name: 'text' });
 
 module.exports.Collection = mongoose.model('Collection', Collection);

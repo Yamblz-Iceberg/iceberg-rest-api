@@ -1,13 +1,11 @@
 const mongoose = require('../libs/db/mongoose');
-const findOrCreate = require('mongoose-find-or-create');
+const findOrCreate = require('findorcreate-promise');
 
 const Schema = mongoose.Schema;
 
-// TODO: category link
 const Link = new Schema({
   name: {
     type: String,
-    unique: true,
     required: true,
   },
   userAdded: {
@@ -16,15 +14,30 @@ const Link = new Schema({
   },
   favicon: {
     type: String,
-    required: true,
   },
   photo: {
     type: String,
-    required: true,
+  },
+  description: {
+    type: String,
   },
   url: {
     type: String,
     required: true,
+  },
+  likes: {
+    type: Number,
+    default: 0,
+  },
+  added: {
+    type: Date,
+    default: Date.now,
+  },
+  usersSaved: {
+    type: Array,
+  },
+  usersLiked: {
+    type: Array,
   },
 });
 

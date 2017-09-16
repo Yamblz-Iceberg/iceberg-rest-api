@@ -1,5 +1,5 @@
 const mongoose = require('../libs/db/mongoose');
-const findOrCreate = require('mongoose-find-or-create');
+const findOrCreate = require('findorcreate-promise');
 
 const Schema = mongoose.Schema;
 
@@ -8,14 +8,7 @@ const Tag = new Schema({
     type: String,
     unique: true,
     required: true,
-  },
-  color: {
-    type: String,
-    required: true,
-  },
-  textColor: {
-    type: String,
-    required: true,
+    lowercase: true,
   },
 });
 

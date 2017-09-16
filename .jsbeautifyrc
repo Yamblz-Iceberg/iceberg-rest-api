@@ -1,9 +1,0 @@
-{
-    "indent_size": 2,
-    "indent_char": " ",
-    "space_after_anon_function": true,
-    "brace_style": "collapse",
-    "jslint_happy": true,
-    "end_with_newline": true,
-    "preserve_newlines": true
-  }

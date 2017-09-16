@@ -1,6 +1,6 @@
 const mongoose = require('./libs/db/mongoose');
 const async = require('async');
-const faker = require('faker');
+const faker = require('faker/locale/ru');
 
 const config = require('./libs/config');
 const log = require('./libs/log/log')(module);
@@ -18,6 +18,7 @@ mongoose.Promise = global.Promise;
 const users = [];
 const tags = [];
 const links = [];
+const collections = [];
 
 
 async.series([
@@ -30,34 +31,29 @@ async.series([
   createTags,
   createLinks,
   createCollections,
+  updateUsers,
 ], (err) => {
   if (err) {
     log.info(err);
   }
   mongoose.models.User.count({})
-    .then((count0) => {
-      log.info('Users created:', count0);
-      return mongoose.models.Tag.count({})
-        .then((count1) => {
-          log.info('Tags created:', count1);
-          return mongoose.models.Link.count({})
-            .then((count2) => {
-              log.info('Links created:', count2);
-              return mongoose.models.Collection.count({})
-                .then((count3) => {
-                  log.info('Collections created:', count3);
-                  log.info('DB recreated successfully!');
-                  process.exit(0);
-                });
-            });
-        });
+    .then(count0 => log.info('Users created:', count0))
+    .then(() => mongoose.models.Tag.count({}))
+    .then(count1 => log.info('Users created:', count1))
+    .then(() => mongoose.models.Link.count({}))
+    .then(count2 => log.info('Users created:', count2))
+    .then(() => mongoose.models.Collection.count({}))
+    .then((count3) => {
+      log.info('Collections created:', count3);
+      log.info('DB recreated successfully!');
+      process.exit(0);
     })
     .catch(error => log.error(error));
 });
 
-const numberOfUsers = 10;
-const tagsCount = 10;
-const collectionsCount = 20;
+const numberOfUsers = process.env.NODE_ENV === 'test' ? 0 : 10;
+const tagsCount = process.env.NODE_ENV === 'test' ? 0 : 10;
+const collectionsCount = process.env.NODE_ENV === 'test' ? 0 : 10;
 
 function open(callback) {
   mongoose.connection.on('connected', callback);
@@ -163,9 +159,12 @@ const generateLinks = () => {
     links.push({
       name: faker.lorem.sentence(),
       userAdded: _.sample(users).main.userId,
+      description: faker.lorem.sentences(_.random(0, 3)),
       favicon: faker.internet.avatar(),
       photo: faker.image.image(),
       url: faker.internet.url(),
+      usersSaved: _.sampleSize(_.map(users, 'main.userId'), _.random(1, numberOfUsers / 3)),
+      likes: _.random(2, 100),
     });
   }
   return links;
@@ -180,25 +179,24 @@ function createLinks(callback) {
   }, callback);
 }
 
-const generateCollections = () => new Promise((resolve, reject) => {
-  const collections = [];
-  return Promise.all([...Array(collectionsCount)].map(() => mongoose.models.Tag.distinct('_id')
-    .then(idsTags => mongoose.models.Link.distinct('_id')
-      .then((idsLinks) => {
-        collections.push({
-          name: faker.lorem.sentence(),
-          authorId: _.sample(users).main.userId,
-          photo: faker.image.image(),
-          tags: _.sampleSize(idsTags, _.random(2, 3)),
-          links: _.sampleSize(idsLinks, _.random(3, 10)),
-          color: faker.internet.color(),
-          textColor: faker.internet.color(),
-        });
-      }))
-    .catch(err => reject(err))))
-    .then(() => resolve(collections))
-    .catch(err => log.error(err));
-});
+const generateCollections = () => new Promise((resolve, reject) => Promise.all([...Array(collectionsCount)].map(() => mongoose.models.Tag.distinct('_id')
+  .then(idsTags => mongoose.models.Link.distinct('_id')
+    .then((idsLinks) => {
+      collections.push({
+        name: faker.lorem.sentence(),
+        authorId: _.sample(users).main.userId,
+        description: faker.lorem.paragraph(),
+        photo: faker.image.image(),
+        tags: _.sampleSize(idsTags, _.random(2, 3)),
+        links: _.sampleSize(idsLinks, _.random(3, 10)),
+        color: faker.internet.color(),
+        usersSaved: _.sampleSize(_.map(users, 'main.userId'), _.random(1, numberOfUsers / 3)),
+        textColor: faker.internet.color(),
+      });
+    }))
+  .catch(err => reject(err))))
+  .then(() => resolve(collections))
+  .catch(err => log.error(err)));
 
 function createCollections(callback) {
   generateCollections()
@@ -206,5 +204,25 @@ function createCollections(callback) {
       const curCollection = new mongoose.models.Collection(curCollectionData);
       curCollection.save(_callback);
     }, callback));
+}
+
+function updateUsers(callback) {
+  mongoose.models.Collection.find({})
+    .then(collectionsDB => mongoose.models.Link.find({})
+      .then(linksDB => mongoose.models.User.find({})
+        .then(usersDB => Promise.all(usersDB.map((user) => {
+          const userObject = user;
+          userObject.bookmarks = collectionsDB.map(collection => (collection.usersSaved.indexOf(userObject.userId) !== -1 ?
+            { bookmarkId: collection._id, type: 'savedCollections' } : undefined)).filter(Boolean);
+          userObject.bookmarks = _.concat(userObject.bookmarks, _.filter(collectionsDB, { authorId: userObject.userId })
+            .map(collection => ({ bookmarkId: collection._id, type: 'createdCollections' })));
+          userObject.bookmarks = _.concat(userObject.bookmarks, _.filter(linksDB, { userAdded: userObject.userId })
+            .map(link => ({ bookmarkId: link._id, type: 'addedLinks' })));
+          userObject.bookmarks = _.concat(userObject.bookmarks, linksDB.map(link => (link.usersSaved.indexOf(userObject.userId) !== -1 ?
+            { bookmarkId: link._id, type: 'savedLinks' } : undefined)).filter(Boolean));
+          return userObject.save();
+        }))
+          .then(() => callback())
+          .catch(err => log.error(err)))));
 }
 

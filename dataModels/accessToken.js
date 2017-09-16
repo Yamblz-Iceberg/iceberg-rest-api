@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require('../libs/db/mongoose');
 
 const Schema = mongoose.Schema;
 
@@ -7,12 +7,10 @@ const AccessToken = new Schema({
     type: String,
     required: true,
   },
-
   clientId: {
     type: String,
     required: true,
   },
-
   token: {
     type: String,
     unique: true,

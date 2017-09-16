@@ -228,3 +228,6 @@ xirsys.json
 !/pm2conf.json
 .vscode/
 !bin/
+google-credentials.json
+circle.yml
+dredd.yml

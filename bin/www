@@ -17,17 +17,8 @@ const port = normalizePort(process.env.PORT || '1337');
 app.set('port', port);
 
 
-/**
- * Create HTTP & HTTPS  server.
- */
-
 const server = http.createServer(app);
 
-// const serverS = https.createServer(require('localhost.daplie.me-certificates').create(), app);
-
-
-const io = app.io;
-io.attach(server);
 
 /**
  * Listen on provided port, on all network interfaces.

@@ -1,13 +1,11 @@
 global.Promise = require('bluebird');
 const express = require('express');
-const socketIo = require('socket.io');
 const helmet = require('helmet');
 const path = require('path');
 const favicon = require('serve-favicon');
 const logger = require('morgan');
 const compression = require('compression');
 const bodyParser = require('body-parser');
-// const config = require('./libs/config');
 const passport = require('passport');
 const methodOverride = require('method-override');
 const errorHandler = require('./libs/error');
@@ -15,12 +13,11 @@ const cors = require('cors');
 
 const RateLimit = require('express-rate-limit');
 
-// TODO: bruttforce
 
 const limiter = new RateLimit({
   windowMs: 10 * 60 * 1000, //  10 minutes 
-  max: 100, // limit each IP to 100 requests per windowMs 
-  delayMs: 0, // disable delaying - full speed until the max limit is reached
+  max: 400,
+  delayMs: 0,
   statusCode: 429,
   message: 'too fast bro',
   handler(req, res, next) {
@@ -34,20 +31,21 @@ const limiter = new RateLimit({
 
 const app = express();
 
+
 require('./libs/auth/auth');
 require('./libs/auth/vk');
 require('./libs/auth/facebook');
-
-const io = socketIo();
-app.io = io;
-require('./libs/websocket/socketIO')(io);
+require('./libs/auth/yandex');
 
 
-const index = require('./routes/index');
 const users = require('./routes/users');
+const index = require('./routes/index');
+const collections = require('./routes/collections');
 const register = require('./routes/register');
 const feed = require('./routes/feed');
-require('./libs/db/mongoose');
+const tags = require('./routes/tags');
+const upload = require('./routes/upload');
+const links = require('./routes/links');
 require('./libs/auth/oauth2');
 const oauth = require('./routes/oauth');
 require('./libs/log/log')(module);
@@ -68,30 +66,27 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(methodOverride());
 app.use(passport.initialize());
-app.use(helmet());
+app.use(helmet({
+  frameguard: false,
+}));
 app.use(limiter);
-
-// FIXME: Redirect to https 
-// app.all('*', ensureSecure);
-
-// function ensureSecure(req, res, next) {
-//   if (req.secure) {
-//     return next();
-//   }
-//   return res.redirect(`https:// localhost.daplie.me:3001${req.url}`);
-// }
 
 app.use('/', index);
 app.use('/users', users);
 app.use('/register', register);
 app.use('/oauth', oauth);
 app.use('/feed', feed);
+app.use('/collections', collections);
+app.use('/tags', tags);
+app.use('/upload', upload);
+app.use('/links', links);
 
 
 //  catch 404 and forward to error handler
 app.use((req, res, next) => {
-  const err = new Error('Not Found');
+  const err = new Error('Route not found');
   err.status = 404;
+  err.code = 'NO_ROUTE_ERR';
   next(err);
 });
 
@@ -103,9 +98,9 @@ app.use((err, req, res, next) => {
     })
     .catch((error) => {
       res.status(500).json({
-        code: 'ERROR_PARSE_ERROR',
+        code: 'ERROR_PARSE_ERR',
         type: 'API_ERROR',
-        message: 'This message is caused by illegal error data, this literaly doesn\'t happens, but this error must be defined',
+        message: 'This message is caused by bad error data, this usually doesn\'t happens, but this error must be defined 🙃',
       });
       next(error);
     });

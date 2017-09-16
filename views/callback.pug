@@ -1,0 +1,18 @@
+doctype html
+html(lang='en')
+  head
+    title Callback
+    body= response
+    script(type='text/javascript').
+      var app = 'iceberg';
+      var data = !{response};
+      var str = '';
+      for (var key in data) {
+        if (data.hasOwnProperty(key)){
+          if (str != '') {
+            str += '&';
+          }
+          str += key + '=' + encodeURIComponent(data[key]);
+        }
+      }
+      window.location = app + '://?data=' + str;
