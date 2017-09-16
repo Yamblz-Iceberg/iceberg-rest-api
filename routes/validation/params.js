@@ -3,7 +3,7 @@ const badUsernames = require('./badUsernames');
 
 const nicknameJoi = Joi.string().alphanum().min(3).max(12)
   .invalid(badUsernames);
-const urlJoi = /^((?:https\:\/\/)|(?:http\:\/\/)|(?:www\.))?([a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(?:\??)[a-zA-Z0-9\-\._\?\,\'\/\\\+&%\$#\=~]+)$/;
+const urlJoi = /^((?:https\:\/\/)|(?:http\:\/\/)|(?:www\.))?([a-zа-яA-ZА-Я0-9\-\.]+\.[a-zа-яА-ЯA-Z]{2,3}(?:\??)[a-zа-яA-ZА-Я0-9\-\._\?\,\'\/\\\+&%\$#\=~]+)$/;
 const idMongoRegex = /^[0-9a-fA-F]{24}$/;
 const textShortJoi = Joi.string().min(2).max(20).invalid(badUsernames);
 

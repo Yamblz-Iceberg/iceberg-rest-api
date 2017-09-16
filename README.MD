@@ -33,6 +33,6 @@ npm test
 
 ## Документация **Apiary**
 
-[<img src="https://static.apiary.io/assets/v6Zkz37_.png" alt="APIARY" style="width: 150px;"/>](http://docs.icebergproject.apiary.io)
+[<img src="https://static.apiary.io/assets/v6Zkz37_.png" alt="APIARY" width="175px">](http://docs.icebergproject.apiary.io)
 
 [docs.icebergproject.apiary.io](http://docs.icebergproject.apiary.io)

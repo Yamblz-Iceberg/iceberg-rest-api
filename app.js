@@ -46,7 +46,6 @@ const feed = require('./routes/feed');
 const tags = require('./routes/tags');
 const upload = require('./routes/upload');
 const links = require('./routes/links');
-require('./libs/db/mongoose');
 require('./libs/auth/oauth2');
 const oauth = require('./routes/oauth');
 require('./libs/log/log')(module);
