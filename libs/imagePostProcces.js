@@ -28,10 +28,8 @@ const getAverageColor = image => new Promise((resolve, reject) => {
 
   return Jimp.read(image.buffer)
     .then(imageFromBuffer => imageFromBuffer
-      .crop(imageFromBuffer.bitmap.width / 2,
-        imageFromBuffer.bitmap.height - Math.round(imageFromBuffer.bitmap.height / 20),
-        imageFromBuffer.bitmap.width,
-        Math.round(imageFromBuffer.bitmap.height / 10)))
+      .cover(imageFromBuffer.bitmap.width,
+        Math.round(imageFromBuffer.bitmap.height / 10), Jimp.VERTICAL_ALIGN_BOTTOM))
     .then(imageCropped => getImageBuffer(imageCropped, image.mimetype))
     .then(buffer => resolve(`rgb(${colorThief.getColor(buffer).join(', ')})`))
     .catch(err => reject(new error.InternalServerError('FILE_POST_PROCCES_ERR', err.message)));
